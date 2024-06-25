@@ -34,10 +34,10 @@ class _ExampleViewState extends State<ExampleView> {
               print(value);
               if (value) {
                 context.read<LocaleProvider>().changeLocale(const Locale('en'));
-                context.read<ThemeProvider>().setThemeData(AppTheme.darkTheme);
+                context.read<ThemeProvider>().setThemeData(ThemeConfig.darkTheme);
               } else {
                 context.read<LocaleProvider>().changeLocale(const Locale('vi'));
-                context.read<ThemeProvider>().setThemeData(AppTheme.lightTheme);
+                context.read<ThemeProvider>().setThemeData(ThemeConfig.lightTheme);
               }
             });
           },
