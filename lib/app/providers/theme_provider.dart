@@ -5,6 +5,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData themeData = ThemeData.light();
   void setThemeData(ThemeData themeData) {
     this.themeData = themeData;
+    print(themeData.scaffoldBackgroundColor);
     notifyListeners();
   }
 }
