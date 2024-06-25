@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hit_moments/app/core/config/app_config.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
@@ -22,34 +23,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
+    return ScreenUtilInit(
+        designSize: const Size(360, 800),
+        builder: (context, child) {
+          return MultiProvider(
+            providers: [
+              ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
 
-        //provider ngôn ngữ làm riêng
-        ChangeNotifierProvider(
-          create: (context) => locale,
-        )
-      ],
-      child: Consumer<LocaleProvider>(
-        builder: (context, provider, child) {
-          return MaterialApp(
-            title: AppConfig.appName,
-            locale: provider.locale,
-            debugShowCheckedModeBanner: false,
-            theme: Provider.of<ThemeProvider>(context).themeData,
-            initialRoute: AppRoutes.SPASH,
-            routes: AppPages.routes,
-            supportedLocales: L10n.all,
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              AppLocalizations.delegate,
+              //provider ngôn ngữ làm riêng
+              ChangeNotifierProvider(
+                create: (context) => locale,
+              )
             ],
+            child: Consumer<LocaleProvider>(
+              builder: (context, provider, child) {
+                return MaterialApp(
+                  title: AppConfig.appName,
+                  locale: provider.locale,
+                  debugShowCheckedModeBanner: false,
+                  theme: Provider.of<ThemeProvider>(context).themeData,
+                  initialRoute: AppRoutes.SPASH,
+                  routes: AppPages.routes,
+                  supportedLocales: L10n.all,
+                  localizationsDelegates: const [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    AppLocalizations.delegate,
+                  ],
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
+        });
   }
 }
