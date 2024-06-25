@@ -24,7 +24,10 @@ class _ExampleViewState extends State<ExampleView> {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Text(AppLocalizations.of(context)!.hello),
+        child: Text(
+          AppLocalizations.of(context)!.hello,
+          style: context.watch<ThemeProvider>().themeData.textTheme.headlineLarge,
+        ),
       ),
       bottomNavigationBar: Container(
         child: Switch(
