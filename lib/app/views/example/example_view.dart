@@ -26,7 +26,7 @@ class _ExampleViewState extends State<ExampleView> {
       body: Center(
         child: Text(
           AppLocalizations.of(context)!.hello,
-          style: Theme.of(context).textTheme.headlineLarge,
+          style: Theme.of(context).textTheme.displayLarge,
         ),
       ),
       bottomNavigationBar: Container(
