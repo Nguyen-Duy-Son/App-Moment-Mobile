@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hit_moments/app/core/config/theme_config.dart';
+import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
@@ -22,11 +23,15 @@ class _ExampleViewState extends State<ExampleView> {
   Widget build(BuildContext context) {
     print(Platform.localeName);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: AppColors.of(context).primaryColor12,
+      ),
       body: Center(
         child: Text(
           AppLocalizations.of(context)!.hello,
-          style: Theme.of(context).textTheme.displayLarge,
+          style: AppTextStyles.of(context).regular32.copyWith(
+                color: AppColors.of(context).primaryColor12,
+              ),
         ),
       ),
       bottomNavigationBar: Container(
