@@ -139,6 +139,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                       children: [
                         IconOnTapScale(
                           icon1Path: 'assets/icons/heart.svg',
+                          icon2Color: AppColors.of(context).primaryColor9,
                           icon2Path: 'assets/icons/Heart-1.svg',
                           backGroundColor: AppColors.of(context).neutralColor1,
                           icon1Color: AppColors.of(context).neutralColor9,
@@ -149,7 +150,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                         ),
                         IconOnTapScale(
                           icon1Path: 'assets/icons/Send.svg',
-                          icon2Path: 'assets/icons/Send2.svg',
+                          icon2Color: AppColors.of(context).primaryColor9,
                           backGroundColor: AppColors.of(context).neutralColor1,
                           icon1Color: AppColors.of(context).neutralColor9,
                           iconHeight: 28, iconWidth: 28,
@@ -160,6 +161,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                         IconOnTapScale(
                           icon1Path: 'assets/icons/Burger.svg',
                           icon2Path: 'assets/icons/Close.svg',
+                          icon2Color: AppColors.of(context).primaryColor9,
                           padding: 3,
                           backGroundColor: AppColors.of(context).neutralColor1,
                           icon1Color: AppColors.of(context).neutralColor9,

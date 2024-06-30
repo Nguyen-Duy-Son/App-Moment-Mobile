@@ -64,6 +64,7 @@ class _IconOnTapScale extends State<IconOnTapScale> {
             padding: EdgeInsets.all(widget.padding??0),
             child: SvgPicture.asset(
               _isIcon1?widget.icon1Path:(widget.icon2Path??widget.icon1Path),
+              color: _isIcon1?widget.icon1Color:(widget.icon2Color??widget.icon1Color),
               height: widget.padding==null?widget.iconHeight:widget.iconHeight*0.8,
               width: widget.padding==null?widget.iconWidth:widget.iconWidth*0.8,),
           ),

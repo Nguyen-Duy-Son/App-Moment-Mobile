@@ -25,7 +25,7 @@ class _MomentViewState extends State<MomentView> {
             child: IconOnTapScale(
               icon1Path: 'assets/icons/Plus.svg',
               backGroundColor: AppColors.of(context).neutralColor6,
-              icon1Color: AppColors.of(context).neutralColor6,
+              icon1Color: AppColors.of(context).neutralColor10,
               iconHeight: 15,
               iconWidth: 15,
               onPress: () {
@@ -42,7 +42,7 @@ class _MomentViewState extends State<MomentView> {
               child: IconOnTapScale(
                   icon1Path: 'assets/icons/Layers.svg',
                   backGroundColor: AppColors.of(context).neutralColor6,
-                  icon1Color: AppColors.of(context).neutralColor6,
+                  icon1Color: AppColors.of(context).neutralColor10,
                   iconHeight: 20, iconWidth: 20,
                   onPress: () {
 
