@@ -227,6 +227,6 @@ class TextStyleExt extends ThemeExtension<TextStyleExt> {
       regular10: TextStyle.lerp(regular10, other.regular10, t) ?? regular10,
       light10: TextStyle.lerp(light10, other.light10, t) ?? light10,
     );
-    throw UnimplementedError();
+    //throw UnimplementedError();
   }
 }
