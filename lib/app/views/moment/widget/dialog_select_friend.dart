@@ -31,14 +31,14 @@ class _DialogSelectFriendState extends State<DialogSelectFriend> {
                         child: Row(
                           children: [
                             CircleAvatar(
+                                radius: 17.w,
+                                backgroundColor: Colors.white,
                                 child: CircleAvatar(
                                   backgroundImage: NetworkImage("https://image.phunuonline.com.vn/fckeditor/upload/2024/20240509/images/fan-taylor-swift-cuu-doanh-_791715219308.jpg"),
-                                  radius: 16,
-                                ),
-                                radius: 17,
-                                backgroundColor: Colors.white
+                                  radius: 16.w,
+                                )
                             ),
-                            SizedBox(width: 8,),
+                            SizedBox(width: 8.w,),
                             Text(
                               selectedOption["menu"]??"",
                               style: AppTextStyles.of(context).light20.copyWith(

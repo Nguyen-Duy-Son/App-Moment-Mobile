@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/custom/widgets/popup_menu_select.dart';
+import 'package:hit_moments/app/providers/moment_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/scale_on_tap_widget.dart';
@@ -21,14 +25,7 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
       context: context,
       builder: (context) {
         return DialogSelectFriend(
-            options:  [
-              {'menu': 'Option 1'},
-              {'menu': 'Option 2'},
-              {'menu': 'Option 3'},
-              {'menu': 'Option 1'},
-              {'menu': 'Option 2'},
-              {'menu': 'Option 3'},
-            ],
+            options: context.read()<MomentProvider>().getListFriend(),
           isBack: () {
             setState(() {
               _isChangeColor = !_isChangeColor;
@@ -70,13 +67,13 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
 
       },
         child: Container(
-            padding: EdgeInsets.only(left: 24,top: 4, right: 24,),
+            padding: EdgeInsets.only(left: 24.w,top: 4.w, right: 24.w,),
             decoration: BoxDecoration(
                 color: AppColors.of(context).neutralColor6,
                 borderRadius: BorderRadius.all(Radius.circular(100)),
                 border: Border.all(
                     color: _isChangeColor?AppColors.of(context).primaryColor8:AppColors.of(context).neutralColor6,
-                    width: 1
+                    width: 1.w
                 )
             ),
             child: Row(
@@ -86,12 +83,12 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
                   style: AppTextStyles.of(context).regular24.copyWith(
                       color: AppColors.of(context).neutralColor11
                   ),),
-                SizedBox(width: 8,),
+                SizedBox(width: 8.w,),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 6),
+                  padding: EdgeInsets.only(bottom: 6.w),
                   child: RotationTransition(
                    turns: Tween(begin: 1.0, end: 0.0).animate(_controller),
-                    child: SvgPicture.asset("assets/icons/Down.svg",
+                    child: SvgPicture.asset(Assets.icons.downSVG,
                       color: AppColors.of(context).neutralColor10,),
                   ),
                 )

@@ -20,6 +20,7 @@ class _PopupMenuSelectState extends State<PopupMenuSelect> {
             ListTile(
               title: Text(
                 selectedOption['menu'] ?? "",
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: ScreenUtil().setSp(14.0),
                   fontWeight: FontWeight.w400,

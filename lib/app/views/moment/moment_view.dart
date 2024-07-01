@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
 import 'package:hit_moments/app/views/moment/moment_widget.dart';
-import 'package:hit_moments/app/views/moment/widget/dialog_select_friend.dart';
 import 'package:hit_moments/app/views/moment/widget/select_friend_widget.dart';
 
 class MomentView extends StatefulWidget {
@@ -21,13 +22,13 @@ class _MomentViewState extends State<MomentView> {
       child: Scaffold(
         appBar: AppBar(
           leading: Padding(
-            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+            padding: EdgeInsets.only(left: 16.w, top: 8.w, bottom: 8.w),
             child: IconOnTapScale(
-              icon1Path: 'assets/icons/Plus.svg',
+              icon1Path: Assets.icons.plusSVG,
               backGroundColor: AppColors.of(context).neutralColor6,
               icon1Color: AppColors.of(context).neutralColor10,
-              iconHeight: 15,
-              iconWidth: 15,
+              iconHeight: 15.w,
+              iconWidth: 15.w,
               onPress: () {
 
               },
@@ -38,12 +39,12 @@ class _MomentViewState extends State<MomentView> {
           centerTitle: true,
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 16),
+              padding: EdgeInsets.only(right: 16.w),
               child: IconOnTapScale(
-                  icon1Path: 'assets/icons/Layers.svg',
+                  icon1Path: Assets.icons.layersSVG,
                   backGroundColor: AppColors.of(context).neutralColor6,
                   icon1Color: AppColors.of(context).neutralColor10,
-                  iconHeight: 20, iconWidth: 20,
+                  iconHeight: 20.w, iconWidth: 20.w,
                   onPress: () {
 
                     //SelectFriendWidget();

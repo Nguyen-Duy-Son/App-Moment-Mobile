@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class IconOnTapScale extends StatefulWidget {
-  final String icon1Path;
-  final String? icon2Path;
-  final Color backGroundColor;
-  final Color icon1Color;
-  final Color? icon2Color;
+  final String icon1Path;  //icon mặc định ban đầu
+  final String? icon2Path; //icon thay đổi khi ấn
+  final Color backGroundColor;  //màu nền
+  final Color icon1Color;  //màu icon mặc định
+  final Color? icon2Color;  //màu của "icon thay đổi khi ấn"
   final double? padding;
-  final double iconHeight;
-  final double iconWidth;
+  final double iconHeight;  //dài icon
+  final double iconWidth;   // rộng icon
   final void Function() onPress;
   const IconOnTapScale({super.key,
     required this.icon1Path,
@@ -51,13 +52,13 @@ class _IconOnTapScale extends State<IconOnTapScale> {
         scale: _scale,
         duration: Duration(milliseconds: 100),
         child: Container(
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: widget.backGroundColor,
             border: Border.all(
               color: widget.icon1Color,
-              width: 1
+              width: 1.w
             )
           ),
           child: Padding(
