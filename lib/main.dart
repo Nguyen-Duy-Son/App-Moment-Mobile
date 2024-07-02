@@ -29,7 +29,9 @@ class MyApp extends StatelessWidget {
           return MultiProvider(
             providers: [
               ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
-
+              //không hiểu sao thêm MomentProvider vào cái là nó bị lỗi k tìm thấy
+              //ThemeProvider nên e khai báo nó thẳng vào đây luôn ạ
+              ChangeNotifierProvider(create: (context) => ThemeProvider()),
               //provider ngôn ngữ làm riêng
               ChangeNotifierProvider(
                 create: (context) => locale,

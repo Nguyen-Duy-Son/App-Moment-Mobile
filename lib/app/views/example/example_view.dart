@@ -7,6 +7,7 @@ import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
+import 'package:hit_moments/app/views/moment/moment_view.dart';
 import 'package:provider/provider.dart';
 
 class ExampleView extends StatefulWidget {
@@ -27,11 +28,19 @@ class _ExampleViewState extends State<ExampleView> {
         backgroundColor: AppColors.of(context).primaryColor12,
       ),
       body: Center(
-        child: Text(
-          AppLocalizations.of(context)!.hello,
-          style: AppTextStyles.of(context).regular32.copyWith(
+        child: Column(
+          children: [
+            Text(
+              AppLocalizations.of(context)!.hello,
+              style: AppTextStyles.of(context).regular32.copyWith(
                 color: AppColors.of(context).primaryColor12,
               ),
+            ),
+            ElevatedButton(onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MomentView(),) );
+            },
+                child: Text("Chuyển màn"))
+          ],
         ),
       ),
       bottomNavigationBar: Container(
