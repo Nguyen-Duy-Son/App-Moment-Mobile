@@ -1,3 +1,3 @@
 class AppConfig {
-  static const appName = 'hit_moment';
+  static const appName = 'hit_moments';
 }

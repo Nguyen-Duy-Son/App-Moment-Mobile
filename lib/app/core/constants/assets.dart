@@ -6,7 +6,6 @@ class Assets {
 
 class _AssetsIcons {
   _AssetsIcons._();
-  final viDuSVG = 'assets/icons/viDu.svg';
   final downSVG = 'assets/icons/Down.svg';
   final downOutLineSolidSVG = 'assets/icons/Down 2.svg';
   final plusSVG = 'assets/icons/Plus.svg';

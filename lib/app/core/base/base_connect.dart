@@ -1,8 +1,11 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 enum RequestMethod { GET, POST, PUT, DELETE }
 
@@ -14,8 +17,7 @@ class BaseConnect {
     return request;
   }
 
-  Future<dynamic> responseInterceptor(
-      http.Request request, http.Response response) async {
+  Future<dynamic> responseInterceptor(http.Request request, http.Response response) async {
     if (response.statusCode < 200 || response.statusCode > 299) {
       handleErrorStatus(response);
       return null;
@@ -28,16 +30,13 @@ class BaseConnect {
       case 400:
       case 404:
       case 500:
-        final Map<String, dynamic> errorMessage =
-            jsonDecode(response.body.toString());
+        final Map<String, dynamic> errorMessage = jsonDecode(response.body.toString());
         String message = '';
-        if (errorMessage.containsKey('error') ||
-            errorMessage.containsKey('message')) {
+        if (errorMessage.containsKey('error') || errorMessage.containsKey('message')) {
           if (errorMessage['error'] is Map) {
             message = errorMessage['error']['message'];
           } else {
-            message =
-                (errorMessage['message'] ?? errorMessage['error']).toString();
+            message = (errorMessage['message'] ?? errorMessage['error']).toString();
           }
         } else {
           errorMessage.forEach((key, value) {
@@ -51,8 +50,7 @@ class BaseConnect {
         print(message);
         break;
       case 401:
-        String message =
-            'CODE (${response.statusCode}):\n${response.reasonPhrase}';
+        String message = 'CODE (${response.statusCode}):\n${response.reasonPhrase}';
         print(message);
         //Remove token
         setToken('');
@@ -69,8 +67,7 @@ class BaseConnect {
     Map<String, dynamic>? queryParam,
   }) async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    if (!connectivityResult.contains(ConnectivityResult.mobile) &&
-        !connectivityResult.contains(ConnectivityResult.wifi)) {
+    if (!connectivityResult.contains(ConnectivityResult.mobile) && !connectivityResult.contains(ConnectivityResult.wifi)) {
       print("No internet connection available.");
       return;
     }
