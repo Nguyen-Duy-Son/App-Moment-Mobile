@@ -15,6 +15,13 @@ class _AssetsIcons {
   final sendSVG = 'assets/icons/Send.svg';
   final burgerSVG = 'assets/icons/Burger.svg';
   final closeSVG = 'assets/icons/Close.svg';
+  final bell = 'assets/icons/Bell.svg';
+  final search = 'assets/icons/Search.svg';
+  final rightArrow = 'assets/icons/Right.svg';
+  final upSVG = 'assets/icons/Up.svg';
+  final up2 = 'assets/icons/Zoom in.svg';
+  final delete = 'assets/icons/Zoom out.svg';
+  final searchOff = 'assets/icons/search-off.svg';
 }
 
 class _AssetsImages {

@@ -1,3 +1,10 @@
 {
-    "hello": "Hello"
+    "hello": "Hello",
+    "friend": "Friend",
+
+    "list":"List",
+    "proposal":"Proposal",
+    "searchListMyFriend":"Search by email, name or phone number",
+    "friendRequest":"Friend Request",
+    "userNotFound":"User not found"
 }
