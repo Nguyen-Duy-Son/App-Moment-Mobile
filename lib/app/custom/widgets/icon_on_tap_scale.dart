@@ -35,18 +35,22 @@ class _IconOnTapScale extends State<IconOnTapScale> {
       onTapDown: (_) {
         setState(() {
           _scale = 0.9;
-          _isIcon1 = !_isIcon1;
+
         });
       },
       onTapUp: (_) {
         setState(() {
           _scale = 1.0;
+          _isIcon1 = !_isIcon1;
         });
+        widget.onPress();
       },
       onTapCancel: () {
         setState(() {
           _scale = 1.0;
+
         });
+
       },
       child: AnimatedScale(
         scale: _scale,
