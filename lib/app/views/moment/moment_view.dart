@@ -15,6 +15,11 @@ class MomentView extends StatefulWidget {
 
 class _MomentViewState extends State<MomentView> {
   int selected = 5;
+  List<Widget> _list=<Widget>[
+    MomentWidget(),
+    MomentWidget(),
+    MomentWidget(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +57,10 @@ class _MomentViewState extends State<MomentView> {
             )
           ],
         ),
-        body: MomentWidget(),
+        body: PageView(
+          children: _list,
+          scrollDirection: Axis.vertical,
+        ),
       ),
     );
   }
