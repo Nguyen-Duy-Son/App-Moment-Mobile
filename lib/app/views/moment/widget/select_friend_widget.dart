@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
-import 'package:hit_moments/app/custom/widgets/popup_menu_select.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
+import 'package:popover/popover.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/scale_on_tap_widget.dart';
-import 'dialog_select_friend.dart';
+import 'popover_select_friend.dart';
 
 class SelectFriendWidget extends StatefulWidget {
   const SelectFriendWidget({super.key});
@@ -20,30 +20,10 @@ class SelectFriendWidget extends StatefulWidget {
 class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _isChangeColor = false;
-  Future<void> _showDialogSelectFriend(BuildContext context) async{
-    showDialog(
-      context: context,
-      builder: (context) {
-        return DialogSelectFriend(
-            options: context.read()<MomentProvider>().getListFriend(),
-          isBack: () {
-            setState(() {
-              _isChangeColor = !_isChangeColor;
-            });
-            if(!_isChangeColor){
-              _controller..reverse(from: 0.5);
-
-            }else{
-              _controller..forward(from: 0.0);
-            }
-          },
-        );
-      },
-    );
-  }
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -63,7 +43,20 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
         }else{
           _controller..forward(from: 0.0);
         }
-        _showDialogSelectFriend(context);
+        showPopover(
+            context: context,
+            bodyBuilder: (context) =>
+                PopoverSelectFriend(options: context.read<MomentProvider>().getListFriend(),
+                  isBack: () {
+
+            },),
+            onPop: () => print("Đã ấn"),
+            direction: PopoverDirection.bottom,
+            width: MediaQuery.of(context).size.width/1.6,
+            height: 190.w,
+            arrowHeight: 15.w,
+            arrowWidth: 30.w
+        );
 
       },
         child: Container(

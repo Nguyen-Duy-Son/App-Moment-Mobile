@@ -4,8 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
-import 'package:hit_moments/app/views/moment/widget/dialog_select_friend.dart';
-
+import 'package:hit_moments/app/views/moment/widget/select_funtion_widget.dart';
 import '../../core/extensions/theme_extensions.dart';
 
 class MomentWidget extends StatefulWidget {
@@ -58,13 +57,21 @@ class _MomentWidgetState extends State<MomentWidget> {
                     left: 16.w,
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          radius: 21.w,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage("https://image.phunuonline.com.vn/fckeditor/upload/2024/20240509/images/fan-taylor-swift-cuu-doanh-_791715219308.jpg"),
-                            radius: 20.w,
-                          )
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(100))
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(40.w),
+                            child: Image.network(
+                              "https://image.phunuonline.com.vn/fckeditor/upload/2024/20240509/images/fan-taylor-swift-cuu-doanh-_791715219308.jpg",
+                              width: 40.w,
+                              height: 40.w,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         SizedBox(width: 8.w,),
                         Column(
@@ -93,16 +100,16 @@ class _MomentWidgetState extends State<MomentWidget> {
                       alignment: Alignment.center,
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: AppColors.of(context).neutralColor6,
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                        ),
                         child: Text("Con mèo đẹp quá trời!",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.of(context).light24.copyWith(
                             color: AppColors.of(context).neutralColor12
                           ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.of(context).neutralColor6,
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
                         ),
                       ),
                     ),
@@ -163,18 +170,7 @@ class _MomentWidgetState extends State<MomentWidget> {
 
                           },
                         ),
-                        IconOnTapScale(
-                          icon1Path: Assets.icons.burgerSVG,
-                          icon2Path: Assets.icons.closeSVG,
-                          icon2Color: AppColors.of(context).primaryColor9,
-                          padding: 3.w,
-                          backGroundColor: AppColors.of(context).neutralColor1,
-                          icon1Color: AppColors.of(context).neutralColor9,
-                          iconHeight: 28.w, iconWidth: 28.w,
-                          onPress: () {
-
-                          },
-                        )
+                        SelectFuntionWidget()
                       ],
                                   ),
                   ))
