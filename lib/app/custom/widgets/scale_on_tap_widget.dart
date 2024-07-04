@@ -19,19 +19,21 @@ class _ScaleOnTapWidgetState extends State<ScaleOnTapWidget> {
       onTapDown: (_) {
         setState(() {
           _scale = 0.9;
-          _isSelect = !_isSelect;
-          widget.onTap(_isSelect);
         });
       },
       onTapUp: (_) {
         setState(() {
           _scale = 1.0;
+          _isSelect = !_isSelect;
         });
+        widget.onTap(_isSelect);
       },
       onTapCancel: () {
         setState(() {
           _scale = 1.0;
         });
+
+
       },
       child: AnimatedScale(
         scale: _scale,
