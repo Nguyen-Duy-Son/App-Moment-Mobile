@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/color_constants.dart';
+import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/search_data_not_found.dart';
 import '../../../models/user_model.dart';
 
@@ -33,7 +34,6 @@ class ListMyFriend extends StatefulWidget {
 class _ListMyFriendState extends State<ListMyFriend> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     List<User> lists = widget.users
         .where((user) => user.fullName
             .toLowerCase()
@@ -54,8 +54,8 @@ class _ListMyFriendState extends State<ListMyFriend> {
                       borderRadius: BorderRadius.circular(200),
                       child: Image.network(
                         lists[index].avatar!,
-                        height: 40.w,
-                        width: 40.w,
+                        height: 36.w,
+                        width: 36.w,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -64,9 +64,8 @@ class _ListMyFriendState extends State<ListMyFriend> {
                       children: [
                         Text(
                           lists[index].fullName,
-                          style: TextStyle(
-                            fontSize: 20.w,
-                            color: ColorConstants.neutralLight120,
+                          style: AppTextStyles.of(context).light20.copyWith(
+                            color: AppColors.of(context).neutralColor12,
                           ),
                         ),
                         InkWell(
@@ -80,18 +79,20 @@ class _ListMyFriendState extends State<ListMyFriend> {
                       ],
                     ),
                   ),
-                  Container(
-                    height: 1.0,
-                    margin: EdgeInsets.only(
-                      top: 6.h,
-                      bottom: 6.h,
+                  Opacity(
+                    opacity: 0.5,
+                    child: Container(
+                      height: 1.0,
+                      margin: EdgeInsets.only(
+                        top: 6.h,
+                        bottom: 6.h,
+                      ),
+                      padding: EdgeInsets.only(
+                        left: 12.w,
+                        right: 12.w,
+                      ),
+                      color: AppColors.of(context).neutralColor11,
                     ),
-                    padding: EdgeInsets.only(
-                      left: 12.w,
-                      right: 12.w,
-                    ),
-                    width: width * 0.75,
-                    color: ColorConstants.neutralLight80,
                   ),
                 ],
               );

@@ -3,10 +3,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
+import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/assets.dart';
 import '../../core/constants/text_style_constants.dart';
+import '../../l10n/l10n.dart';
 import '../../models/friend.model.dart';
 import '../../models/user_model.dart';
 import 'components/friend_request.dart';
@@ -21,18 +25,20 @@ class ListMyFriendView extends StatefulWidget {
 class _ListMyFriendViewState extends State<ListMyFriendView> {
   @override
   void initState() {
+    //
+    context.read<UserProvider>().getUser();
+    context.read<UserProvider>().getFriendOfUser();
+    context.read<UserProvider>().getMyFriendsUsers();
+    context.read<UserProvider>().getFriendRequests();
+    context.read<UserProvider>().getFriendProposals();
+    //
     super.initState();
   }
 
   bool checkOpacity = false;
-  final List<User> friendsUsers =
-      usersF.where((user) => friend.friendsList!.contains(user.id)).toList();
-  final List<User> friendRequestUsers =
-      usersF.where((user) => friend.friendRequests!.contains(user.id)).toList();
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -47,7 +53,7 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
               padding: EdgeInsets.only(top: 15.w),
               child: Text(
                 AppLocalizations.of(context)!.friend,
-                style: TextStyle(fontSize: 32.w),
+                style: AppTextStyles.of(context).bold32,
               ),
             ),
             centerTitle: true,
@@ -122,13 +128,17 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                   right: 15.w,
                 ),
                 onOpened: () {
-                  setState(() {
-                    checkOpacity = true;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      checkOpacity = true;
+                    });
                   });
                 },
                 onCanceled: () {
-                  setState(() {
-                    checkOpacity = false;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      checkOpacity = false;
+                    });
                   });
                 },
                 icon: Stack(
@@ -154,36 +164,33 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: ColorConstants.accentRed,
                           borderRadius: BorderRadius.circular(50),
                         ),
-                        width: 16.w,
-                        height: 16.w,
+                        width: 20.w,
+                        height: 20.w,
                         child: Text(
-                          '${friend.friendRequests?.length ?? 0}',
-                          style: TextStyle(
-                            color: ColorConstants.neutralLight10,
-                            fontSize: 12.w,
-                          ),
-                          textAlign: TextAlign.center,
+                          '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
+                          style: AppTextStyles.of(context).light16,
                         ),
                       ),
                     ),
                   ],
                 ),
                 itemBuilder: (_) =>
-                    _buildFriendRequestMenu(friendRequestUsers, width, 0.5.h),
+                    _buildFriendRequestMenu(Provider.of<UserProvider>(context, listen: false).friendRequests),
               ),
             ],
           ),
           body: Opacity(
               opacity: checkOpacity ? 0.3 : 1,
-              child: ListMyFriendWidget(friend: friend, users: usersF))),
+              child: ListMyFriendWidget(friendProposals: Provider.of<UserProvider>(context, listen: false).friendProposals,
+                  friendsUsers: Provider.of<UserProvider>(context, listen: false).friendsUsers))),
     );
   }
 
   List<PopupMenuItem> _buildFriendRequestMenu(
-      List<User> users, double width, double height) {
+      List<User> users) {
     List<PopupMenuItem> items = users
         .map(
           (e) => PopupMenuItem(
@@ -199,7 +206,7 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
         child: Center(
           child: Text(
             AppLocalizations.of(context)!.friendRequest,
-            style: TextStyleConstant.boldLight22,
+            style: AppTextStyles.of(context).bold20,
           ),
         ),
         enabled: false, // Disable the item so it can't be selected
@@ -208,89 +215,6 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
     return items;
   }
 }
-
-// Bạn bè của người dùng
-final Friend friend = Friend(
-  userId: '1',
-  friendsList: ['2', '3', '6', '7'],
-  friendRequests: ['4', '5', '8', '9'],
-  friendSuggestions: ['10', '11', '12', '13'],
-);
-// Thông tin của bạn bè
-final List<User> usersF = [
-  User(
-    id: '2',
-    fullName: 'Nguyễn Văn Nam',
-    avatar:
-        'https://cdn.thoitiet247.edu.vn/wp-content/uploads/2024/04/nhung-hinh-anh-girl-xinh-de-thuong.webp',
-  ),
-  User(
-    id: '3',
-    fullName: 'Trần Thị Ngọc',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-27.webp',
-  ),
-  User(
-    id: '4',
-    fullName: 'Phạm Văn Tú',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-7.webp',
-  ),
-  User(
-    id: '5',
-    fullName: 'Lê Thị Hồng',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-6.webp',
-  ),
-  User(
-    id: '6',
-    fullName: 'Nguyễn Văn E',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-30.webp',
-  ),
-  User(
-    id: '7',
-    fullName: 'Trần Thị F',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
-  ),
-  User(
-    id: '8',
-    fullName: 'Nguyễn Thị F',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
-  ),
-  User(
-    id: '9',
-    fullName: 'Trần Nguyễn',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
-  ),
-  User(
-    id: '10',
-    fullName: 'Nguyễn Thị H',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
-  ),
-  User(
-    id: '11',
-    fullName: 'Trần Thị H',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
-  ),
-  User(
-    id: '12',
-    fullName: 'Nguyễn Văn H',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
-  ),
-  User(
-    id: '13',
-    fullName: 'Trần Văn H',
-    avatar:
-        'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
-  ),
-];
 
 class TooltipShape extends ShapeBorder {
   const TooltipShape();

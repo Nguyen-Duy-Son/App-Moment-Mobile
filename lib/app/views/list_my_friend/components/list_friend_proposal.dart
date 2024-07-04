@@ -1,22 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hit_moments/app/custom/widgets/search_data_not_found.dart';
 
 import '../../../core/constants/assets.dart';
-import '../../../core/constants/color_constants.dart';
+import '../../../core/extensions/theme_extensions.dart';
 import '../../../models/user_model.dart';
 
 class ListFriendSuggestions extends StatefulWidget {
-  const ListFriendSuggestions({
-    super.key,
-    required this.users,
-    required this.setExpanded,
-    required this.isExpanded,
-    required this.keySearch
-  });
+  const ListFriendSuggestions(
+      {super.key,
+      required this.users,
+      required this.setExpanded,
+      required this.isExpanded,
+      required this.keySearch});
 
   final VoidCallback setExpanded;
   final bool isExpanded;
@@ -30,67 +27,71 @@ class ListFriendSuggestions extends StatefulWidget {
 class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    List<User> lists = widget.users.where((user) =>
-        user.fullName
+    List<User> lists = widget.users
+        .where((user) => user.fullName
             .toLowerCase()
             .contains(widget.keySearch.toLowerCase()))
         .toList();
-    return lists.isNotEmpty? SingleChildScrollView(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.isExpanded ? lists.length : (lists.length > 3 ? 3 : lists.length),
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              ListTile(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(200),
-                  child: Image.network(
-                    lists[index].avatar!,
-                    height: 40.w,
-                    width: 40.w,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return lists.isNotEmpty
+        ? SingleChildScrollView(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.isExpanded
+                  ? lists.length
+                  : (lists.length > 3 ? 3 : lists.length),
+              itemBuilder: (context, index) {
+                return Column(
                   children: [
-                    Text(
-                      lists[index].fullName,
-                      style: TextStyle(
-                        fontSize: 20.w,
-                        color: ColorConstants.neutralLight120,
+                    ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(200),
+                        child: Image.network(
+                          lists[index].avatar!,
+                          height: 36.w,
+                          width: 36.w,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            lists[index].fullName,
+                            style: AppTextStyles.of(context).light20.copyWith(
+                                  color: AppColors.of(context).neutralColor12,
+                                ),
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: SvgPicture.asset(
+                              Assets.icons.up2,
+                              width: 20.w,
+                              height: 20.w,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    InkWell(
-                      onTap: () {},
-                      child: SvgPicture.asset(
-                        Assets.icons.up2,
-                        width: 20.w,
-                        height: 20.w,
+                    Opacity(
+                      opacity: 0.5,
+                      child: Container(
+                        height: 1.0,
+                        margin: EdgeInsets.only(
+                          top: 6.h,
+                          bottom: 6.h,
+                        ),
+                        padding: EdgeInsets.only(
+                          left: 12.w,
+                          right: 12.w,
+                        ),
+                        color: AppColors.of(context).neutralColor11,
                       ),
                     ),
                   ],
-                ),
-              ),
-              Container(
-                height: 1.0,
-                margin: EdgeInsets.only(
-                  top: 6.h,
-                  bottom: 6.h,
-                ),
-                padding: EdgeInsets.only(
-                  left: 12.w,
-                  right: 12.w,
-                ),
-                width: width * 0.75,
-                color: ColorConstants.neutralLight80,
-              ),
-            ],
-          );
-        },
-      ),
-    ):const SearchDataNotFound();
+                );
+              },
+            ),
+          )
+        : const SearchDataNotFound();
   }
 }
