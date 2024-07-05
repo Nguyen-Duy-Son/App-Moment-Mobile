@@ -22,6 +22,7 @@ class _AssetsIcons {
   final up2 = 'assets/icons/Zoom in.svg';
   final delete = 'assets/icons/Zoom out.svg';
   final searchOff = 'assets/icons/search-off.svg';
+  final vector = 'assets/icons/Vector.svg';
 }
 
 class _AssetsImages {

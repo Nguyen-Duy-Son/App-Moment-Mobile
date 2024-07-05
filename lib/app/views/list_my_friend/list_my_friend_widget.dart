@@ -4,29 +4,39 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
+import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:provider/provider.dart';
 
-import '../../models/friend.model.dart';
 import '../../models/user_model.dart';
+import '../../providers/user_provider.dart';
 import 'components/list_friend_proposal.dart';
 import 'components/list_my_friend.dart';
 
 class ListMyFriendWidget extends StatefulWidget {
   const ListMyFriendWidget(
-      {super.key, required this.friend, required this.users});
+      {super.key, required this.friendsUsers, required this.friendProposals});
 
-  final Friend friend;
-  final List<User> users;
+  final List<User> friendsUsers,friendProposals;
+
 
   @override
   State<ListMyFriendWidget> createState() => _ListMyFriendWidgetState();
 }
 
 class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
+  @override
+  void initState() {
+    // context.read<UserProvider>().getMyFriendsUsers();
+    // context.read<UserProvider>().getFriendRequestsUsers();
+    // context.read<UserProvider>().getFriendProposalsUsers();
+    super.initState();
+  }
   bool checkColorList = false;
   bool isExpandedMyFriend = false;
-  bool isExpandedFriendSuggestions = false;
+  bool isExpandedFriendProposals = false;
   bool isDownUpMyFriend = false;
-  bool isDownUpFriendSuggestions = false;
+  bool isDownUpFriendProposals = false;
+
 
   void toggleColor(String title) {
     setState(() {
@@ -44,9 +54,9 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
     });
   }
 
-  void setExpandedFriendSuggestions() {
+  void setExpandedFriendProposals() {
     setState(() {
-      isExpandedFriendSuggestions = !isExpandedFriendSuggestions;
+      isExpandedFriendProposals = !isExpandedFriendProposals;
     });
   }
 
@@ -55,9 +65,9 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
       isDownUpMyFriend = !isDownUpMyFriend;
     });
   }
-  void setIsDownUpFriendSuggestions() {
+  void setIsDownUpFriendProposals() {
     setState(() {
-      isDownUpFriendSuggestions = !isDownUpFriendSuggestions;
+      isDownUpFriendProposals = !isDownUpFriendProposals;
     });
   }
 
@@ -66,13 +76,13 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
 
   @override
   Widget build(BuildContext context) {
-    List<User> friendsUsers = widget.users
-        .where((user) => widget.friend.friendsList!.contains(user.id))
-        .toList();
-    List<User> friendSuggestions = widget.users
-        .where((user) =>
-            widget.friend.friendSuggestions!.contains(user.id) ?? false)
-        .toList();
+    // List<User> friendsUsers = widget.users
+    //     .where((user) => widget.friend.friendsList!.contains(user.id))
+    //     .toList();
+    // List<User> friendSuggestions = widget.users
+    //     .where((user) =>
+    //         widget.friend.friendSuggestions!.contains(user.id) ?? false)
+    //     .toList();
     // print(_searchController.text);
     return SingleChildScrollView(
       child: Column(
@@ -180,14 +190,14 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                   child: Column(
                     children: [
                       ListMyFriend(
-                        users: friendsUsers,
+                        users: widget.friendsUsers,
                         setExpanded: setExpandedMyFriend,
                         isExpanded: isExpandedMyFriend,
                         keySearch: checkColorList == !true
                             ? _searchController.text
                             : "",
                       ),
-                      if(friendsUsers.length>3)
+                      if(widget.friendsUsers.length>3)
                         Padding(
                         padding: EdgeInsets.all(6.w),
                         child: InkWell(
@@ -232,19 +242,19 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                   child: Column(
                     children: [
                       ListFriendSuggestions(
-                        users: friendSuggestions,
-                        setExpanded: setExpandedFriendSuggestions,
-                        isExpanded: isExpandedFriendSuggestions,
+                        users: widget.friendProposals,
+                        setExpanded: setExpandedFriendProposals,
+                        isExpanded: isExpandedFriendProposals,
                         keySearch: checkColorList == true
                             ? _searchController.text
                             : "",
                       ),
-                      if(friendSuggestions.length>3)
+                      if(widget.friendProposals.length>3)
                         Padding(
                         padding: EdgeInsets.all(6.w),
                         child: InkWell(
-                          onTap: setExpandedFriendSuggestions,
-                          child: isExpandedFriendSuggestions
+                          onTap: setExpandedFriendProposals,
+                          child: isExpandedFriendProposals
                               ? SvgPicture.asset(
                                   Assets.icons.upSVG,
                                   width: 12.w,
@@ -283,27 +293,27 @@ class TabBarMyFriend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        padding: EdgeInsets.only(
-          left: 20.w,
-          right: 20.w,
-        ),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: checkColor
-              ? ColorConstants.primaryDark110
-              : ColorConstants.primaryLight10,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: InkWell(
-          onTap: toggleColor,
+      child: InkWell(
+        onTap: toggleColor,
+        child: Container(
+          padding: EdgeInsets.only(
+            left: 15.w,
+            right: 15.w,
+          ),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: checkColor
+                ? AppColors.of(context).primaryColor9
+                  : AppColors.of(context).primaryColor1,
+            borderRadius: BorderRadius.circular(30),
+          ),
           child: Text(
             title,
             style: TextStyle(
               fontSize: 25.w,
               color: checkColor
-                  ? ColorConstants.primaryLight20
-                  : ColorConstants.neutralDark110,
+                  ? AppColors.of(context).primaryColor1
+                  : AppColors.of(context).neutralColor7,
             ),
           ),
         ),

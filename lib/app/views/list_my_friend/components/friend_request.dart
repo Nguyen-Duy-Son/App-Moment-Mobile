@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/text_style_constants.dart';
+import '../../../core/extensions/theme_extensions.dart';
 import '../../../models/user_model.dart';
 
 class FriendRequest extends StatefulWidget {
   const FriendRequest({
     super.key,
     required this.user,
-    r
   });
   final User user;
   @override
@@ -21,17 +22,15 @@ class FriendRequest extends StatefulWidget {
 class _FriendRequestState extends State<FriendRequest> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Column(
       children: [
         ListTile(
           leading: ClipRRect(
-            borderRadius: BorderRadius.circular(200),
+            borderRadius: BorderRadius.circular(50),
             child: Image.network(
               widget.user.avatar!,
-              height: 0.1 * width,
-              width: 0.1 * width,
+              height: 36.w,
+              width: 36.w,
               fit: BoxFit.cover,
             ),
           ),
@@ -40,9 +39,8 @@ class _FriendRequestState extends State<FriendRequest> {
             children: [
               Text(
                 widget.user.fullName,
-                style: TextStyle(
-                  fontSize: 0.05 * width,
-                  color: ColorConstants.neutralLight120,
+                style: AppTextStyles.of(context).light20.copyWith(
+                  color: AppColors.of(context).neutralColor12,
                 ),
               ),
               Row(
@@ -51,17 +49,17 @@ class _FriendRequestState extends State<FriendRequest> {
                     onTap: () {},
                     child: SvgPicture.asset(
                       Assets.icons.delete,
-                      width: 0.06 * width,
-                      height: 0.06 * width,
+                      width: 24.w,
+                      height: 24.w,
                     ),
                   ),
-                  SizedBox(width: 0.02 * width),
+                  SizedBox(width: 10.w),
                   InkWell(
                     onTap: () {},
                     child: SvgPicture.asset(
                       Assets.icons.up2,
-                      width: 0.06 * width,
-                      height: 0.06 * width,
+                      width: 24.w,
+                      height: 24.w,
                     ),
                   ),
                 ],
@@ -69,18 +67,20 @@ class _FriendRequestState extends State<FriendRequest> {
             ],
           ),
         ),
-        Container(
-          height: 1.0,
-          margin: EdgeInsets.only(
-            top: 0.02 * height,
-            bottom: 0.02 * height,
+        Opacity(
+          opacity: 0.5,
+          child: Container(
+            height: 1.0,
+            margin: EdgeInsets.only(
+              top: 10.w,
+              bottom: 10.w,
+            ),
+            padding: EdgeInsets.only(
+              left: 10.w,
+              right: 10.w,
+            ),
+            color: AppColors.of(context).neutralColor11,
           ),
-          padding: EdgeInsets.only(
-            left: 0.02 * width,
-            right: 0.02 * width,
-          ),
-          width: width * 0.7,
-          color: ColorConstants.neutralLight80,
         ),
       ],
     );
