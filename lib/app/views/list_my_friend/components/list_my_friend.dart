@@ -7,6 +7,7 @@ import '../../../core/constants/color_constants.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/search_data_not_found.dart';
 import '../../../models/user_model.dart';
+import 'my_friend_infomation.dart';
 
 class ListMyFriend extends StatefulWidget {
   const ListMyFriend({
@@ -34,26 +35,37 @@ class ListMyFriend extends StatefulWidget {
 class _ListMyFriendState extends State<ListMyFriend> {
   @override
   Widget build(BuildContext context) {
-    List<User> lists = widget.users
-        .where((user) => user.fullName
-            .toLowerCase()
-            .contains(widget.keySearch.toLowerCase()))
-        .toList();
+    // List<User> lists = widget.users
+    //     .where((user) => user.fullName
+    //         .toLowerCase()
+    //         .contains(widget.keySearch.toLowerCase()))
+    //     .toList();
 
-    return lists.isNotEmpty
+    return widget.users.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
             itemCount: widget.isExpanded
-                ? lists.length
-                : (lists.length > 3 ? 3 : lists.length),
+                ? widget.users.length
+                : (widget.users.length > 3 ? 3 : widget.users.length),
             itemBuilder: (context, index) {
               return Column(
                 children: [
                   ListTile(
+                    // onTap: () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       // builder: (context) =>
+                    //       //     MyFriendInfomationScreen(
+                    //       //   user: lists[index],
+                    //       // ),
+                    //     ),
+                    //   );
+                    // },
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(200),
+                      borderRadius: BorderRadius.circular(50),
                       child: Image.network(
-                        lists[index].avatar!,
+                        widget.users[index].avatar!,
                         height: 36.w,
                         width: 36.w,
                         fit: BoxFit.cover,
@@ -63,10 +75,11 @@ class _ListMyFriendState extends State<ListMyFriend> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          lists[index].fullName,
+                          widget.users[index].fullName,
                           style: AppTextStyles.of(context).light20.copyWith(
                             color: AppColors.of(context).neutralColor12,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         InkWell(
                           onTap: () {},

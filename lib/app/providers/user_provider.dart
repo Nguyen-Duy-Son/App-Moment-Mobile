@@ -6,31 +6,42 @@ class UserProvider extends ChangeNotifier {
   late List<User> users;
   late Friend friend;
   late List<User> friendsUsers, friendRequests, friendProposals;
-
-  Future<void> getUser() async {
+  bool isLoandingFriendsUsers = true, isLoandingFriendRequests = true, isLoandingFriendProposals = true, isLoandingFriend = true, isLoandingUser = true;
+  void getUser() {
     // Simulate a network request
+  isLoandingUser = true;
     users = userTest;
-    notifyListeners();
+    isLoandingFriend = false;
+    // notifyListeners();
   }
-  Future<void> getFriendOfUser() async {
+  void getFriendOfUser() {
     // Simulate a network request
+    isLoandingFriend = true;
     friend = friendTest;
-    notifyListeners();
+    isLoandingFriend = false;
+    // notifyListeners();
   }
-  Future<void> getMyFriendsUsers() async {
+  void getMyFriendsUsers() {
     // Simulate a network request
+    isLoandingFriendsUsers = true;
     friendsUsers = users.where((user) => friend.friendsList!.contains(user.id)).toList();
-    notifyListeners();
+    isLoandingFriendsUsers = false;
+    // notifyListeners();
   }
-  Future<void> getFriendRequests() async {
+  void getFriendRequests() {
     // Simulate a network request
+    isLoandingFriendRequests = true;
     friendRequests = users.where((user) => friend.friendRequests!.contains(user.id)).toList();
-    notifyListeners();
+    isLoandingFriendRequests = false;
+    // notifyListeners();
   }
-  Future<void> getFriendProposals() async {
+  void getFriendProposals(){
     // Simulate a network request
+    isLoandingFriendProposals = true;
     friendProposals = users.where((user) => friend.friendSuggestions!.contains(user.id)).toList();
-    notifyListeners();
+    isLoandingFriendProposals = false;
+    // notifyListeners();
+
   }
 }
 final List<User> userTest = [
