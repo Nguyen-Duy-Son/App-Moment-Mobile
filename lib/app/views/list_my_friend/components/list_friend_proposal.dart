@@ -44,7 +44,7 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
                   children: [
                     ListTile(
                       leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(200),
+                        borderRadius: BorderRadius.circular(50),
                         child: Image.network(
                           lists[index].avatar!,
                           height: 36.w,
@@ -60,6 +60,7 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
                             style: AppTextStyles.of(context).light20.copyWith(
                                   color: AppColors.of(context).neutralColor12,
                                 ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           InkWell(
                             onTap: () {},

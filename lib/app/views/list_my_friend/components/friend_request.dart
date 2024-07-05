@@ -42,6 +42,7 @@ class _FriendRequestState extends State<FriendRequest> {
                 style: AppTextStyles.of(context).light20.copyWith(
                   color: AppColors.of(context).neutralColor12,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
               Row(
                 children: [

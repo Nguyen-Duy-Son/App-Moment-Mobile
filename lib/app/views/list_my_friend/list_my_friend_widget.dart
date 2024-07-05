@@ -6,7 +6,7 @@ import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:provider/provider.dart';
-
+import '../../l10n/l10n.dart';
 import '../../models/user_model.dart';
 import '../../providers/user_provider.dart';
 import 'components/list_friend_proposal.dart';
@@ -40,9 +40,9 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
 
   void toggleColor(String title) {
     setState(() {
-      if (title == AppLocalizations.of(context)!.list) {
+      if (title == S.of(context).list) {
         checkColorList = false;
-      } else if (title == AppLocalizations.of(context)!.proposal) {
+      } else if (title == S.of(context).proposal) {
         checkColorList = true;
       }
     });
@@ -76,14 +76,6 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // List<User> friendsUsers = widget.users
-    //     .where((user) => widget.friend.friendsList!.contains(user.id))
-    //     .toList();
-    // List<User> friendSuggestions = widget.users
-    //     .where((user) =>
-    //         widget.friend.friendSuggestions!.contains(user.id) ?? false)
-    //     .toList();
-    // print(_searchController.text);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -93,10 +85,9 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
               bottom: 22.h,
             ),
             decoration: BoxDecoration(
-              color: ColorConstants.primaryLight10,
               borderRadius: BorderRadius.circular(30),
               border: Border.all(
-                color: ColorConstants.neutralLight80,
+                color: AppColors.of(context).neutralColor8,
                 width: 1,
               ),
             ),
@@ -105,16 +96,16 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TabBarMyFriend(
-                    title: AppLocalizations.of(context)!.list,
+                    title: S.of(context).list,
                     checkColor: !checkColorList,
                     toggleColor: () =>
-                        toggleColor(AppLocalizations.of(context)!.list),
+                        toggleColor(S.of(context).list),
                   ),
                   TabBarMyFriend(
-                    title: AppLocalizations.of(context)!.proposal,
+                    title: S.of(context).proposal,
                     checkColor: checkColorList,
                     toggleColor: () =>
-                        toggleColor(AppLocalizations.of(context)!.proposal),
+                        toggleColor(S.of(context).proposal),
                   ),
                 ],
               ),
@@ -129,16 +120,15 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
               controller: _searchController,
               initialValue: searchValue,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.searchListMyFriend,
-                hintStyle: TextStyle(
-                  fontSize: 20.w,
-                  color: ColorConstants.neutralLight80,
+                hintText: S.of(context).searchListMyFriend,
+                hintStyle: AppTextStyles.of(context).light20.copyWith(
+                  color: AppColors.of(context).neutralColor11,
                 ),
                 suffixIcon: Padding(
                   padding: EdgeInsets.all(12.w),
                   child: SvgPicture.asset(
                     Assets.icons.search,
-                    color: ColorConstants.neutralLight80,
+                    color: AppColors.of(context).neutralColor11,
                     height: 10.w,
                     width: 10.w,
                   ),
@@ -149,15 +139,15 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(
-                    color: ColorConstants.neutralLight90,
+                  borderSide: BorderSide(
+                    color: AppColors.of(context).neutralColor8,
                     width: 1,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(
-                    color: ColorConstants.neutralLight110,
+                  borderSide:BorderSide(
+                    color: AppColors.of(context).neutralColor10,
                     width: 1,
                   ),
                 ),
@@ -182,7 +172,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: ColorConstants.neutralLight80,
+                      color: AppColors.of(context).neutralColor8,
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(30),
@@ -207,13 +197,13 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                                   Assets.icons.upSVG,
                                   width: 13.w,
                                   height: 13.w,
-                                  color: ColorConstants.neutralLight80,
+                                  color: AppColors.of(context).neutralColor9,
                                 )
                               : SvgPicture.asset(
                                   Assets.icons.downSVG,
                                   width: 13.w,
                                   height: 13.w,
-                                  color: ColorConstants.neutralLight80,
+                                  color: AppColors.of(context).neutralColor9,
                                 ),
                         ),
                       ),
@@ -259,13 +249,11 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                                   Assets.icons.upSVG,
                                   width: 12.w,
                                   height: 12.w,
-                                  color: ColorConstants.neutralLight80,
                                 )
                               : SvgPicture.asset(
                                   Assets.icons.downSVG,
                                   width: 12.w,
                                   height: 12.w,
-                                  color: ColorConstants.neutralLight80,
                                 ),
                         ),
                       ),
@@ -309,6 +297,7 @@ class TabBarMyFriend extends StatelessWidget {
           ),
           child: Text(
             title,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 25.w,
               color: checkColor
