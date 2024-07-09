@@ -18,7 +18,6 @@ class ListMyFriendWidget extends StatefulWidget {
 
   final List<User> friendsUsers,friendProposals;
 
-
   @override
   State<ListMyFriendWidget> createState() => _ListMyFriendWidgetState();
 }
