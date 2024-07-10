@@ -10,14 +10,14 @@ import 'package:http/http.dart' as http;
 enum RequestMethod { GET, POST, PUT, DELETE }
 
 class BaseConnect {
-  Future<http.Request> requestInterceptor(http.Request request) async {
+  static Future<http.Request> requestInterceptor(http.Request request) async {
     request.headers['Authorization'] = 'Bearer ${getToken()}';
     request.headers['Accept'] = 'application/json, text/plain, */*';
     request.headers['Charset'] = 'utf-8';
     return request;
   }
 
-  Future<dynamic> responseInterceptor(http.Request request, http.Response response) async {
+  static Future<dynamic> responseInterceptor(http.Request request, http.Response response) async {
     if (response.statusCode < 200 || response.statusCode > 299) {
       handleErrorStatus(response);
       return null;
@@ -25,7 +25,7 @@ class BaseConnect {
     return response;
   }
 
-  void handleErrorStatus(http.Response response) {
+  static void handleErrorStatus(http.Response response) {
     switch (response.statusCode) {
       case 400:
       case 404:
@@ -47,11 +47,11 @@ class BaseConnect {
             }
           });
         }
-        print(message);
+        print("lỗi là:"+ message.toString());
         break;
       case 401:
         String message = 'CODE (${response.statusCode}):\n${response.reasonPhrase}';
-        print(message);
+        print("lỗi là:"+ message.toString());
         //Remove token
         setToken('');
         break;
@@ -60,7 +60,7 @@ class BaseConnect {
     }
   }
 
-  Future<dynamic> onRequest(
+  static Future<dynamic> onRequest(
     String url,
     RequestMethod method, {
     dynamic body,
@@ -71,8 +71,8 @@ class BaseConnect {
       print("No internet connection available.");
       return;
     }
-
     var requestBody = body != null ? jsonEncode(body) : null;
+
     var uri = Uri.parse(url);
     if (queryParam != null) {
       uri = uri.replace(queryParameters: queryParam);
@@ -80,7 +80,6 @@ class BaseConnect {
 
     var request = http.Request(method.toString().split('.').last, uri);
     request = await requestInterceptor(request);
-
     http.Response response;
     var headers = {'Content-Type': 'application/json'};
     try {

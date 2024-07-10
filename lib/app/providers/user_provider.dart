@@ -48,74 +48,109 @@ final List<User> userTest = [
   User(
     id: '2',
     fullName: 'Nguyễn Văn Nam',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cdn.thoitiet247.edu.vn/wp-content/uploads/2024/04/nhung-hinh-anh-girl-xinh-de-thuong.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '3',
     fullName: 'Trần Thị Ngọc',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-27.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '4',
     fullName: 'Phạm Văn Tú',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-7.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '5',
     fullName: 'Lê Thị Hồng',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-6.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '6',
     fullName: 'Nguyễn Văn E',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-30.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '7',
     fullName: 'Trần Thị F',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '8',
     fullName: 'Nguyễn Thị F',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '9',
     fullName: 'Trần Nguyễn',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '10',
     fullName: 'Nguyễn Thị H',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '11',
     fullName: 'Trần Thị H',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '12',
     fullName: 'Nguyễn Văn H',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
   User(
     id: '13',
     fullName: 'Trần Văn H',
+    email: 'nguyenvannam@example.com',
     avatar:
     'https://cebcu.com/wp-content/uploads/2024/01/anh-gai-xinh-cute-de-thuong-het-ca-nuoc-cham-34.webp',
+    phoneNumber: '0123456789',
+    dob: DateTime(1990, 1, 1),
   ),
 ];
 final Friend friendTest = Friend(

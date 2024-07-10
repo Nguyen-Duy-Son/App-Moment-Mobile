@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/core/base/base_connect.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_widget.dart';
@@ -31,9 +34,9 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
     Provider.of<UserProvider>(context, listen: false).getFriendProposals();
     //
   }
-
+  final PageController _pageController = PageController();
+  int pageIndex = 0;
   bool checkOpacity = false;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,76 +45,25 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           leading: Padding(
             padding: EdgeInsets.only(top: 15.w),
             child: BackButton(
-              color: AppColors.of(context).neutralColor9,
+              color: AppColors
+                  .of(context)
+                  .neutralColor9,
             ),
           ),
           title: Padding(
             padding: EdgeInsets.only(top: 15.w),
             child: Text(
               overflow: TextOverflow.ellipsis,
-              S.of(context).friend,
-              style: AppTextStyles.of(context).bold32,
+              S
+                  .of(context)
+                  .friend,
+              style: AppTextStyles
+                  .of(context)
+                  .bold32,
             ),
           ),
           centerTitle: true,
           actions: [
-            // Padding(
-            //   padding: EdgeInsets.only(top: 15.w, right: 15.w),
-            //   child:
-            //   Stack(
-            //     clipBehavior: Clip.none,
-            //     children: [
-            //
-            //       InkWell(
-            //         onTap: () {
-            //           // showDialog(
-            //           //   context: context,
-            //           //   useSafeArea: true,
-            //           //   builder: (context) {
-            //           //     return ListFriendRequests(users: usersF);
-            //           //   },
-            //           // );
-            //
-            //         },
-            //         child: ClipRRect(
-            //           borderRadius: BorderRadius.circular(200),
-            //           child: Container(
-            //             decoration: const BoxDecoration(
-            //               color: ColorConstants.neutralLight70,
-            //             ),
-            //             padding: EdgeInsets.all(8.w),
-            //             child: SvgPicture.asset(
-            //               Assets.icons.bell,
-            //               width: 22.w,
-            //               height: 22.w,
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       Positioned(
-            //         right: 1.w,
-            //         top: -5.w,
-            //         child: Container(
-            //           alignment: Alignment.center,
-            //           decoration: BoxDecoration(
-            //             color: Colors.red,
-            //             borderRadius: BorderRadius.circular(50),
-            //           ),
-            //           width: 17.w,
-            //           height: 17.w,
-            //           child: Text(
-            //             '${friend.friendRequests?.length ?? 0}',
-            //             style: TextStyle(
-            //               color: ColorConstants.neutralLight10,
-            //               fontSize: 13.w,
-            //             ),
-            //             textAlign: TextAlign.center,
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
             PopupMenuButton(
               offset: const Offset(
                 -16,
@@ -140,7 +92,9 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                     borderRadius: BorderRadius.circular(50),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.of(context).neutralColor7,
+                        color: AppColors
+                            .of(context)
+                            .neutralColor7,
                       ),
                       padding: EdgeInsets.all(8.w),
                       child: SvgPicture.asset(
@@ -162,8 +116,13 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                       width: 20.w,
                       height: 20.w,
                       child: Text(
-                        '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
-                        style: AppTextStyles.of(context).light16,
+                        '${Provider
+                            .of<UserProvider>(context, listen: false)
+                            .friendRequests
+                            .length ?? 0}',
+                        style: AppTextStyles
+                            .of(context)
+                            .light16,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -171,31 +130,38 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                 ],
               ),
               itemBuilder: (_) =>
-                  !Provider.of<UserProvider>(context, listen: false)
-                          .isLoandingFriendRequests
-                      ? _buildFriendRequestMenu(
-                          Provider.of<UserProvider>(context, listen: false)
-                              .friendRequests)
-                      : [
-                          const PopupMenuItem(
-                              child: Center(child: CircularProgressIndicator()))
-                        ],
+              !Provider
+                  .of<UserProvider>(context, listen: false)
+                  .isLoandingFriendRequests
+                  ? _buildFriendRequestMenu(
+                  Provider
+                      .of<UserProvider>(context, listen: false)
+                      .friendRequests)
+                  : [
+                const PopupMenuItem(
+                    child: Center(child: CircularProgressIndicator()))
+              ],
             ),
           ],
         ),
-        body: Opacity(
+        body:
+        Opacity(
             opacity: checkOpacity ? 0.3 : 1,
-            child: (!Provider.of<UserProvider>(context, listen: false)
-                        .isLoandingFriendProposals &&
-                    !Provider.of<UserProvider>(context, listen: false)
-                        .isLoandingFriendsUsers)
+            child: (!Provider
+                .of<UserProvider>(context, listen: false)
+                .isLoandingFriendProposals &&
+                !Provider
+                    .of<UserProvider>(context, listen: false)
+                    .isLoandingFriendsUsers)
                 ? ListMyFriendWidget(
-                    friendProposals:
-                        Provider.of<UserProvider>(context, listen: false)
-                            .friendProposals,
-                    friendsUsers:
-                        Provider.of<UserProvider>(context, listen: false)
-                            .friendsUsers)
+                friendProposals:
+                Provider
+                    .of<UserProvider>(context, listen: false)
+                    .friendProposals,
+                friendsUsers:
+                Provider
+                    .of<UserProvider>(context, listen: false)
+                    .friendsUsers)
                 : const Center(child: CircularProgressIndicator())),
       ),
     );
@@ -227,6 +193,8 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
     return items;
   }
 }
+
+
 
 class TooltipShape extends ShapeBorder {
   const TooltipShape();
