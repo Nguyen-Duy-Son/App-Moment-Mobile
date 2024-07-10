@@ -14,6 +14,21 @@ String getToken() {
   return box.read(StorageConstants.token) ?? '';
 }
 
+setEmail(String value) {
+  box.write(StorageConstants.email, value);
+}
+
+String getEmail() {
+  return box.read(StorageConstants.email) ?? '';
+}
+setPassWord(String value) {
+  box.write(StorageConstants.password, value);
+}
+
+String getPassWord() {
+  return box.read(StorageConstants.password) ?? '';
+}
+
 setLocaleLocal(String languageCode) {
   box.write(StorageConstants.localeLocal, languageCode);
 }

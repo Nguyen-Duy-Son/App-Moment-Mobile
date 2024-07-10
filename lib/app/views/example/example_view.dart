@@ -7,6 +7,7 @@ import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
+import 'package:hit_moments/app/views/auth/auth_view.dart';
 import 'package:hit_moments/app/views/moment/moment_view.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +40,8 @@ class _ExampleViewState extends State<ExampleView> {
             ElevatedButton(onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => MomentView(),) );
             },
-                child: Text("Chuyển màn"))
+                child: Text("Moment")),
+
           ],
         ),
       ),

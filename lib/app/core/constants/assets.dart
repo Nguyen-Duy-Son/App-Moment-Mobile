@@ -16,10 +16,12 @@ class _AssetsIcons {
   final sendSVG = 'assets/icons/Send.svg';
   final burgerSVG = 'assets/icons/Burger.svg';
   final closeSVG = 'assets/icons/Close.svg';
+  final leftSVG = 'assets/icons/Left.svg';
 }
 
 class _AssetsImages {
   _AssetsImages._();
+  final authPNG = 'assets/images/auth.png';
 
   //final viDuPNG = 'assets/images/viDu.png';
 }
