@@ -15,6 +15,16 @@ class _AssetsIcons {
   final sendSVG = 'assets/icons/Send.svg';
   final burgerSVG = 'assets/icons/Burger.svg';
   final closeSVG = 'assets/icons/Close.svg';
+  final adduser = 'assets/icons/Add user.svg';
+  final union = 'assets/icons/Union.svg';
+  final user = 'assets/icons/User.svg';
+  final vector = 'assets/icons/Vector.svg';
+  final lightning = 'assets/icons/Lightning.svg';
+  final cloud1SVG = 'assets/icons/Cloud1.svg';
+  final cloud2SVG = 'assets/icons/Cloud2.svg';
+  final download2SVG = 'assets/icons/Download 2.svg';
+  final leftSVG = 'assets/icons/Left.svg';
+  final sunSVG = 'assets/icons/Sun.svg';
 }
 
 class _AssetsImages {

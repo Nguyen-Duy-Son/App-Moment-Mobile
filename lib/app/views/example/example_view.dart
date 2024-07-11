@@ -1,4 +1,5 @@
-import 'dart:io';
+// app/views/example/example_view.dart
+import 'dart:io';import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,6 +8,7 @@ import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
+import 'package:hit_moments/app/views/moment/camera/take_pictures_screen.dart';
 import 'package:hit_moments/app/views/moment/moment_view.dart';
 import 'package:provider/provider.dart';
 
@@ -33,11 +35,11 @@ class _ExampleViewState extends State<ExampleView> {
             Text(
               AppLocalizations.of(context)!.hello,
               style: AppTextStyles.of(context).regular32.copyWith(
-                color: AppColors.of(context).primaryColor12,
+                color: AppColors.of(context).neutralColor12,
               ),
             ),
             ElevatedButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MomentView(),) );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TakePictureScreen(),) );
             },
                 child: Text("Chuyển màn"))
           ],

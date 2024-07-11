@@ -1,3 +1,7 @@
 {
-    "hello": "Xin chào"
+    "hello": "Xin chào",
+    "addfriend": "Thêm bạn",
+    "friends": "bạn bè",
+    "sendto": "Gửi đến...",
+    "feel": "Cảm nghĩ..." 
 }

@@ -1,3 +1,7 @@
 {
-    "hello": "Hello"
+    "hello": "Hello",
+    "addfriend": "Add friend",
+    "friends": "friends",
+    "sendto": "Send to...",
+    "feel": "feelings..."
 }

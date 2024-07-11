@@ -46,6 +46,7 @@ dependencies:
   popover: ^0.3.0+1
   connectivity_plus: ^6.0.3
   http: ^1.2.1
+  camera: ^0.11.0+1
 
 dev_dependencies:
   flutter_test:
