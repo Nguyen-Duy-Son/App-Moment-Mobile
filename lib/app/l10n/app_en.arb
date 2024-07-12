@@ -6,5 +6,6 @@
     "proposal":"Proposal",
     "searchListMyFriend":"Search by email, name or phone number",
     "friendRequest":"Friend Request",
-    "userNotFound":"User not found"
+    "userNotFound":"User not found",
+    "sendMessage":"Send message"
 }
