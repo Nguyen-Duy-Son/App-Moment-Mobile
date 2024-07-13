@@ -384,7 +384,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ChatMessageView(
-          // user: widget.user,
+          user: widget.user,
         ),
       ),
     );
