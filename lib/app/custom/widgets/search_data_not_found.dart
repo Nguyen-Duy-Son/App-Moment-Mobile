@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/l10n/l10n.dart';
 import '../../core/constants/assets.dart';
 import '../../core/constants/color_constants.dart';
 
@@ -23,11 +24,10 @@ class SearchDataNotFound extends StatelessWidget {
             color: ColorConstants.neutralLight100,
           ),
           Text(
-            AppLocalizations.of(context)!.userNotFound,
-            style: TextStyle(
-              fontSize: 24.w,
-              color: ColorConstants.neutralLight120
-            ),
+            S.of(context).userNotFound,
+            style: AppTextStyles.of(context).light24.copyWith(
+                  color: AppColors.of(context).neutralColor11,
+                ),
           ),
         ],
       ),

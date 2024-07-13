@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../core/constants/assets.dart';
-import '../../../core/constants/color_constants.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/search_data_not_found.dart';
 import '../../../models/user_model.dart';
@@ -21,9 +20,11 @@ class ListMyFriend extends StatefulWidget {
   });
 
   final VoidCallback setExpanded;
+
   // final VoidCallback setDownUp;
 
   final bool isExpanded;
+
   // final bool isDownUp;
   final List<User> users;
   final String keySearch;
@@ -33,14 +34,9 @@ class ListMyFriend extends StatefulWidget {
 }
 
 class _ListMyFriendState extends State<ListMyFriend> {
+  List<int> options = [0,1,2];
   @override
   Widget build(BuildContext context) {
-    // List<User> lists = widget.users
-    //     .where((user) => user.fullName
-    //         .toLowerCase()
-    //         .contains(widget.keySearch.toLowerCase()))
-    //     .toList();
-
     return widget.users.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
@@ -51,17 +47,17 @@ class _ListMyFriendState extends State<ListMyFriend> {
               return Column(
                 children: [
                   ListTile(
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       // builder: (context) =>
-                    //       //     MyFriendInfomationScreen(
-                    //       //   user: lists[index],
-                    //       // ),
-                    //     ),
-                    //   );
-                    // },
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyFriendInfomationScreen(
+                            user: widget.users[index],
+                            option: options[1],
+                          ),
+                        ),
+                      );
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image.network(
@@ -77,8 +73,8 @@ class _ListMyFriendState extends State<ListMyFriend> {
                         Text(
                           widget.users[index].fullName,
                           style: AppTextStyles.of(context).light20.copyWith(
-                            color: AppColors.of(context).neutralColor12,
-                          ),
+                                color: AppColors.of(context).neutralColor12,
+                              ),
                           overflow: TextOverflow.ellipsis,
                         ),
                         InkWell(
