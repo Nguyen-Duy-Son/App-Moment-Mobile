@@ -12,8 +12,9 @@ enum RequestMethod { GET, POST, PUT, DELETE }
 class BaseConnect {
   static Future<http.Request> requestInterceptor(http.Request request) async {
     request.headers['Authorization'] = 'Bearer ${getToken()}';
-    request.headers['Accept'] = 'application/json, text/plain, */*';
+    request.headers['Accept'] = 'application/json, text/plain, /';
     request.headers['Charset'] = 'utf-8';
+    request.headers['Content-Type'] = 'application/json';
     return request;
   }
 
@@ -61,11 +62,11 @@ class BaseConnect {
   }
 
   static Future<dynamic> onRequest(
-    String url,
-    RequestMethod method, {
-    dynamic body,
-    Map<String, dynamic>? queryParam,
-  }) async {
+      String url,
+      RequestMethod method, {
+        dynamic body,
+        Map<String, dynamic>? queryParam,
+      }) async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (!connectivityResult.contains(ConnectivityResult.mobile) && !connectivityResult.contains(ConnectivityResult.wifi)) {
       print("No internet connection available.");
