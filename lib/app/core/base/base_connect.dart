@@ -19,7 +19,6 @@ class BaseConnect {
   }
 
   static Future<dynamic> responseInterceptor(http.Request request, http.Response response) async {
-
     if (response.statusCode < 200 || response.statusCode > 299) {
       handleErrorStatus(response);
       return null;
@@ -49,11 +48,11 @@ class BaseConnect {
             }
           });
         }
-        print(message);
+        print("lỗi là:"+ message.toString());
         break;
       case 401:
         String message = 'CODE (${response.statusCode}):\n${response.reasonPhrase}';
-        print(message);
+        print("lỗi là:"+ message.toString());
         //Remove token
         setToken('');
         break;
@@ -73,8 +72,8 @@ class BaseConnect {
       print("No internet connection available.");
       return;
     }
-
     var requestBody = body != null ? jsonEncode(body) : null;
+
     var uri = Uri.parse(url);
     if (queryParam != null) {
       uri = uri.replace(queryParameters: queryParam);
@@ -82,7 +81,6 @@ class BaseConnect {
 
     var request = http.Request(method.toString().split('.').last, uri);
     request = await requestInterceptor(request);
-
     http.Response response;
     var headers = {'Content-Type': 'application/json'};
     try {

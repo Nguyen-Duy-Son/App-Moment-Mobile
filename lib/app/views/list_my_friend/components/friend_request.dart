@@ -8,6 +8,7 @@ import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/text_style_constants.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../models/user_model.dart';
+import 'my_friend_infomation.dart';
 
 class FriendRequest extends StatefulWidget {
   const FriendRequest({
@@ -25,6 +26,17 @@ class _FriendRequestState extends State<FriendRequest> {
     return Column(
       children: [
         ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyFriendInfomationScreen(
+                  user: widget.user,
+                  option: 2,
+                ),
+              ),
+            );
+          },
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(50),
             child: Image.network(
