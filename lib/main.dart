@@ -9,6 +9,7 @@ import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/providers_list.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
+import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/routes/app_pages.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
               //provider ngôn ngữ làm riêng
               ChangeNotifierProvider(
                 create: (context) => locale,
-              )
+              ), ChangeNotifierProvider(create: (context) => UserProvider())
             ],
             child: Consumer<LocaleProvider>(
               builder: (context, provider, child) {

@@ -4,6 +4,7 @@ import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/datasource/network_services/auth_service.dart';
 
 import '../core/config/enum.dart';
+import '../l10n/l10n.dart';
 
 
 class AuthProvider extends ChangeNotifier {
@@ -16,9 +17,15 @@ class AuthProvider extends ChangeNotifier {
   String? loginSuccess;
   String? registerSuccess;
   String? emailExist;
+  bool isRemember = false;
 
   void fullFieldRegister(bool isFull) {
     isFullFieldRegister = isFull;
+    notifyListeners();
+  }
+
+  void changeRemember(){
+    isRemember = !isRemember;
     notifyListeners();
   }
 
@@ -29,30 +36,30 @@ class AuthProvider extends ChangeNotifier {
     emailExist = null;
     isFullFieldLogin = isFull;
     isFullFieldRegister = isFull;
+    isRemember = false;
   }
   void fullFieldLogin(bool isFull) {
     isFullFieldLogin = isFull;
     notifyListeners();
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, BuildContext context) async {
     loginStatus = ModuleStatus.loading;
     notifyListeners();
     try {
       int result = await authService.login(email, password);
       if (result == 200) {
-        loginSuccess = "Đăng nhập thành công!";
+        loginSuccess = S.of(context).loginSuccess;
         loginStatus = ModuleStatus.success;
       } else if (result == 401) {
-        loginSuccess =
-        "Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại!";
+        loginSuccess = S.of(context).loginError;
         loginStatus = ModuleStatus.fail;
       } else if(result == 400){
         loginSuccess =
-        "Email chưa đúng định dạng!";
+        S.of(context).emailInvalid;
         loginStatus = ModuleStatus.fail;
       }else {
-        loginSuccess = "Lỗi! Hãy kiểm tra kết nối mạng và thử lại";
+        loginSuccess = S.of(context).networkError;
         loginStatus = ModuleStatus.fail;
       }
       notifyListeners();
@@ -63,7 +70,7 @@ class AuthProvider extends ChangeNotifier {
 
 
   Future<void> register(String fullName, String phoneNumber,
-      String dob, String email, String passWord) async {
+      String dob, String email, String passWord, BuildContext context) async {
     registerStatus = ModuleStatus.loading;
     notifyListeners();
     try {
@@ -72,21 +79,23 @@ class AuthProvider extends ChangeNotifier {
       print("kết quả là ${result}");
       switch(result) {
         case 201:
-          registerSuccess = "Đăng ký thành công!";
+          registerSuccess = S.of(context).registerSuccess;
           emailExist = null;
           registerStatus = ModuleStatus.success;
-          setPassWord(passWord);
-          setEmail(email);
+          if(isRemember){
+            setPassWord(passWord);
+            setEmail(email);
+          }
           notifyListeners();
           break;
         case 409:
           registerSuccess = null;
-          emailExist = "Email đã tồn tại";
+          emailExist = S.of(context).emailExists;
           registerStatus = ModuleStatus.fail;
           notifyListeners();
           break;
         default:
-          registerSuccess = "Lỗi, hãy thử lại";
+          registerSuccess = S.of(context).genericError;
           registerStatus = ModuleStatus.fail;
           notifyListeners();
           print("Unknown status");

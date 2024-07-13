@@ -6,6 +6,8 @@ import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:hit_moments/app/views/auth/login/login_view.dart';
 import 'package:hit_moments/app/views/auth/register/register_view.dart';
 
+import '../../l10n/l10n.dart';
+
 class AuthView extends StatefulWidget {
   const AuthView({super.key});
 
@@ -32,11 +34,11 @@ class _AuthViewState extends State<AuthView> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Xin chào!",
+                          Text(S.of(context).greeting,
                             style: AppTextStyles.of(context).bold32.copyWith(
                                 color: AppColors.of(context).neutralColor12
                             ),),
-                          Text("Bạn đã có tài khoản chưa?",
+                          Text(S.of(context).accountPrompt,
                             style: AppTextStyles.of(context).light20.copyWith(
                                 color: AppColors.of(context).neutralColor11
                             ),)
@@ -70,7 +72,7 @@ class _AuthViewState extends State<AuthView> {
                           ]
                         ),
                         child: Text(
-                          "Đăng nhập",
+                          S.of(context).login,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.of(context).regular32.copyWith(
                             color: AppColors.of(context).neutralColor1
@@ -103,7 +105,7 @@ class _AuthViewState extends State<AuthView> {
                           ]
                         ),
                         child: Text(
-                          "Đăng ký",
+                          S.of(context).register,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.of(context).regular32.copyWith(
                             color: AppColors.of(context).primaryColor9

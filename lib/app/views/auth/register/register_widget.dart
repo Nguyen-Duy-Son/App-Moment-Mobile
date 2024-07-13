@@ -7,6 +7,7 @@ import '../../../core/config/enum.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/scale_on_tap_widget.dart';
+import '../../../l10n/l10n.dart';
 import '../../../providers/auth_provider.dart';
 import '../input_textff_widget.dart';
 
@@ -64,7 +65,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
           _phoneNumberController.text,
           _dateOfBirthController.text,
           _emailController.text,
-          _passwordConfirmController.text);
+          _passwordConfirmController.text, context);
       if(context.watch<AuthProvider>().registerStatus == ModuleStatus.success){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginView(),));
       }
@@ -95,16 +96,16 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Đăng ký thôi!",
+                    S.of(context).registerNow,
                     style: AppTextStyles.of(context).regular32.copyWith(
                         color: AppColors.of(context).neutralColor12
                     ),
                   ),
                   InputTextffWidget(
                     controller: _fullNameController,
-                    hintText: 'Họ và tên',
+                    hintText: S.of(context).fullName,
                     context: context,
-                    validator: (value) => value!.isEmpty ? 'Không được bỏ trống' : null,
+                    validator: (value) => value!.isEmpty ? S.of(context).cannotBeEmpty : null,
                     onChanged: (value) => _updateButtonColor(),
                     onSaved: (newValue) => _fullNameController.text = newValue ?? "",
                   ),
@@ -112,7 +113,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     controller: _phoneNumberController,
                     hintText: 'Số điện thoại',
                     context: context,
-                    validator: (value) => value!.isEmpty ? 'Không được bỏ trống' : null,
+                    validator: (value) => value!.isEmpty ? S.of(context).cannotBeEmpty : null,
                     onChanged: (value) => _updateButtonColor(),
                     onSaved: (newValue) => _phoneNumberController.text = newValue ?? "",
                   ),
@@ -120,7 +121,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     controller: _dateOfBirthController,
                     hintText: 'Ngày sinh',
                     context: context,
-                    validator: (value) => value!.isEmpty ? 'Không được bỏ trống' : null,
+                    validator: (value) => value!.isEmpty ? S.of(context).cannotBeEmpty : null,
                     onChanged: (value) => _updateButtonColor(),
                     onSaved: (newValue) => _dateOfBirthController.text = newValue ?? "",
                   ),
@@ -128,7 +129,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     controller: _emailController,
                     hintText: 'Email',
                     context: context,
-                    validator: (value) => !value!.contains('@') ? 'Không phải email' : null,
+                    validator: (value) => !value!.contains('@') ? S.of(context).emailNotValid : null,
                     onChanged: (value) => _updateButtonColor(),
                     onSaved: (newValue) => _emailController.text = newValue ?? "",
                     errorText: context.watch<AuthProvider>().emailExist,
@@ -136,7 +137,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                        hintText: 'Mật khẩu',
+                        hintText: S.of(context).password,
                         hintStyle: AppTextStyles.of(context).light16.copyWith(
                             color: AppColors.of(context).neutralColor11
                         ),
@@ -164,7 +165,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       if (value!.length < 8 ||
                           !RegExp(r'[A-Za-z]').hasMatch(value) ||
                           !RegExp(r'\d').hasMatch(value)) {
-                        return 'Mật khẩu phải có ít nhất 8 ký tự, 1 chữ cái, 1 ký tự số';
+                        return S.of(context).passwordRequirement;
                       }
                       return null;
                     },
@@ -177,7 +178,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   TextFormField(
                     controller: _passwordConfirmController,
                     decoration: InputDecoration(
-                        hintText: 'Xác thực mật khẩu',
+                        hintText: S.of(context).confirmPassword,
                         hintStyle: AppTextStyles.of(context).light16.copyWith(
                             color: AppColors.of(context).neutralColor11
                         ),
@@ -209,7 +210,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                         color: AppColors.of(context).neutralColor12
                     ),
                     validator: (value) =>
-                    _passwordConfirmController.text != _passwordController.text ?"Chưa khớp":null,
+                    _passwordConfirmController.text != _passwordController.text ?S.of(context).notMatched:null,
                     onSaved: (newValue) => _passwordConfirmController.text = newValue??"",
                     onChanged: (value) {
                       _updateButtonColor();
@@ -242,7 +243,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     ]
                 ),
                 child: Text(
-                  "Đăng ký",
+                  S.of(context).register,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.of(context).regular32.copyWith(
                       color: AppColors.of(context).neutralColor1
@@ -265,7 +266,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   ]
               ),
               child: Text(
-                "Đăng ký",
+                S.of(context).register,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.of(context).regular32.copyWith(
                     color: AppColors.of(context).neutralColor11

@@ -6,7 +6,6 @@ class Assets {
 
 class _AssetsIcons {
   _AssetsIcons._();
-  final viDuSVG = 'assets/icons/viDu.svg';
   final downSVG = 'assets/icons/Down.svg';
   final downOutLineSolidSVG = 'assets/icons/Down 2.svg';
   final plusSVG = 'assets/icons/Plus.svg';
@@ -17,6 +16,14 @@ class _AssetsIcons {
   final burgerSVG = 'assets/icons/Burger.svg';
   final closeSVG = 'assets/icons/Close.svg';
   final leftSVG = 'assets/icons/Left.svg';
+  final bell = 'assets/icons/Bell.svg';
+  final search = 'assets/icons/Search.svg';
+  final rightArrow = 'assets/icons/Right.svg';
+  final upSVG = 'assets/icons/Up.svg';
+  final up2 = 'assets/icons/Zoom in.svg';
+  final delete = 'assets/icons/Zoom out.svg';
+  final searchOff = 'assets/icons/search-off.svg';
+  final vector = 'assets/icons/Vector.svg';
 }
 
 class _AssetsImages {

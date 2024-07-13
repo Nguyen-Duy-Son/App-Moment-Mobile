@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
-import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
-import 'package:hit_moments/app/views/example/example_view.dart';
+import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/config/enum.dart';
 import '../../../core/constants/assets.dart';
 import '../../../custom/widgets/scale_on_tap_widget.dart';
+import '../../../l10n/l10n.dart';
+import '../../example/example_view.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
@@ -27,8 +28,6 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   void initState() {
     super.initState();
-    // _emailController.text = getEmail();
-    // _passwordController.text = getPassWord();
     _emailController.text = 'admin@hitmoments.com';
     _passwordController.text = 'admin';
     if(_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty){
@@ -56,15 +55,14 @@ class _LoginWidgetState extends State<LoginWidget> {
     if(form.validate()){
       form.save();
       form.validate();
-      await context.read<AuthProvider>().login(_emailController.text, _passwordController.text);
-      // if(context.watch<AuthProvider>().loginStatus == ModuleStatus.success){
-      //   print("ok");
-      //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ExampleView()),
-      //         (Route<dynamic> route) => false,);
-      // }
-
+      await context.read<AuthProvider>().login(_emailController.text, _passwordController.text, context);
+      if(context.read<AuthProvider>().loginStatus == ModuleStatus.success){
+        print("ok");
+        Navigator.pushAndRemoveUntil<void>(context, MaterialPageRoute(builder: (context) => ExampleView()),
+              ModalRoute.withName(AppRoutes.AUTHENTICATION),);
       }else{
-      print("lỗi");
+        print("lỗi");
+      }
     }
   }
   @override
@@ -80,7 +78,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 Image.asset(Assets.images.authPNG),
                 SizedBox(height: 16.h,),
                 Text(
-                  "Đăng nhập ngay!",
+                  S.of(context).loginNow,
                   style: AppTextStyles.of(context).regular32.copyWith(
                       color: AppColors.of(context).neutralColor12
                   ),
@@ -93,6 +91,8 @@ class _LoginWidgetState extends State<LoginWidget> {
             child: Form(
               key: _formKey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TextFormField(
                     controller: _emailController,
@@ -105,7 +105,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                     style: AppTextStyles.of(context).light20.copyWith(
                         color: AppColors.of(context).neutralColor12
                     ),
-                    validator: (value) => !value!.contains('@') ? 'Không phải email':null,
+                    validator: (value) => !value!.contains('@') ? S.of(context).invalidEmail:null,
                     onSaved: (newValue) => _emailController.text = newValue??"",
                     onChanged: (value) {
                       _updateButtonColor();
@@ -113,7 +113,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Mật khẩu',
+                      hintText: S.of(context).password,
                       hintStyle: AppTextStyles.of(context).light16.copyWith(
                         color: AppColors.of(context).neutralColor11
                       ),
@@ -144,15 +144,37 @@ class _LoginWidgetState extends State<LoginWidget> {
                         color: AppColors.of(context).neutralColor12
                     ),
                     controller: _passwordController,
-                    validator: (value) => value!.length < 2 ?'Mật khẩu phải nhiều hơn 2 ký tự':null,
+                    validator: (value) => value!.length < 2 ?S.of(context).passwordTooShort:null,
                     onSaved: (newValue) => _passwordController.text = newValue??"",
                     onChanged: (value) {
                       _updateButtonColor();
                     },
                     obscureText: _obscureText,
                   ),
+
                 ],
               ),
+            ),
+
+          ),
+          Padding(
+              padding: EdgeInsets.only(left: 16.w),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: context.watch<AuthProvider>().isRemember,
+                  onChanged: (value) {
+                    context.read<AuthProvider>().changeRemember();
+                  },
+                  activeColor: Colors.black,
+                ),
+                Text(
+                  S.of(context).saveLoginInfo,
+                  style: AppTextStyles.of(context).light16.copyWith(
+                      color: AppColors.of(context).neutralColor11
+                  ),
+                )
+              ],
             ),
           ),
           Padding(
@@ -177,7 +199,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                     ]
                 ),
                 child: Text(
-                  "Đăng nhập",
+                  S.of(context).login,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.of(context).regular32.copyWith(
                       color: AppColors.of(context).neutralColor1
@@ -200,7 +222,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ]
               ),
               child: Text(
-                "Đăng nhập",
+                S.of(context).login,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.of(context).regular32.copyWith(
                     color: AppColors.of(context).neutralColor11

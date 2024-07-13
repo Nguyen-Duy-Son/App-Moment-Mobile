@@ -4,6 +4,8 @@ import 'package:hit_moments/app/views/auth/auth_view.dart';
 import 'package:hit_moments/app/views/example/example_view.dart';
 import 'package:hit_moments/app/views/splash/splash_view.dart';
 
+import '../views/list_my_friend/list_my_friend_view.dart';
+
 abstract class AppPages {
   AppPages._();
   static Map<String, Widget Function(dynamic)> routes = {

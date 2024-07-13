@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -17,6 +19,7 @@ class BaseConnect {
   }
 
   static Future<dynamic> responseInterceptor(http.Request request, http.Response response) async {
+
     if (response.statusCode < 200 || response.statusCode > 299) {
       handleErrorStatus(response);
       return null;
