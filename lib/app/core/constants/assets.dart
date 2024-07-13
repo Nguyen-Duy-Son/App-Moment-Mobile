@@ -17,6 +17,7 @@ class _AssetsIcons {
   final sendSVG = 'assets/icons/Send.svg';
   final burgerSVG = 'assets/icons/Burger.svg';
   final closeSVG = 'assets/icons/Close.svg';
+  final leftSVG = 'assets/icons/Left.svg';
   final bell = 'assets/icons/Bell.svg';
   final search = 'assets/icons/Search.svg';
   final rightArrow = 'assets/icons/Right.svg';
@@ -32,6 +33,7 @@ class _AssetsIcons {
 
 class _AssetsImages {
   _AssetsImages._();
+  final authPNG = 'assets/images/auth.png';
 
   //final viDuPNG = 'assets/images/viDu.png';
 }
