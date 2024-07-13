@@ -190,7 +190,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                       if(widget.friendsUsers.length>3)
                         Padding(
                         padding: EdgeInsets.all(6.w),
-                        child: InkWell(
+                        child: GestureDetector(
                           onTap: setExpandedMyFriend,
                           child: isExpandedMyFriend
                               ? SvgPicture.asset(

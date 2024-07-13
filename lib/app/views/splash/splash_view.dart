@@ -15,7 +15,7 @@ class _SplashViewState extends State<SplashView> {
     //   Navigator.popAndPushNamed(context, AppRoutes.EXAMPLE);
     // });
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushNamed(context, AppRoutes.LIST_MY_FRIEND);
+      Navigator.popAndPushNamed(context, AppRoutes.LIST_MY_FRIEND);
     });
     super.initState();
   }
