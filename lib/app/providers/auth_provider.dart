@@ -43,6 +43,20 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loginAuto(String email, String password) async{
+    loginStatus = ModuleStatus.loading;
+    try{
+      int result = await authService.login(email, password);
+      if(result == 200){
+        loginStatus = ModuleStatus.success;
+      }else{
+        loginStatus = ModuleStatus.fail;
+      }
+    }catch(e){
+      loginStatus = ModuleStatus.fail;
+    }
+  }
+
   Future<void> login(String email, String password, BuildContext context) async {
     loginStatus = ModuleStatus.loading;
     notifyListeners();
@@ -51,6 +65,11 @@ class AuthProvider extends ChangeNotifier {
       if (result == 200) {
         loginSuccess = S.of(context).loginSuccess;
         loginStatus = ModuleStatus.success;
+
+        if(isRemember){
+          setPassWord(password);
+          setEmail(email);
+        }
       } else if (result == 401) {
         loginSuccess = S.of(context).loginError;
         loginStatus = ModuleStatus.fail;
@@ -76,16 +95,11 @@ class AuthProvider extends ChangeNotifier {
     try {
       int result = await authService.register(
           fullName, phoneNumber, dob, email, passWord);
-      print("kết quả là ${result}");
       switch(result) {
         case 201:
           registerSuccess = S.of(context).registerSuccess;
           emailExist = null;
           registerStatus = ModuleStatus.success;
-          if(isRemember){
-            setPassWord(passWord);
-            setEmail(email);
-          }
           notifyListeners();
           break;
         case 409:
@@ -98,7 +112,6 @@ class AuthProvider extends ChangeNotifier {
           registerSuccess = S.of(context).genericError;
           registerStatus = ModuleStatus.fail;
           notifyListeners();
-          print("Unknown status");
     }
       }catch (e) {
         print("Lỗi ${e}");

@@ -25,7 +25,7 @@ class _RegisterViewState extends State<RegisterView> {
               appBar: AppBar(
                 leading: IconButton(
                   icon: SvgPicture.asset(Assets.icons.leftSVG),
-                  onPressed: () => Navigator.of(context).pop(),),
+                  onPressed: () => Navigator.of(context).pop()),
               ),
               body: const RegisterWidget(),
             ),
@@ -33,7 +33,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ?const Opacity(
               opacity: 0.6,
               child: ModalBarrier(dismissible: false, color: Colors.black),
-            ):SizedBox(),
+            ):const SizedBox(),
             context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
                 ?const Center(
               child: CircularProgressIndicator(color: Colors.white,),

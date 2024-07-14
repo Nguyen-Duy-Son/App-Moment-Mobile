@@ -19,8 +19,6 @@ class AuthService{
       if(statusCode == 200){
         String token = response['data']['accessToken'];
         setToken(token);
-        setEmail(email);
-        setPassWord(password);
       }else{
         print("looxi ${response['message']} vaf ${statusCode}");
       }

@@ -34,6 +34,7 @@ class _AssetsIcons {
 class _AssetsImages {
   _AssetsImages._();
   final authPNG = 'assets/images/auth.png';
+  final verifyEmailPNG = 'assets/images/verify_email.png';
 
   //final viDuPNG = 'assets/images/viDu.png';
 }
