@@ -1,3 +1,5 @@
+// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 class Assets {
   Assets._();
   static final icons = _AssetsIcons._();
@@ -25,6 +27,17 @@ class _AssetsIcons {
   final download2SVG = 'assets/icons/Download 2.svg';
   final leftSVG = 'assets/icons/Left.svg';
   final sunSVG = 'assets/icons/Sun.svg';
+  final bell = 'assets/icons/Bell.svg';
+  final search = 'assets/icons/Search.svg';
+  final rightArrow = 'assets/icons/Right.svg';
+  final upSVG = 'assets/icons/Up.svg';
+  final up2 = 'assets/icons/Zoom in.svg';
+  final delete = 'assets/icons/Zoom out.svg';
+  final searchOff = 'assets/icons/search-off.svg';
+  final vector2 = 'assets/icons/Vector.svg';
+  final call = 'assets/icons/Call.svg';
+  final mail = 'assets/icons/Mail.svg';
+  final calendar = 'assets/icons/Calendar.svg';
 }
 
 class _AssetsImages {
