@@ -28,8 +28,8 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'admin@hitmoments.com';
-    _passwordController.text = 'admin';
+    _emailController.text = 'duyson2003@gmail.com';
+    _passwordController.text = 'Son2003@';
     if(_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty){
       context.read<AuthProvider>().setData(true);
     }else{
@@ -50,7 +50,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 
-  void _submit() async{
+  Future<void> _submit() async{
     final form = _formKey.currentState!;
     if(form.validate()){
       form.save();

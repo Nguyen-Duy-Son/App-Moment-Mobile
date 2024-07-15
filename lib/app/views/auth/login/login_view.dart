@@ -33,11 +33,11 @@ class _LoginViewState extends State<LoginView> {
         ?const Opacity(
           opacity: 0.6,
           child: ModalBarrier(dismissible: false, color: Colors.black),
-        ):SizedBox(),
+        ):const SizedBox(),
         context.watch<AuthProvider>().loginStatus == ModuleStatus.loading
         ?const Center(
           child: CircularProgressIndicator(color: Colors.white,),
-        ):SizedBox(),
+        ):const SizedBox(),
       ],
     );
   }
