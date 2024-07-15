@@ -12,8 +12,9 @@ enum RequestMethod { GET, POST, PUT, DELETE }
 class BaseConnect {
   static Future<http.Request> requestInterceptor(http.Request request) async {
     request.headers['Authorization'] = 'Bearer ${getToken()}';
-    request.headers['Accept'] = 'application/json, text/plain, */*';
+    // request.headers['Accept'] = 'application/json, text/plain, /';
     request.headers['Charset'] = 'utf-8';
+    request.headers['Content-Type'] = 'application/json';
     return request;
   }
 
@@ -61,11 +62,11 @@ class BaseConnect {
   }
 
   static Future<dynamic> onRequest(
-    String url,
-    RequestMethod method, {
-    dynamic body,
-    Map<String, dynamic>? queryParam,
-  }) async {
+      String url,
+      RequestMethod method, {
+        dynamic body,
+        Map<String, dynamic>? queryParam,
+      }) async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (!connectivityResult.contains(ConnectivityResult.mobile) && !connectivityResult.contains(ConnectivityResult.wifi)) {
       print("No internet connection available.");
@@ -80,25 +81,26 @@ class BaseConnect {
 
     var request = http.Request(method.toString().split('.').last, uri);
     request = await requestInterceptor(request);
+    print("request: ${request.body}");
     http.Response response;
-    var headers = {'Content-Type': 'application/json'};
     try {
       switch (method) {
         case RequestMethod.POST:
-          response = await http.post(uri, body: requestBody, headers: headers);
+          response = await http.post(uri, body: requestBody);
           break;
         case RequestMethod.PUT:
-          response = await http.put(uri, body: requestBody, headers: headers);
+          response = await http.put(uri, body: requestBody);
           break;
         case RequestMethod.GET:
-          response = await http.get(uri, headers: headers);
+          response = await http.get(uri);
           break;
         case RequestMethod.DELETE:
-          response = await http.delete(uri, headers: headers);
+          response = await http.delete(uri);
           break;
         default:
           throw Exception('Unsupported request method');
       }
+      print("response: ${response.body}");
       return jsonDecode(response.body);
     } catch (e) {
       print(e);

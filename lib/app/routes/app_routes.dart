@@ -5,6 +5,7 @@ abstract class AppRoutes {
 
   static String SPASH = '/';
   static String EXAMPLE = '/example';
+  static String AUTHENTICATION = '/authentication';
   static String LIST_MY_FRIEND = '/list-my-friend';
 
 }
