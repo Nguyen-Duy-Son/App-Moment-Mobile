@@ -1,5 +1,6 @@
 import 'package:hit_moments/app/core/base/base_connect.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/models/user_model.dart';
 import '../../core/config/api_url.dart';
 
 class AuthService{
@@ -15,6 +16,7 @@ class AuthService{
         RequestMethod.POST,
         body: body
       );
+      print('token sau login là ${response}');
       int statusCode = response['statusCode'];
       if(statusCode == 200){
         String token = response['data']['accessToken'];
@@ -32,7 +34,6 @@ class AuthService{
 
   Future<dynamic> register(String fullName, String phoneNumber, String dateOfBirth,
       String email, String passWord) async{
-    print("${fullName} + ${phoneNumber} + ${dateOfBirth} + ${email} + ${passWord}");
     Map<String, dynamic> body = {
       'fullname': fullName,
       'email': email,
@@ -45,16 +46,26 @@ class AuthService{
           ApiUrl.register, RequestMethod.POST, body: body);
       int statusCode = response['statusCode'];
       String mess = response['message'];
-      print("status code ${statusCode} và ${mess}");
       return statusCode;
       }catch(e){
-      print("Lỗi ${e}");
       return 0;
     }
-  //   {
-  //     "statusCode": 409,
-  //   "message": "Email đã tồn tại"
-  // }
+  }
+  
+  Future<dynamic> getMe() async{
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.getMe, RequestMethod.GET);
+      int statusCode = response['statusCode'];
+      if(statusCode == 200){
+        User user = User.fromJson(response['data']['user']);
+        return user;
+      }else{
+        return statusCode;
+      }
+    }catch(e){
+      return e.toString();
+    }
   }
 
 }
