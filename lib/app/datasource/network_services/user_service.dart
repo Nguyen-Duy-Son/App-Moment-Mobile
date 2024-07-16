@@ -1,3 +1,5 @@
+import 'package:hit_moments/app/datasource/local/storage.dart';
+
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
 class UserService{
@@ -9,7 +11,8 @@ class UserService{
       );
       int statusCode = response['statusCode'];
       if(statusCode == 200){
-        return response['data'];
+        print("Dữ liệu: ${response['data']["friendList"]}");
+        return response['data']["friendList"];
       }else{
         print("Lỗi: ${response['message']} ");
       }

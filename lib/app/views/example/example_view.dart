@@ -27,6 +27,7 @@ class _ExampleViewState extends State<ExampleView> {
   @override
   Widget build(BuildContext context) {
     print(Platform.localeName);
+    print(getToken());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.of(context).primaryColor12,

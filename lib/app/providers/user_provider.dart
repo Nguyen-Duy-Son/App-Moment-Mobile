@@ -5,7 +5,7 @@ import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   late List<User> users;
-  late Friend friend;
+  // late Friend friend;
   late List<User> friendsUsers, friendRequests, friendProposals;
   bool isLoandingFriendsUsers = true,
       isLoandingFriendRequests = true,
@@ -20,43 +20,42 @@ class UserProvider extends ChangeNotifier {
     // notifyListeners();
   }
 
-  void getFriendOfUser() async{
-    // Simulate a network request
-    isLoandingFriend = true;
-    friend = await UserService.getFriends();
-    print("Friend: ${friend.friendsList}");
-    isLoandingFriend = false;
-    // notifyListeners();
-  }
+  // void getFriendOfUser() async{
+  //   // Simulate a network request
+  //   isLoandingFriend = true;
+  //   friend.friendsList = await UserService.getFriends();
+  //   isLoandingFriend = false;
+  //   // notifyListeners();
+  // }
 
-  void getMyFriendsUsers() {
-    // Simulate a network request
-    isLoandingFriendsUsers = true;
-    friendsUsers =
-        users.where((user) => friend.friendsList!.contains(user.id)).toList();
-    isLoandingFriendsUsers = false;
-    // notifyListeners();
-  }
-
-  void getFriendRequests() {
-    // Simulate a network request
-    isLoandingFriendRequests = true;
-    friendRequests = users
-        .where((user) => friend.friendRequests!.contains(user.id))
-        .toList();
-    isLoandingFriendRequests = false;
-    // notifyListeners();
-  }
-
-  void getFriendProposals() {
-    // Simulate a network request
-    isLoandingFriendProposals = true;
-    friendProposals = users
-        .where((user) => friend.friendSuggestions!.contains(user.id))
-        .toList();
-    isLoandingFriendProposals = false;
-    // notifyListeners();
-  }
+  // void getMyFriendsUsers() async{
+  //   // Simulate a network request
+  //   isLoandingFriendsUsers = true;
+  //   friendsUsers =await UserService.getFriends();
+  //       // users.where((user) => friend.friendsList!.contains(user.id)).toList();
+  //   isLoandingFriendsUsers = false;
+  //   notifyListeners();
+  // }
+  //
+  // void getFriendRequests() {
+  //   // Simulate a network request
+  //   isLoandingFriendRequests = true;
+  //   friendRequests = users
+  //       .where((user) => friend.friendRequests!.contains(user.id))
+  //       .toList();
+  //   isLoandingFriendRequests = false;
+  //   // notifyListeners();
+  // }
+  //
+  // void getFriendProposals() {
+  //   // Simulate a network request
+  //   isLoandingFriendProposals = true;
+  //   friendProposals = users
+  //       .where((user) => friend.friendSuggestions!.contains(user.id))
+  //       .toList();
+  //   isLoandingFriendProposals = false;
+  //   // notifyListeners();
+  // }
 }
 
 final List<User> userTest = [

@@ -122,9 +122,10 @@ enum RequestMethod { GET, POST, PUT, DELETE }
 class BaseConnect {
   static Future<http.Request> requestInterceptor(http.Request request) async {
     request.headers['Authorization'] = 'Bearer ${getToken()}';
+    print(getToken());
     request.headers['Accept'] = 'application/json, text/plain, /';
     request.headers['Charset'] = 'utf-8';
-    request.headers['Content-Type'] = 'application/json';
+    // request.headers['Content-Type'] = 'application/json';
     return request;
   }
 
@@ -198,20 +199,21 @@ class BaseConnect {
     var request = http.Request(method.toString().split('.').last, uri);
     request = await requestInterceptor(request);
     http.Response response;
+    print('Token: ${request.headers['Authorization']}');
     var headers = {'Content-Type': 'application/json'};
     try {
       switch (method) {
         case RequestMethod.POST:
-          response = await http.post(uri, body: requestBody, headers: headers);
+          response = await http.post(uri, body: requestBody);
           break;
         case RequestMethod.PUT:
-          response = await http.put(uri, body: requestBody, headers: headers);
+          response = await http.put(uri, body: requestBody);
           break;
         case RequestMethod.GET:
-          response = await http.get(uri, headers: headers);
+          response = await http.get(uri, headers: request.headers);
           break;
         case RequestMethod.DELETE:
-          response = await http.delete(uri, headers: headers);
+          response = await http.delete(uri, headers: request.headers);
           break;
         default:
           throw Exception('Unsupported request method');

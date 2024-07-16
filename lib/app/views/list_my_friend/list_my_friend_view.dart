@@ -28,10 +28,10 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
     //
     super.initState();
     Provider.of<UserProvider>(context, listen: false).getUser();
-    Provider.of<UserProvider>(context, listen: false).getFriendOfUser();
-    Provider.of<UserProvider>(context, listen: false).getMyFriendsUsers();
-    Provider.of<UserProvider>(context, listen: false).getFriendRequests();
-    Provider.of<UserProvider>(context, listen: false).getFriendProposals();
+    // Provider.of<UserProvider>(context, listen: false).getFriendOfUser();
+    // Provider.of<UserProvider>(context, listen: false).getMyFriendsUsers();
+    // Provider.of<UserProvider>(context, listen: false).getFriendRequests();
+    // Provider.of<UserProvider>(context, listen: false).getFriendProposals();
     //
   }
 
@@ -59,96 +59,96 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           ),
           centerTitle: true,
           actions: [
-            PopupMenuButton(
-              offset: const Offset(
-                -16,
-                64,
-              ),
-              shape: const TooltipShape(),
-              constraints: BoxConstraints.expand(width: 0.8.sw, height: 0.4.sh),
-              padding: EdgeInsets.only(
-                top: 15.w,
-                right: 15.w,
-              ),
-              onOpened: () {
-                setState(() {
-                  checkOpacity = true;
-                });
-              },
-              onCanceled: () {
-                setState(() {
-                  checkOpacity = false;
-                });
-              },
-              icon: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.of(context).neutralColor7,
-                      ),
-                      padding: EdgeInsets.all(8.w),
-                      child: SvgPicture.asset(
-                        Assets.icons.bell,
-                        width: 20.w,
-                        height: 20.w,
-                      ),
-                    ),
-                  ),
-                  Provider.of<UserProvider>(context, listen: false)
-                              .friendRequests
-                              .length >
-                          0
-                      ? Positioned(
-                          right: 1.w,
-                          top: -3.w,
-                          child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: ColorConstants.accentRed,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            width: 20.w,
-                            height: 20.w,
-                            child: Text(
-                              '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
-                              style: AppTextStyles.of(context).light16,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
-              itemBuilder: (_) =>
-                  !Provider.of<UserProvider>(context, listen: false)
-                          .isLoandingFriendRequests
-                      ? _buildFriendRequestMenu(
-                          Provider.of<UserProvider>(context, listen: false)
-                              .friendRequests)
-                      : [
-                          const PopupMenuItem(
-                              child: Center(child: CircularProgressIndicator()))
-                        ],
-            ),
+            // PopupMenuButton(
+            //   offset: const Offset(
+            //     -16,
+            //     64,
+            //   ),
+            //   shape: const TooltipShape(),
+            //   constraints: BoxConstraints.expand(width: 0.8.sw, height: 0.4.sh),
+            //   padding: EdgeInsets.only(
+            //     top: 15.w,
+            //     right: 15.w,
+            //   ),
+            //   onOpened: () {
+            //     setState(() {
+            //       checkOpacity = true;
+            //     });
+            //   },
+            //   onCanceled: () {
+            //     setState(() {
+            //       checkOpacity = false;
+            //     });
+            //   },
+            //   icon: Stack(
+            //     clipBehavior: Clip.none,
+            //     children: [
+            //       ClipRRect(
+            //         borderRadius: BorderRadius.circular(50),
+            //         child: Container(
+            //           decoration: BoxDecoration(
+            //             color: AppColors.of(context).neutralColor7,
+            //           ),
+            //           padding: EdgeInsets.all(8.w),
+            //           child: SvgPicture.asset(
+            //             Assets.icons.bell,
+            //             width: 20.w,
+            //             height: 20.w,
+            //           ),
+            //         ),
+            //       ),
+            //       Provider.of<UserProvider>(context, listen: false)
+            //                   .friendRequests
+            //                   .length >
+            //               0
+            //           ? Positioned(
+            //               right: 1.w,
+            //               top: -3.w,
+            //               child: Container(
+            //                 alignment: Alignment.center,
+            //                 decoration: BoxDecoration(
+            //                   color: ColorConstants.accentRed,
+            //                   borderRadius: BorderRadius.circular(50),
+            //                 ),
+            //                 width: 20.w,
+            //                 height: 20.w,
+            //                 child: Text(
+            //                   '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
+            //                   style: AppTextStyles.of(context).light16,
+            //                   overflow: TextOverflow.ellipsis,
+            //                 ),
+            //               ),
+            //             )
+            //           : Container(),
+            //     ],
+            //   ),
+            //   itemBuilder: (_) =>
+            //       !Provider.of<UserProvider>(context, listen: false)
+            //               .isLoandingFriendRequests
+            //           ? _buildFriendRequestMenu(
+            //               Provider.of<UserProvider>(context, listen: false)
+            //                   .friendRequests)
+            //           : [
+            //               const PopupMenuItem(
+            //                   child: Center(child: CircularProgressIndicator()))
+            //             ],
+            // ),
           ],
         ),
-        body: Opacity(
-            opacity: checkOpacity ? 0.3 : 1,
-            child: (!Provider.of<UserProvider>(context, listen: false)
-                        .isLoandingFriendProposals &&
-                    !Provider.of<UserProvider>(context, listen: false)
-                        .isLoandingFriendsUsers)
-                ? ListMyFriendWidget(
-                    friendProposals:
-                        Provider.of<UserProvider>(context, listen: false)
-                            .friendProposals,
-                    friendsUsers:
-                        Provider.of<UserProvider>(context, listen: false)
-                            .friendsUsers)
-                : const Center(child: CircularProgressIndicator())),
+        // body: Opacity(
+        //     opacity: checkOpacity ? 0.3 : 1,
+        //     child: (!Provider.of<UserProvider>(context, listen: false)
+        //                 .isLoandingFriendProposals &&
+        //             !Provider.of<UserProvider>(context, listen: false)
+        //                 .isLoandingFriendsUsers)
+        //         ? ListMyFriendWidget(
+        //             friendProposals:
+        //                 Provider.of<UserProvider>(context, listen: false)
+        //                     .friendProposals,
+        //             friendsUsers:
+        //                 Provider.of<UserProvider>(context, listen: false)
+        //                     .friendsUsers)
+        //         : const Center(child: CircularProgressIndicator())),
       ),
     );
   }
