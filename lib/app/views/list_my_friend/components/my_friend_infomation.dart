@@ -124,7 +124,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                       width: 20.w,
                       height: 20.w,
                       child: Text(
-                        '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
+                        '${Provider.of<UserProvider>(context, listen: false).friendList.length ?? 0}',
                         style: AppTextStyles.of(context).light16,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -176,14 +176,14 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                         style: AppTextStyles.of(context).bold20,
                       ),
                       SizedBox(height: 20.h),
-                      Information(
+                      widget.user.phoneNumber!=null?Information(
                         iconUrl: Assets.icons.call,
                         title: formatPhone(widget.user.phoneNumber!),
-                      ),
-                      Information(
+                      ):SizedBox(),
+                      widget.user.dob!=null?Information(
                         iconUrl: Assets.icons.calendar,
                         title: formatDate(widget.user.dob!),
-                      ),
+                      ):SizedBox(),
                       Information(
                         iconUrl: Assets.icons.mail,
                         title: widget.user.email!,

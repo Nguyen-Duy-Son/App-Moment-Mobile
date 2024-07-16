@@ -5,13 +5,13 @@ import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   late List<User> users;
-  // late Friend friend;
+  List<User> friendList=[];
   late List<User> friendsUsers, friendRequests, friendProposals;
-  bool isLoandingFriendsUsers = true,
-      isLoandingFriendRequests = true,
-      isLoandingFriendProposals = true,
-      isLoandingFriend = true,
-      isLoandingUser = true;
+  bool isLoandingFriendList = false,
+      isLoandingFriendRequests = false,
+      isLoandingFriendProposals = false,
+      isLoandingFriend = false,
+      isLoandingUser = false;
   void getUser() {
     // Simulate a network request
     isLoandingUser = true;
@@ -20,13 +20,6 @@ class UserProvider extends ChangeNotifier {
     // notifyListeners();
   }
 
-  // void getFriendOfUser() async{
-  //   // Simulate a network request
-  //   isLoandingFriend = true;
-  //   friend.friendsList = await UserService.getFriends();
-  //   isLoandingFriend = false;
-  //   // notifyListeners();
-  // }
 
   // void getMyFriendsUsers() async{
   //   // Simulate a network request
@@ -47,14 +40,21 @@ class UserProvider extends ChangeNotifier {
   //   // notifyListeners();
   // }
   //
-  // void getFriendProposals() {
-  //   // Simulate a network request
+  void getFriendOfUser() async{
+    isLoandingFriendList = true;
+    notifyListeners();
+    var response = await UserService.getFriends();
+    friendList = response.map<User>((item) => User.fromJson(item)).toList();
+    isLoandingFriendList = false;
+    notifyListeners();
+  }
+  //
+  // void getFriendProposals() async {
   //   isLoandingFriendProposals = true;
-  //   friendProposals = users
-  //       .where((user) => friend.friendSuggestions!.contains(user.id))
-  //       .toList();
+  //   notifyListeners(); // Notify Flutter to rebuild the widgets
+  //   friendProposals = userTest;
   //   isLoandingFriendProposals = false;
-  //   // notifyListeners();
+  //   notifyListeners(); // Notify Flutter to rebuild the widgets
   // }
 }
 
