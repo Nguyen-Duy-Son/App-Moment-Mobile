@@ -68,7 +68,7 @@ class _ExampleViewState extends State<ExampleView> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ListMyFriendView(),
+                        builder: (context) => const ListMyFriendView(),
                       ));
                 },
                 child: Text("List My Friend")),

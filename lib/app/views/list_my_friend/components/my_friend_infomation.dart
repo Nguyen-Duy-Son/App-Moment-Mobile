@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/extensions/theme_extensions.dart';
+import '../../../datasource/network_services/user_service.dart';
 import '../../../l10n/l10n.dart';
 import '../../../models/user_model.dart';
 import '../../../providers/user_provider.dart';
@@ -52,6 +53,8 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
 
     return formatted.trim(); // Use trim to remove the trailing space
   }
+
+  bool isDelete = false;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +127,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                       width: 20.w,
                       height: 20.w,
                       child: Text(
-                        '${Provider.of<UserProvider>(context, listen: false).friendList.length ?? 0}',
+                        '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
                         style: AppTextStyles.of(context).light16,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -176,14 +179,18 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                         style: AppTextStyles.of(context).bold20,
                       ),
                       SizedBox(height: 20.h),
-                      widget.user.phoneNumber!=null?Information(
-                        iconUrl: Assets.icons.call,
-                        title: formatPhone(widget.user.phoneNumber!),
-                      ):SizedBox(),
-                      widget.user.dob!=null?Information(
-                        iconUrl: Assets.icons.calendar,
-                        title: formatDate(widget.user.dob!),
-                      ):SizedBox(),
+                      widget.user.phoneNumber != null
+                          ? Information(
+                              iconUrl: Assets.icons.call,
+                              title: formatPhone(widget.user.phoneNumber!),
+                            )
+                          : SizedBox(),
+                      widget.user.dob != null
+                          ? Information(
+                              iconUrl: Assets.icons.calendar,
+                              title: formatDate(widget.user.dob!),
+                            )
+                          : SizedBox(),
                       Information(
                         iconUrl: Assets.icons.mail,
                         title: widget.user.email!,
@@ -264,25 +271,43 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
             ]
           : (option == 1
               ? [
-                  Expanded(
-                    child: _button(
-                      "Xoá bạn",
-                      AppColors.of(context).primaryColor4,
-                      AppColors.of(context).neutralColor11,
-                      () => showDialogDeleteFriend(widget.user.fullName),
-                    ),
-                  ),
+                  !isDelete
+                      ? Expanded(
+                          child: _button(
+                            "Xoá bạn",
+                            AppColors.of(context).primaryColor4,
+                            AppColors.of(context).neutralColor11,
+                            () => showDialogDeleteFriend(widget.user.fullName),
+                          ),
+                        )
+                      : Expanded(
+                          child: _button(
+                            "Xoá",
+                            AppColors.of(context).primaryColor4,
+                            AppColors.of(context).neutralColor11,
+                            () {},
+                          ),
+                        ),
                   SizedBox(
                     width: 52.w,
                   ),
-                  Expanded(
-                    child: _button(
-                      "Nhắn tin",
-                      AppColors.of(context).primaryColor7,
-                      AppColors.of(context).neutralColor12,
-                      () => navigateToChatScreen(),
-                    ),
-                  ),
+                  !isDelete
+                      ? Expanded(
+                          child: _button(
+                            "Nhắn tin",
+                            AppColors.of(context).primaryColor7,
+                            AppColors.of(context).neutralColor12,
+                            () => navigateToChatScreen(),
+                          ),
+                        )
+                      : Expanded(
+                          child: _button(
+                            "Kết bạn",
+                            AppColors.of(context).primaryColor7,
+                            AppColors.of(context).neutralColor12,
+                            () {},
+                          ),
+                        ),
                 ]
               : [
                   Expanded(
@@ -332,6 +357,19 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
     return items;
   }
 
+  void deleteFriend(BuildContext ct) async {
+    int statusCode = await UserService.deleteFriendOfUserById(widget.user.id);
+    if (statusCode == 200) {
+      setState(() {
+        isDelete = true;
+      });
+      print("Huỷ kết bạn thành công");
+      Navigator.pop(ct);
+    } else {
+      print("Huỷ kết bạn thất bại");
+    }
+  }
+
   void showDialogDeleteFriend(String fullName) {
     showDialog(
       context: context,
@@ -353,8 +391,8 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                     "Có",
                     AppColors.of(context).primaryColor4,
                     AppColors.of(context).neutralColor11,
-                    () {
-                      Navigator.pop(context);
+                    () async {
+                      deleteFriend(context);
                     },
                   ),
                 ),

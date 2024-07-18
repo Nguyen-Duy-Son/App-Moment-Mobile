@@ -6,7 +6,8 @@ import '../models/user_model.dart';
 class UserProvider extends ChangeNotifier {
   late List<User> users;
   List<User> friendList=[];
-  late List<User> friendsUsers, friendRequests, friendProposals;
+  List<User> friendRequests = [];
+  List<User> friendProposals = [];
   bool isLoandingFriendList = false,
       isLoandingFriendRequests = false,
       isLoandingFriendProposals = false,
@@ -46,6 +47,14 @@ class UserProvider extends ChangeNotifier {
     var response = await UserService.getFriends();
     friendList = response.map<User>((item) => User.fromJson(item)).toList();
     isLoandingFriendList = false;
+    notifyListeners();
+  }
+  void getFriendRequestOfUser() async{
+    isLoandingFriendRequests = true;
+    notifyListeners();
+    var response = await UserService.getFriendsRequest();
+    friendRequests = response.map<User>((item) => User.fromJson(item)).toList();
+    isLoandingFriendRequests = false;
     notifyListeners();
   }
   //

@@ -74,13 +74,10 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
                                 ),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          InkWell(
-                            onTap: () {},
-                            child: SvgPicture.asset(
-                              Assets.icons.up2,
-                              width: 20.w,
-                              height: 20.w,
-                            ),
+                          SvgPicture.asset(
+                            Assets.icons.up2,
+                            width: 28.w,
+                            height: 28.h,
                           ),
                         ],
                       ),

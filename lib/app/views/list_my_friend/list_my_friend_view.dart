@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hit_moments/app/core/base/base_connect.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_widget.dart';
@@ -26,12 +23,16 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
   @override
   void initState() {
     super.initState();
-    context.read<UserProvider>().getFriendOfUser();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<UserProvider>().getFriendOfUser();
+      context.read<UserProvider>().getFriendRequestOfUser();
+    });
   }
 
   final PageController _pageController = PageController();
   int pageIndex = 0;
   bool checkOpacity = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -91,37 +92,36 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                       ),
                     ),
                   ),
-                  context.watch<UserProvider>()
-                      .friendList.isNotEmpty
-                      ? Positioned(
-                          right: 1.w,
-                          top: -3.w,
-                          child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: ColorConstants.accentRed,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            width: 20.w,
-                            height: 20.w,
-                            child: Text(
-                              '${Provider.of<UserProvider>(context, listen: false)
-                                  .friendList.length ?? 0}',
-                              style: AppTextStyles.of(context).light16,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
+                  !context.watch<UserProvider>().isLoandingFriendRequests
+                      ? (context.watch<UserProvider>().friendRequests.isNotEmpty
+                          ? Positioned(
+                              right: 1.w,
+                              top: -3.w,
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: ColorConstants.accentRed,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                width: 20.w,
+                                height: 20.w,
+                                child: Text(
+                                  '${Provider.of<UserProvider>(context, listen: false).friendRequests.length}',
+                                  style: AppTextStyles.of(context).light16,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            )
+                          : Container())
                       : Container(),
                 ],
               ),
               itemBuilder: (_) =>
                   !Provider.of<UserProvider>(context, listen: false)
-                      .isLoandingFriendList
-                      ?
-                  _buildFriendRequestMenu(
-                      Provider.of<UserProvider>(context, listen: false)
-                          .friendList)
+                          .isLoandingFriendRequests
+                      ? _buildFriendRequestMenu(
+                          Provider.of<UserProvider>(context, listen: false)
+                              .friendRequests)
                       : [
                           const PopupMenuItem(
                               child: Center(child: CircularProgressIndicator()))
@@ -129,19 +129,19 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
             ),
           ],
         ),
-        body: Opacity(
+        body: Container(
+          margin: EdgeInsets.only(bottom: 32.h),
+          child: Opacity(
             opacity: checkOpacity ? 0.3 : 1,
-            child: (
-                    !context.watch<UserProvider>()
-                        .isLoandingFriendList)
+            child: (!context.watch<UserProvider>().isLoandingFriendList)
                 ? ListMyFriendWidget(
-                    friendProposals:
-                    context.watch<UserProvider>()
-                        .friendList,
-                    friendsUsers:
-                        context.watch<UserProvider>()
-                            .friendList)
-                : const Center(child: CircularProgressIndicator())),
+                    friendProposals: const [],
+                    friendsUsers: context.watch<UserProvider>().friendList)
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+          ),
+        ),
       ),
     );
   }
@@ -166,8 +166,7 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
         PopupMenuItem(
           child: Center(
             child: Text(
-              S.of(context)
-                  .noNotification,
+              S.of(context).noNotification,
               style: AppTextStyles.of(context).regular20,
             ),
           ),
@@ -191,31 +190,6 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
 
     return items;
   }
-  // List<PopupMenuItem> _buildFriendRequestMenu(List<User> users) {
-  //   List<PopupMenuItem> items = users
-  //       .map(
-  //         (e) => PopupMenuItem(
-  //           child: FriendRequest(
-  //             user: e,
-  //           ),
-  //         ),
-  //       )
-  //       .toList();
-  //   items.insert(
-  //     0,
-  //     PopupMenuItem(
-  //       child: Center(
-  //         child: Text(
-  //           overflow: TextOverflow.ellipsis,
-  //           S.of(context).friendRequest,
-  //           style: AppTextStyles.of(context).bold20,
-  //         ),
-  //       ),
-  //       enabled: false, // Disable the item so it can't be selected
-  //     ),
-  //   );
-  //   return items;
-  // }
 }
 
 class TooltipShape extends ShapeBorder {
