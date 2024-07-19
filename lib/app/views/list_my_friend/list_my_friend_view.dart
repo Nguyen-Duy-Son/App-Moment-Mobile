@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/constants/assets.dart';
 import '../../core/constants/color_constants.dart';
+import '../../datasource/network_services/user_service.dart';
 import '../../l10n/l10n.dart';
 import '../../models/user_model.dart';
 import 'components/friend_request.dart';
@@ -190,6 +191,7 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
 
     return items;
   }
+
 }
 
 class TooltipShape extends ShapeBorder {

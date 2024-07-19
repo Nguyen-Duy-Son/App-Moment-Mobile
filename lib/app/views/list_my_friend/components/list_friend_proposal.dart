@@ -35,71 +35,76 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
         .toList();
     return lists.isNotEmpty
         ? SingleChildScrollView(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.isExpanded
-                  ? lists.length
-                  : (lists.length > 3 ? 3 : lists.length),
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyFriendInfomationScreen(
-                              user: widget.users[index],
-                              option: 0,
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.isExpanded
+                      ? lists.length
+                      : (lists.length > 3 ? 3 : lists.length),
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyFriendInfomationScreen(
+                                  user: widget.users[index],
+                                  option: 0,
+                                ),
+                              ),
+                            );
+                          },
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              lists[index].avatar!,
+                              height: 36.w,
+                              width: 36.w,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        );
-                      },
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                          lists[index].avatar!,
-                          height: 36.w,
-                          width: 36.w,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            lists[index].fullName,
-                            style: AppTextStyles.of(context).light20.copyWith(
-                                  color: AppColors.of(context).neutralColor12,
-                                ),
-                            overflow: TextOverflow.ellipsis,
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                lists[index].fullName,
+                                style: AppTextStyles.of(context).light20.copyWith(
+                                      color: AppColors.of(context).neutralColor12,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SvgPicture.asset(
+                                Assets.icons.up2,
+                                width: 28.w,
+                                height: 28.h,
+                              ),
+                            ],
                           ),
-                          SvgPicture.asset(
-                            Assets.icons.up2,
-                            width: 28.w,
-                            height: 28.h,
+                        ),
+                        Opacity(
+                          opacity: 0.5,
+                          child: Container(
+                            height: 1.0,
+                            margin: EdgeInsets.only(
+                              top: 6.h,
+                              bottom: 6.h,
+                            ),
+                            padding: EdgeInsets.only(
+                              left: 12.w,
+                              right: 12.w,
+                            ),
+                            color: AppColors.of(context).neutralColor11,
                           ),
-                        ],
-                      ),
-                    ),
-                    Opacity(
-                      opacity: 0.5,
-                      child: Container(
-                        height: 1.0,
-                        margin: EdgeInsets.only(
-                          top: 6.h,
-                          bottom: 6.h,
                         ),
-                        padding: EdgeInsets.only(
-                          left: 12.w,
-                          right: 12.w,
-                        ),
-                        color: AppColors.of(context).neutralColor11,
-                      ),
-                    ),
-                  ],
-                );
-              },
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
           )
         : const SearchDataNotFound();

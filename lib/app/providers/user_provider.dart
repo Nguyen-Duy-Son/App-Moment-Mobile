@@ -13,6 +13,7 @@ class UserProvider extends ChangeNotifier {
       isLoandingFriendProposals = false,
       isLoandingFriend = false,
       isLoandingUser = false;
+  bool isSearchFriend = false;
   void getUser() {
     // Simulate a network request
     isLoandingUser = true;
@@ -55,6 +56,22 @@ class UserProvider extends ChangeNotifier {
     var response = await UserService.getFriendsRequest();
     friendRequests = response.map<User>((item) => User.fromJson(item)).toList();
     isLoandingFriendRequests = false;
+    notifyListeners();
+  }
+  void getFriendUserByEmail(String emailOfFriend) async{
+    isSearchFriend = true;
+    notifyListeners();
+    var response = await UserService.searchFriendUserByEmail(emailOfFriend);
+    friendList=[];
+    if(response!=200){
+      print("alo$friendList.length");
+      isSearchFriend = false;
+      notifyListeners();
+      return;
+    }
+    friendList.add(User.fromJson(response));
+
+    isSearchFriend = false;
     notifyListeners();
   }
   //
