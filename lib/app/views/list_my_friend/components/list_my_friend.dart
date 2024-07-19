@@ -77,13 +77,10 @@ class _ListMyFriendState extends State<ListMyFriend> {
                               ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        InkWell(
-                          onTap: () {},
-                          child: SvgPicture.asset(
-                            Assets.icons.rightArrow,
-                            width: 20.w,
-                            height: 20.w,
-                          ),
+                        SvgPicture.asset(
+                          Assets.icons.rightArrow,
+                          width: 22.w,
+                          height: 22.h,
                         ),
                       ],
                     ),
