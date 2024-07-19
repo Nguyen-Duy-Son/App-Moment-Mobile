@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hit_moments/app/datasource/network_services/moment_service.dart';
+import 'package:hit_moments/app/models/moment_model.dart';
 
 class MomentProvider extends ChangeNotifier{
   late List<Map<String, dynamic>> options;
@@ -13,6 +15,16 @@ class MomentProvider extends ChangeNotifier{
       {'menu': 'Option 3'},
     ];
     return options;
+  }
+
+  Future<List<MomentModel>> getListMoment() async{
+    final response = await MomentService().getListMoment();
+    if(response is List<MomentModel>){
+      return response;
+    }else{
+      return [];
+    }
+
   }
 
 

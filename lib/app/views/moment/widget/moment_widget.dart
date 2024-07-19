@@ -4,11 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
+import 'package:hit_moments/app/models/moment_model.dart';
 import 'package:hit_moments/app/views/moment/widget/select_funtion_widget.dart';
-import '../../core/extensions/theme_extensions.dart';
+import '../../../core/extensions/theme_extensions.dart';
 
 class MomentWidget extends StatefulWidget {
-  const MomentWidget({super.key});
+  const MomentWidget({super.key, required this.momentModel});
+  final MomentModel momentModel;
 
   @override
   State<MomentWidget> createState() => _MomentWidgetState();
@@ -49,7 +51,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                     aspectRatio: 3/4,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.w),
-                      child: Image.network("https://images.wallpaperscraft.com/image/single/cat_face_cool_cat_94317_1400x1050.jpg", fit: BoxFit.fill,),
+                      child: Image.network(widget.momentModel.image!, fit: BoxFit.fill,),
                     ),
                   ),
                   Positioned(
@@ -80,14 +82,73 @@ class _MomentWidgetState extends State<MomentWidget> {
                             Text("Bộ Bộ",
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.of(context).regular16.copyWith(
-                                color: AppColors.of(context).neutralColor1
+                                color: AppColors.of(context).neutralColor1,
+                                shadows: [
+                                  const Shadow(
+                                    blurRadius: 1.0,
+                                    color: Colors.black,
+                                  ),
+                                ],
                               ),
                             ),
                             Text("1 giờ trước",
                             style: AppTextStyles.of(context).light14.copyWith(
-                              color: AppColors.of(context).neutralColor8
+                              color: AppColors.of(context).neutralColor8,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: AppColors.of(context).neutralColor12,
+                                ),
+                              ],
                             ),)
                           ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 16.w,
+                    right: 0,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(Assets.icons.sunSVG),
+                        SizedBox(width: 8.w,),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                          ),
+                          padding: EdgeInsets.only(right: 16.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Hà Nội",
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.of(context).light14.copyWith(
+                                  color: AppColors.of(context).neutralColor1,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 1.0,
+                                      color: AppColors.of(context).neutralColor12,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text("29 độ C",
+                              style: AppTextStyles.of(context).regular20.copyWith(
+                                color: AppColors.of(context).neutralColor3,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 1.0,
+                                    color: AppColors.of(context).neutralColor12,
+                                  ),
+                                ],
+                              ),)
+                            ],
+                          ),
                         )
                       ],
                     ),
@@ -103,6 +164,13 @@ class _MomentWidgetState extends State<MomentWidget> {
                         decoration: BoxDecoration(
                           color: AppColors.of(context).neutralColor6,
                           borderRadius: BorderRadius.all(Radius.circular(100)),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: AppColors.of(context).neutralColor11,
+                                  blurRadius: 5.h,
+                                  offset: Offset(0, 3.h)
+                              )
+                            ]
                         ),
                         child: Text("Con mèo đẹp quá trời!",
                           maxLines: 1,
@@ -131,7 +199,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                           color: AppColors.of(context).neutralColor1,
                           border: Border.all(
                             width: 1.w,
-                            color: AppColors.of(context).neutralColor9
+                            color: AppColors.of(context).primaryColor10
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(100))
                       ),
@@ -156,6 +224,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                           backGroundColor: AppColors.of(context).neutralColor1,
                           icon1Color: AppColors.of(context).neutralColor9,
                           iconHeight: 28.w, iconWidth: 28.w,
+                          borderColor: AppColors.of(context).primaryColor10,
                           onPress: () {
 
                           },
@@ -166,6 +235,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                           backGroundColor: AppColors.of(context).neutralColor1,
                           icon1Color: AppColors.of(context).neutralColor9,
                           iconHeight: 28.w, iconWidth: 28.w,
+                          borderColor: AppColors.of(context).primaryColor10,
                           onPress: () {
 
                           },

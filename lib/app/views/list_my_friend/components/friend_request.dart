@@ -61,7 +61,7 @@ class _FriendRequestState extends State<FriendRequest> {
                   InkWell(
                     onTap: () {},
                     child: SvgPicture.asset(
-                      Assets.icons.delete,
+                      Assets.icons.zoomOut,
                       width: 24.w,
                       height: 24.w,
                     ),
@@ -70,7 +70,7 @@ class _FriendRequestState extends State<FriendRequest> {
                   InkWell(
                     onTap: () {},
                     child: SvgPicture.asset(
-                      Assets.icons.up2,
+                      Assets.icons.zoomIn,
                       width: 24.w,
                       height: 24.w,
                     ),

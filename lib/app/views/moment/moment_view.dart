@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
-import 'package:hit_moments/app/views/moment/moment_widget.dart';
+import 'package:hit_moments/app/providers/moment_provider.dart';
+import 'package:hit_moments/app/views/moment/widget/moment_widget.dart';
 import 'package:hit_moments/app/views/moment/widget/select_friend_widget.dart';
+import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/moment_model.dart';
 
 class MomentView extends StatefulWidget {
   const MomentView({super.key});
@@ -14,12 +20,25 @@ class MomentView extends StatefulWidget {
 }
 
 class _MomentViewState extends State<MomentView> {
+  late final List<MomentModel> listMoment;
+   List<Widget> _list = [];
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
   int selected = 5;
-  List<Widget> _list=<Widget>[
-    MomentWidget(),
-    MomentWidget(),
-    MomentWidget(),
-  ];
+
+
+  Future<void> getData() async{
+    listMoment = await context.read<MomentProvider>().getListMoment();
+    print("Là ${listMoment.length}");
+    _list = listMoment.map((e) => MomentWidget(momentModel: e,)).toList();
+    //_list.add(SuggestedFriendsView());
+    setState(() {
+      _list;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +76,8 @@ class _MomentViewState extends State<MomentView> {
             )
           ],
         ),
-        body: PageView(
+        body: _list.isEmpty?CircularProgressIndicator():
+        PageView(
           children: _list,
           scrollDirection: Axis.vertical,
         ),

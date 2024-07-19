@@ -77,7 +77,7 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
                           InkWell(
                             onTap: () {},
                             child: SvgPicture.asset(
-                              Assets.icons.up2,
+                              Assets.icons.zoomIn,
                               width: 20.w,
                               height: 20.w,
                             ),
