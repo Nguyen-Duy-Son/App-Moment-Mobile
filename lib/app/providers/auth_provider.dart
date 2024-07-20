@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/core/constants/app_constants.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/datasource/network_services/auth_service.dart';
+import 'package:hit_moments/app/models/user_model.dart';
 
 import '../core/config/enum.dart';
 import '../l10n/l10n.dart';
@@ -43,6 +44,22 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> checkToken() async{
+    loginStatus = ModuleStatus.loading;
+    try{
+      dynamic result = await authService.getMe();
+      if(result is User){
+        loginStatus = ModuleStatus.success;
+      }else{
+        loginStatus = ModuleStatus.fail;
+      }
+      notifyListeners();
+    }catch(e){
+      loginStatus = ModuleStatus.fail;
+      notifyListeners();
+    }
+  }
+
   Future<void> login(String email, String password, BuildContext context) async {
     loginStatus = ModuleStatus.loading;
     notifyListeners();
@@ -51,6 +68,11 @@ class AuthProvider extends ChangeNotifier {
       if (result == 200) {
         loginSuccess = S.of(context).loginSuccess;
         loginStatus = ModuleStatus.success;
+
+        if(isRemember){
+          setPassWord(password);
+          setEmail(email);
+        }
       } else if (result == 401) {
         loginSuccess = S.of(context).loginError;
         loginStatus = ModuleStatus.fail;
@@ -76,16 +98,11 @@ class AuthProvider extends ChangeNotifier {
     try {
       int result = await authService.register(
           fullName, phoneNumber, dob, email, passWord);
-      print("kết quả là ${result}");
       switch(result) {
         case 201:
           registerSuccess = S.of(context).registerSuccess;
           emailExist = null;
           registerStatus = ModuleStatus.success;
-          if(isRemember){
-            setPassWord(passWord);
-            setEmail(email);
-          }
           notifyListeners();
           break;
         case 409:
@@ -98,7 +115,6 @@ class AuthProvider extends ChangeNotifier {
           registerSuccess = S.of(context).genericError;
           registerStatus = ModuleStatus.fail;
           notifyListeners();
-          print("Unknown status");
     }
       }catch (e) {
         print("Lỗi ${e}");

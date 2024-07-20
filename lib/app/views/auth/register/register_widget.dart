@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/auth/login/login_view.dart';
+import 'package:hit_moments/app/views/auth/register/verify_email_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/config/enum.dart';
@@ -54,8 +56,9 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     }
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     final form = _formKey.currentState!;
+
     if(form.validate()){
       form.save();
       form.validate();
@@ -67,8 +70,11 @@ class _RegisterWidgetState extends State<RegisterWidget> {
           _emailController.text,
           _passwordConfirmController.text, context);
       if(context.watch<AuthProvider>().registerStatus == ModuleStatus.success){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginView(),));
+        Navigator.pushAndRemoveUntil(
+            context, MaterialPageRoute(builder: (context) => const VerifyEmailView()
+          ,), ModalRoute.withName(AppRoutes.VERIFYEMAIL));
       }
+
     }else{
       print("lỗi");
     }
@@ -83,7 +89,9 @@ class _RegisterWidgetState extends State<RegisterWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(Assets.images.authPNG, height: MediaQuery.of(context).size.height/4,),
+                  Image.asset(
+                    Assets.images.authPNG,
+                    height: MediaQuery.of(context).size.height/4,),
                   SizedBox(height: 16.h,),
                 ],
               )
@@ -188,8 +196,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                         errorText: context.watch<AuthProvider>().registerSuccess,
                         errorBorder: UnderlineInputBorder(
                             borderSide: BorderSide(width: 1,
-                                color: context.watch<AuthProvider>().registerSuccess
-                                    == ModuleStatus.success?AppColors.of(context)
+                                color: ModuleStatus.success
+                                    == context.read<AuthProvider>().registerStatus?AppColors.of(context)
                                     .neutralColor9:AppColors.of(context).primaryColor10)
                         ),
                         suffixIconColor: AppColors.of(context).neutralColor9,

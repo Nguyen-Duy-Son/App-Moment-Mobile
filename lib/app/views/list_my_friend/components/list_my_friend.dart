@@ -38,75 +38,79 @@ class _ListMyFriendState extends State<ListMyFriend> {
   @override
   Widget build(BuildContext context) {
     return widget.users.isNotEmpty
-        ? ListView.builder(
-            shrinkWrap: true,
-            itemCount: widget.isExpanded
-                ? widget.users.length
-                : (widget.users.length > 3 ? 3 : widget.users.length),
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyFriendInfomationScreen(
-                            user: widget.users[index],
-                            option: options[1],
+        ? SingleChildScrollView(
+          child: Column(
+            children: [
+              ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.isExpanded
+                      ? widget.users.length
+                      : (widget.users.length > 3 ? 3 : widget.users.length),
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyFriendInfomationScreen(
+                                  user: widget.users[index],
+                                  option: options[1],
+                                ),
+                              ),
+                            );
+                          },
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              widget.users[index].avatar!,
+                              height: 36.w,
+                              width: 36.w,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                widget.users[index].fullName,
+                                style: AppTextStyles.of(context).light20.copyWith(
+                                      color: AppColors.of(context).neutralColor12,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SvgPicture.asset(
+                                Assets.icons.rightArrow,
+                                width: 22.w,
+                                height: 22.h,
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network(
-                        widget.users[index].avatar!,
-                        height: 36.w,
-                        width: 36.w,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          widget.users[index].fullName,
-                          style: AppTextStyles.of(context).light20.copyWith(
-                                color: AppColors.of(context).neutralColor12,
-                              ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: SvgPicture.asset(
-                            Assets.icons.rightArrow,
-                            width: 20.w,
-                            height: 20.w,
+                        Opacity(
+                          opacity: 0.5,
+                          child: Container(
+                            height: 1.0,
+                            margin: EdgeInsets.only(
+                              top: 6.h,
+                              bottom: 6.h,
+                            ),
+                            padding: EdgeInsets.only(
+                              left: 12.w,
+                              right: 12.w,
+                            ),
+                            color: AppColors.of(context).neutralColor11,
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  Opacity(
-                    opacity: 0.5,
-                    child: Container(
-                      height: 1.0,
-                      margin: EdgeInsets.only(
-                        top: 6.h,
-                        bottom: 6.h,
-                      ),
-                      padding: EdgeInsets.only(
-                        left: 12.w,
-                        right: 12.w,
-                      ),
-                      color: AppColors.of(context).neutralColor11,
-                    ),
-                  ),
-                ],
-              );
-            },
-          )
+                    );
+                  },
+                ),
+            ],
+          ),
+        )
         : const SearchDataNotFound();
   }
 }

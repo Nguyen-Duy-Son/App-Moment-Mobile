@@ -19,30 +19,26 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Stack(
-      children: [
-        Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: SvgPicture.asset(Assets.icons.leftSVG),
-              onPressed: () => Navigator.of(context).pop(),
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: SvgPicture.asset(Assets.icons.leftSVG),
+                  onPressed: () => Navigator.of(context).pop()),
+              ),
+              body: const RegisterWidget(),
             ),
-          ),
-          body: const RegisterWidget(),
-        ),
-        context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
-            ? const Opacity(
-                opacity: 0.6,
-                child: ModalBarrier(dismissible: false, color: Colors.black),
-              )
-            : const SizedBox(),
-        context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              )
-            : const SizedBox(),
-      ],
-    ));
+            context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
+                ?const Opacity(
+              opacity: 0.6,
+              child: ModalBarrier(dismissible: false, color: Colors.black),
+            ):const SizedBox(),
+            context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
+                ?const Center(
+              child: CircularProgressIndicator(color: Colors.white,),
+            ):SizedBox(),
+          ],
+        )
+    );
   }
 }
