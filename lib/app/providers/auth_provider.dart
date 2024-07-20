@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/core/constants/app_constants.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/datasource/network_services/auth_service.dart';
+import 'package:hit_moments/app/models/user_model.dart';
 
 import '../core/config/enum.dart';
 import '../l10n/l10n.dart';
@@ -43,17 +44,19 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loginAuto(String email, String password) async{
+  Future<void> checkToken() async{
     loginStatus = ModuleStatus.loading;
     try{
-      int result = await authService.login(email, password);
-      if(result == 200){
+      dynamic result = await authService.getMe();
+      if(result is User){
         loginStatus = ModuleStatus.success;
       }else{
         loginStatus = ModuleStatus.fail;
       }
+      notifyListeners();
     }catch(e){
       loginStatus = ModuleStatus.fail;
+      notifyListeners();
     }
   }
 

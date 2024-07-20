@@ -25,19 +25,18 @@ class _AuthViewState extends State<AuthView> {
   @override
   void initState() {
     super.initState();
-    autoLogin();
+    checkToken();
   }
 
-  Future<void> autoLogin() async{
-    if (getEmail().isNotEmpty) {
-      await context.read<AuthProvider>().loginAuto(getEmail(), getPassWord());
-      if (context.read<AuthProvider>().loginStatus == ModuleStatus.success) {
-        Navigator.pushAndRemoveUntil<void>(
-          context,
-          MaterialPageRoute(builder: (context) => const ExampleView()),
-          ModalRoute.withName(AppRoutes.EXAMPLE),
-        );
-      }
+
+  Future<void> checkToken() async{
+    await context.read<AuthProvider>().checkToken();
+    if (context.read<AuthProvider>().loginStatus == ModuleStatus.success) {
+      Navigator.pushAndRemoveUntil<void>(
+        context,
+        MaterialPageRoute(builder: (context) => const ExampleView()),
+        ModalRoute.withName(AppRoutes.EXAMPLE),
+      );
     }
   }
   @override
@@ -55,7 +54,12 @@ class _AuthViewState extends State<AuthView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(Assets.images.authPNG),
+                          InkWell(
+                            onTap: () {
+                              context.read<AuthProvider>().checkToken();
+                            },
+                            child: Image.asset(Assets.images.authPNG),
+                          ),
                           SizedBox(height: 16.h,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

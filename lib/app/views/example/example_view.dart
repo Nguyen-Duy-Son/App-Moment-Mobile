@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hit_moments/app/core/config/theme_config.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/providers/auth_provider.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
@@ -50,19 +51,22 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Moment")),
-            ElevatedButton(
-                onPressed: () {
-                  setEmail('');
-                  setPassWord('');
-                  setToken('');
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AuthView(),
-                      ),
-                      ModalRoute.withName(AppRoutes.AUTHENTICATION));
-                },
-                child: Text("Đăng xuất")),
+            ElevatedButton(onPressed: () {
+              context.read<AuthProvider>().checkToken();
+            },
+                child: Text("Get me")),
+            ElevatedButton(onPressed: () {
+              setEmail('');
+              setPassWord('');
+              setToken('');
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AuthView(),),
+                ModalRoute.withName(AppRoutes.AUTHENTICATION)
+              );
+            },
+                child: Text("Đăng xuất")
+            ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(

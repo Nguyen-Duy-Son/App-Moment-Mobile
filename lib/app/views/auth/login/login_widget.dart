@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +29,11 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'duyson2003@gmail.com';
-    _passwordController.text = 'Son2003@';
+
+    // _emailController.text = 'duyson2003@gmail.com';
+    // _passwordController.text = 'Son2003@';
+    _emailController.text = getEmail()??'';
+    _passwordController.text = getPassWord()??'';
     if(_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty){
       context.read<AuthProvider>().setData(true);
     }else{
@@ -61,7 +65,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       if(context.read<AuthProvider>().loginStatus == ModuleStatus.success){
         print("ok");
         Navigator.pushAndRemoveUntil<void>(context, MaterialPageRoute(builder: (context) => ExampleView()),
-              ModalRoute.withName(AppRoutes.AUTHENTICATION),);
+              ModalRoute.withName(AppRoutes.EXAMPLE),);
       }else{
         print("lỗi");
       }

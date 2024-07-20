@@ -58,6 +58,7 @@ class User {
   bool? isVerified;
   DateTime? createdAt;
   DateTime? updatedAt;
+  String? role;
 
   User({
     required this.id,
@@ -72,6 +73,7 @@ class User {
     this.isVerified,
     this.createdAt,
     this.updatedAt,
+    this.role,
   });
 
   // JSON serialization
@@ -86,6 +88,7 @@ class User {
       dob: json['dob'] != null ? DateTime.parse(json['dob']) : null,
       lastActive: json['lastActive'] != null ? DateTime.parse(json['lastActive']) : null,
       isLocked: json['isLocked'],
+      role: json['role'],
       isVerified: json['isVerified'],
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
