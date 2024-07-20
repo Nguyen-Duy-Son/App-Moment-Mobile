@@ -7,4 +7,7 @@ mixin class ApiUrl {
   static const getFriends = "$_urlBase/friends/list-friends";
   static const getFriendsRequest = "$_urlBase/friends/list-received-request";
   static const deleteFriend = "$_urlBase/friends/delete-friend";
+  static const confirmFriendRequest = "$_urlBase/friends/confirm-request";
+  static const searchFriendOfUser = "$_urlBase/friends/search-user";
+  static const declineFriendRequest = "$_urlBase/friends/delince-request";
 }

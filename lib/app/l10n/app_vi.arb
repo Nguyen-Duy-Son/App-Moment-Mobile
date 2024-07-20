@@ -35,5 +35,13 @@
       "thankYouForRegistering": "Cảm ơn bạn đã đăng kí tài khoản trên app của chúng tôi. Vui lòng truy cập vào email của bạn để xác minh tài khoản trước khi đăng nhập. Sau thực hiện xong vui lòng ấn nút bên dưới để hoàn tất việc đăng ký.",
       "complete": "Hoàn tất",
     "sendMessage":"Gửi tin nhắn...",
-    "noNotification":"Không có thông báo"
+    "noNotification":"Không có thông báo",
+    "delete":"Xóa",
+    "deleteFriend":"Xóa bạn",
+    "sendMessage":"Nhắn tin",
+    "accept":"Đồng ý",
+    "reject":"Từ chối",
+    "addFriend":"Kết bạn",
+    "no":"Không",
+    "yes":"Có"
 }

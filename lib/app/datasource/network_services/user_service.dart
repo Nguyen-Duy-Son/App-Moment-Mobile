@@ -55,4 +55,47 @@ class UserService{
       return 0;
     }
   }
+  static Future<int>confirmFriendRequestOfUserBy(String friendId,int option) async{
+    try{
+      var response;
+      if(option == 1){
+         response = await BaseConnect.onRequest(
+            ApiUrl.confirmFriendRequest,
+            RequestMethod.POST,
+            body: {
+              "requesterId": friendId
+            }
+        );
+      }
+      else{
+        response = await BaseConnect.onRequest(
+            ApiUrl.declineFriendRequest,
+            RequestMethod.POST,
+            body: {
+              "requesterId": friendId
+            }
+        );
+      }
+      print("Status decline friend: ${response['statusCode']}");
+      return response['statusCode'];
+    }catch(e){
+      print("Lỗi: ${e}");
+      return 0;
+    }
+  }
+  static Future<dynamic>searchFriendUserByEmail(String emailOfFriend) async{
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.searchFriendOfUser,
+          RequestMethod.GET,
+          queryParam: {
+            "email": emailOfFriend
+          }
+      );
+      return response["data"]["user"];
+    }catch(e){
+      print("Lỗi: ${e}");
+      return 0;
+    }
+  }
 }

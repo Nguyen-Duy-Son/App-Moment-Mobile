@@ -35,5 +35,13 @@
        "thankYouForRegistering": "Thank you for registering an account on our app. Please check your email to verify your account. After completing this, please press the button below to finish registration.",
        "complete": "Complete",
     "sendMessage":"Send message",
-    "noNotification":"No notification"
+    "noNotification":"No notification",
+    "delete":"Delete",
+        "deleteFriend":"Delete friend",
+        "sendMessage":"Send message",
+        "accept":"Accept",
+        "reject":"Reject",
+        "addFriend":"Add friend",
+        "no":"No",
+        "yes":"Yes"
 }

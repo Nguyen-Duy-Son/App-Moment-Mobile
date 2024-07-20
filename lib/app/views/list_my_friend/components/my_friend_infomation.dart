@@ -55,6 +55,8 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
   }
 
   bool isDelete = false;
+  bool isConfirmFriendRequest = false;
+  bool isDelinceFriendRequest = false;
 
   @override
   Widget build(BuildContext context) {
@@ -148,73 +150,75 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
             ),
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.only(top: 20.h),
-          child: Stack(children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: EdgeInsets.only(top: 60.h),
-                padding: EdgeInsets.only(top: 80.h),
-                height: 500.h,
-                decoration: BoxDecoration(
-                  color: AppColors.of(context).primaryColor2,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.of(context).neutralColor8,
-                      offset: const Offset(0, -2),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.user.fullName,
-                        style: AppTextStyles.of(context).bold20,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 20.h),
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  margin: EdgeInsets.only(top: 60.h),
+                  padding: EdgeInsets.only(top: 80.h),
+                  height: 500.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.of(context).primaryColor2,
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.of(context).neutralColor8,
+                        offset: const Offset(0, -2),
+                        blurRadius: 4,
                       ),
-                      SizedBox(height: 20.h),
-                      widget.user.phoneNumber != null
-                          ? Information(
-                              iconUrl: Assets.icons.call,
-                              title: formatPhone(widget.user.phoneNumber!),
-                            )
-                          : SizedBox(),
-                      widget.user.dob != null
-                          ? Information(
-                              iconUrl: Assets.icons.calendar,
-                              title: formatDate(widget.user.dob!),
-                            )
-                          : SizedBox(),
-                      Information(
-                        iconUrl: Assets.icons.mail,
-                        title: widget.user.email!,
-                      ),
-                      SizedBox(height: 100.h),
-                      _buildSelectButtonByOption(widget.option),
                     ],
+                  ),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.user.fullName,
+                          style: AppTextStyles.of(context).bold20,
+                        ),
+                        SizedBox(height: 20.h),
+                        widget.user.phoneNumber != null
+                            ? Information(
+                                iconUrl: Assets.icons.call,
+                                title: formatPhone(widget.user.phoneNumber!),
+                              )
+                            : SizedBox(),
+                        widget.user.dob != null
+                            ? Information(
+                                iconUrl: Assets.icons.calendar,
+                                title: formatDate(widget.user.dob!),
+                              )
+                            : SizedBox(),
+                        Information(
+                          iconUrl: Assets.icons.mail,
+                          title: widget.user.email!,
+                        ),
+                        SizedBox(height: 100.h),
+                        _buildSelectButtonByOption(widget.option),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(
-                  widget.user.avatar!,
-                  height: 120.w,
-                  width: 120.h,
-                  fit: BoxFit.fill,
+              Align(
+                alignment: Alignment.topCenter,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Image.network(
+                    widget.user.avatar!,
+                    height: 120.w,
+                    width: 120.h,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ),
-          ]),
+            ]),
+          ),
         ),
       ),
     );
@@ -233,6 +237,10 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
         decoration: BoxDecoration(
           color: colorBackGround,
           borderRadius: BorderRadius.circular(50),
+          border: Border.all(
+            color: AppColors.of(context).primaryColor9,
+            width: 2,
+          ),
         ),
         child: Text(
           title,
@@ -251,9 +259,9 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
           ? [
               Expanded(
                 child: _button(
-                  "Xoá",
-                  AppColors.of(context).primaryColor4,
-                  AppColors.of(context).neutralColor11,
+                  S.of(context).delete,
+                  AppColors.of(context).neutralColor2,
+                  AppColors.of(context).primaryColor9,
                   () {},
                 ),
               ),
@@ -262,9 +270,9 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
               ),
               Expanded(
                 child: _button(
-                  "Kết bạn",
-                  AppColors.of(context).primaryColor7,
-                  AppColors.of(context).neutralColor12,
+                  S.of(context).addFriend,
+                  AppColors.of(context).primaryColor9,
+                  AppColors.of(context).neutralColor2,
                   () {},
                 ),
               ),
@@ -274,17 +282,17 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   !isDelete
                       ? Expanded(
                           child: _button(
-                            "Xoá bạn",
-                            AppColors.of(context).primaryColor4,
-                            AppColors.of(context).neutralColor11,
+                            S.of(context).deleteFriend,
+                            AppColors.of(context).neutralColor2,
+                            AppColors.of(context).primaryColor9,
                             () => showDialogDeleteFriend(widget.user.fullName),
                           ),
                         )
                       : Expanded(
                           child: _button(
-                            "Xoá",
-                            AppColors.of(context).primaryColor4,
-                            AppColors.of(context).neutralColor11,
+                            S.of(context).delete,
+                            AppColors.of(context).neutralColor2,
+                            AppColors.of(context).primaryColor9,
                             () {},
                           ),
                         ),
@@ -294,41 +302,75 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   !isDelete
                       ? Expanded(
                           child: _button(
-                            "Nhắn tin",
-                            AppColors.of(context).primaryColor7,
-                            AppColors.of(context).neutralColor12,
+                            S.of(context).sendMessage,
+                            AppColors.of(context).primaryColor10,
+                            AppColors.of(context).neutralColor2,
                             () => navigateToChatScreen(),
                           ),
                         )
                       : Expanded(
                           child: _button(
-                            "Kết bạn",
-                            AppColors.of(context).primaryColor7,
-                            AppColors.of(context).neutralColor12,
+                            S.of(context).addFriend,
+                            AppColors.of(context).primaryColor10,
+                            AppColors.of(context).neutralColor2,
                             () {},
                           ),
                         ),
                 ]
               : [
-                  Expanded(
-                    child: _button(
-                      "Xoá",
-                      AppColors.of(context).primaryColor4,
-                      AppColors.of(context).neutralColor11,
-                      () {},
-                    ),
-                  ),
+                  !isConfirmFriendRequest
+                      ? (!isDelinceFriendRequest
+                          ? Expanded(
+                              child: _button(
+                                S.of(context).delete,
+                                AppColors.of(context).neutralColor2,
+                                AppColors.of(context).primaryColor9,
+                                () =>confirmFriendRequest(0),
+                              ),
+                            )
+                          : Expanded(
+                              child: _button(
+                                S.of(context).delete,
+                                AppColors.of(context).neutralColor2,
+                                AppColors.of(context).primaryColor9,
+                                (){},
+                              ),
+                            ))
+                      : Expanded(
+                          child: _button(
+                            S.of(context).deleteFriend,
+                            AppColors.of(context).neutralColor2,
+                            AppColors.of(context).primaryColor9,
+                            () => showDialogDeleteFriend(widget.user.fullName),
+                          ),
+                        ),
                   SizedBox(
                     width: 52.w,
                   ),
-                  Expanded(
-                    child: _button(
-                      "Đồng ý",
-                      AppColors.of(context).primaryColor7,
-                      AppColors.of(context).neutralColor12,
-                      () {},
-                    ),
-                  ),
+                  !isConfirmFriendRequest
+                      ? (!isDelinceFriendRequest
+                          ? Expanded(
+                              child: _button(
+                              S.of(context).accept,
+                              AppColors.of(context).primaryColor10,
+                              AppColors.of(context).neutralColor2,
+                              () => confirmFriendRequest(1),
+                            ))
+                          : Expanded(
+                              child: _button(
+                              S.of(context).addFriend,
+                              AppColors.of(context).primaryColor10,
+                              AppColors.of(context).neutralColor2,
+                              () {},
+                            )))
+                      : Expanded(
+                          child: _button(
+                            S.of(context).sendMessage,
+                            AppColors.of(context).primaryColor10,
+                            AppColors.of(context).neutralColor2,
+                            () => navigateToChatScreen(),
+                          ),
+                        ),
                 ]),
     );
   }
@@ -362,11 +404,30 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
     if (statusCode == 200) {
       setState(() {
         isDelete = true;
+        context.read<UserProvider>().getFriendOfUser();
       });
       print("Huỷ kết bạn thành công");
       Navigator.pop(ct);
     } else {
       print("Huỷ kết bạn thất bại");
+    }
+  }
+
+  void confirmFriendRequest(int option) async {
+    int statusCode =
+        await UserService.confirmFriendRequestOfUserBy(widget.user.id, option);
+    if (statusCode == 200) {
+      if (option == 1) {
+        isConfirmFriendRequest = true;
+      } else {
+        isDelinceFriendRequest = true;
+      }
+      setState(() {
+        context.read<UserProvider>().getFriendRequestOfUser();
+        context.read<UserProvider>().getFriendOfUser();
+      });
+    } else {
+      print("Xác nhận yêu cầu lỗi");
     }
   }
 
@@ -388,7 +449,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
               children: [
                 Expanded(
                   child: _button(
-                    "Có",
+                    S.of(context).yes,
                     AppColors.of(context).primaryColor4,
                     AppColors.of(context).neutralColor11,
                     () async {
@@ -401,7 +462,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                 ),
                 Expanded(
                   child: _button(
-                    "Không",
+                    S.of(context).no,
                     AppColors.of(context).primaryColor7,
                     AppColors.of(context).neutralColor12,
                     () {
