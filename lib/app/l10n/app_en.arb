@@ -33,6 +33,7 @@
       "saveLoginInfo": "Save login information",
        "verifyEmail": "Verify your email",
        "thankYouForRegistering": "Thank you for registering an account on our app. Please check your email to verify your account. After completing this, please press the button below to finish registration.",
-       "complete": "Complete"
-
+       "complete": "Complete",
+    "sendMessage":"Send message",
+    "noNotification":"No notification"
 }
