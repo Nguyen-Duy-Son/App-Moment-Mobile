@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/constants/assets.dart';
-import '../../../core/constants/color_constants.dart';
-import '../../../core/constants/text_style_constants.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../models/user_model.dart';
 import 'my_friend_infomation.dart';
@@ -52,8 +49,8 @@ class _FriendRequestState extends State<FriendRequest> {
               Text(
                 widget.user.fullName,
                 style: AppTextStyles.of(context).light20.copyWith(
-                  color: AppColors.of(context).neutralColor12,
-                ),
+                      color: AppColors.of(context).neutralColor12,
+                    ),
                 overflow: TextOverflow.ellipsis,
               ),
               Row(
@@ -98,5 +95,4 @@ class _FriendRequestState extends State<FriendRequest> {
       ],
     );
   }
-
 }

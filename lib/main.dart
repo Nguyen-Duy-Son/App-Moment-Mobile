@@ -7,7 +7,7 @@ import 'package:hit_moments/app/core/config/app_config.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
-import 'package:hit_moments/app/providers/providers_list.dart';
+import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/routes/app_pages.dart';
@@ -28,17 +28,18 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         designSize: const Size(360, 800),
         builder: (context, child) {
+          //List<SingleChildWidget> providers = listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)).toList();
           return MultiProvider(
             providers: [
-              ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
+              //...providers,
+              //   ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
               //không hiểu sao thêm MomentProvider vào cái là nó bị lỗi k tìm thấy
               //ThemeProvider nên e khai báo nó thẳng vào đây luôn ạ
+              ChangeNotifierProvider(create: (context) => MomentProvider()),
               ChangeNotifierProvider(create: (context) => ThemeProvider()),
               ChangeNotifierProvider(create: (context) => AuthProvider()),
-              //provider ngôn ngữ làm riêng
-              ChangeNotifierProvider(
-                create: (context) => locale,
-              ), ChangeNotifierProvider(create: (context) => UserProvider())
+              ChangeNotifierProvider(create: (context) => LocaleProvider()),
+              ChangeNotifierProvider(create: (context) => UserProvider())
             ],
             child: Consumer<LocaleProvider>(
               builder: (context, provider, child) {

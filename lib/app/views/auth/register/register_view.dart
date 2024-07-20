@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../../core/config/enum.dart';
 import '../../../core/constants/assets.dart';
 import '../../../providers/auth_provider.dart';
-import '../login/login_widget.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -20,26 +19,30 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: SvgPicture.asset(Assets.icons.leftSVG),
-                  onPressed: () => Navigator.of(context).pop(),),
-              ),
-              body: const RegisterWidget(),
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: SvgPicture.asset(Assets.icons.leftSVG),
+              onPressed: () => Navigator.of(context).pop(),
             ),
-            context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
-                ?const Opacity(
-              opacity: 0.6,
-              child: ModalBarrier(dismissible: false, color: Colors.black),
-            ):SizedBox(),
-            context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
-                ?const Center(
-              child: CircularProgressIndicator(color: Colors.white,),
-            ):SizedBox(),
-          ],
-        )
-    );
+          ),
+          body: const RegisterWidget(),
+        ),
+        context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
+            ? const Opacity(
+                opacity: 0.6,
+                child: ModalBarrier(dismissible: false, color: Colors.black),
+              )
+            : const SizedBox(),
+        context.watch<AuthProvider>().registerStatus == ModuleStatus.loading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              )
+            : const SizedBox(),
+      ],
+    ));
   }
 }
