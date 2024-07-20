@@ -37,6 +37,7 @@
        "makeNewFriends": "Make new friends!",
        "searchByEmailPhone": "Search by email, phone number...",
        "userNotFound": "User not found",
-       "mutualFriends": "mutual friends"
-
+       "mutualFriends": "mutual friends",
+    "sendMessage":"Send message",
+    "noNotification":"No notification"
 }

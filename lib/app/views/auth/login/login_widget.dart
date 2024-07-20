@@ -59,6 +59,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     if(form.validate()){
       form.save();
       form.validate();
+      print(_emailController.text);
+      print(_passwordController.text);
       await context.read<AuthProvider>().login(_emailController.text, _passwordController.text, context);
       if(context.read<AuthProvider>().loginStatus == ModuleStatus.success){
         print("ok");

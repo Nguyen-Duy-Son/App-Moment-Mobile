@@ -18,6 +18,7 @@ class AuthService{
       );
       print('token sau login là ${response}');
       int statusCode = response['statusCode'];
+      print(response);
       if(statusCode == 200){
         String token = response['data']['accessToken'];
         setToken(token);

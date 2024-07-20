@@ -37,5 +37,7 @@
     "makeNewFriends": "Kết thêm bạn mới nào!",
       "searchByEmailPhone": "Tìm kiếm theo email, số điện thoại...",
       "userNotFound": "Không tìm thấy người dùng",
-      "mutualFriends": "bạn chung"
+      "mutualFriends": "bạn chung",
+    "sendMessage":"Gửi tin nhắn...",
+    "noNotification":"Không có thông báo"
 }

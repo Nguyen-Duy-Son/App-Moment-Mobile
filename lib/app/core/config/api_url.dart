@@ -1,6 +1,6 @@
 const example = 'example';
 
-mixin class ApiUrl{
+mixin class ApiUrl {
   static const _urlBase = "https://api.hitmoments.com/v1";
 
   static const login = "$_urlBase/auth/login";
@@ -9,4 +9,7 @@ mixin class ApiUrl{
 
   static const getListMoment = "$_urlBase/moments/";
 
+  static const getFriends = "$_urlBase/friends/list-friends";
+  static const getFriendsRequest = "$_urlBase/friends/list-received-request";
+  static const deleteFriend = "$_urlBase/friends/delete-friend";
 }

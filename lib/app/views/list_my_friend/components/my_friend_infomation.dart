@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/views/list_my_friend/components/chat_message_view.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/extensions/theme_extensions.dart';
+import '../../../datasource/network_services/user_service.dart';
 import '../../../l10n/l10n.dart';
 import '../../../models/user_model.dart';
 import '../../../providers/user_provider.dart';
@@ -51,6 +53,8 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
 
     return formatted.trim(); // Use trim to remove the trailing space
   }
+
+  bool isDelete = false;
 
   @override
   Widget build(BuildContext context) {
@@ -175,14 +179,18 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                         style: AppTextStyles.of(context).bold20,
                       ),
                       SizedBox(height: 20.h),
-                      Information(
-                        iconUrl: Assets.icons.call,
-                        title: formatPhone(widget.user.phoneNumber!),
-                      ),
-                      Information(
-                        iconUrl: Assets.icons.calendar,
-                        title: formatDate(widget.user.dob!),
-                      ),
+                      widget.user.phoneNumber != null
+                          ? Information(
+                              iconUrl: Assets.icons.call,
+                              title: formatPhone(widget.user.phoneNumber!),
+                            )
+                          : SizedBox(),
+                      widget.user.dob != null
+                          ? Information(
+                              iconUrl: Assets.icons.calendar,
+                              title: formatDate(widget.user.dob!),
+                            )
+                          : SizedBox(),
                       Information(
                         iconUrl: Assets.icons.mail,
                         title: widget.user.email!,
@@ -219,7 +227,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(
-          horizontal: 40.w,
+          horizontal: 32.w,
           vertical: 8.h,
         ),
         decoration: BoxDecoration(
@@ -241,46 +249,85 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: option == 0
           ? [
-              _button(
-                "Xoá",
-                AppColors.of(context).primaryColor4,
-                AppColors.of(context).neutralColor11,
-                () {},
+              Expanded(
+                child: _button(
+                  "Xoá",
+                  AppColors.of(context).primaryColor4,
+                  AppColors.of(context).neutralColor11,
+                  () {},
+                ),
               ),
-              _button(
-                "Kết bạn",
-                AppColors.of(context).primaryColor7,
-                AppColors.of(context).neutralColor12,
-                () {},
+              SizedBox(
+                width: 52.w,
+              ),
+              Expanded(
+                child: _button(
+                  "Kết bạn",
+                  AppColors.of(context).primaryColor7,
+                  AppColors.of(context).neutralColor12,
+                  () {},
+                ),
               ),
             ]
           : (option == 1
               ? [
-                  _button(
-                    "Xoá bạn",
-                    AppColors.of(context).primaryColor4,
-                    AppColors.of(context).neutralColor11,
-                    () {},
+                  !isDelete
+                      ? Expanded(
+                          child: _button(
+                            "Xoá bạn",
+                            AppColors.of(context).primaryColor4,
+                            AppColors.of(context).neutralColor11,
+                            () => showDialogDeleteFriend(widget.user.fullName),
+                          ),
+                        )
+                      : Expanded(
+                          child: _button(
+                            "Xoá",
+                            AppColors.of(context).primaryColor4,
+                            AppColors.of(context).neutralColor11,
+                            () {},
+                          ),
+                        ),
+                  SizedBox(
+                    width: 52.w,
                   ),
-                  _button(
-                    "Đồng ý",
-                    AppColors.of(context).primaryColor7,
-                    AppColors.of(context).neutralColor12,
-                    () {},
-                  ),
+                  !isDelete
+                      ? Expanded(
+                          child: _button(
+                            "Nhắn tin",
+                            AppColors.of(context).primaryColor7,
+                            AppColors.of(context).neutralColor12,
+                            () => navigateToChatScreen(),
+                          ),
+                        )
+                      : Expanded(
+                          child: _button(
+                            "Kết bạn",
+                            AppColors.of(context).primaryColor7,
+                            AppColors.of(context).neutralColor12,
+                            () {},
+                          ),
+                        ),
                 ]
               : [
-                  _button(
-                    "Xoá",
-                    AppColors.of(context).primaryColor4,
-                    AppColors.of(context).neutralColor11,
-                    () {},
+                  Expanded(
+                    child: _button(
+                      "Xoá",
+                      AppColors.of(context).primaryColor4,
+                      AppColors.of(context).neutralColor11,
+                      () {},
+                    ),
                   ),
-                  _button(
-                    "Đồng ý",
-                    AppColors.of(context).primaryColor7,
-                    AppColors.of(context).neutralColor12,
-                    () {},
+                  SizedBox(
+                    width: 52.w,
+                  ),
+                  Expanded(
+                    child: _button(
+                      "Đồng ý",
+                      AppColors.of(context).primaryColor7,
+                      AppColors.of(context).neutralColor12,
+                      () {},
+                    ),
                   ),
                 ]),
     );
@@ -299,17 +346,86 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
     items.insert(
       0,
       PopupMenuItem(
-        child: Center(
-          child: Text(
-            overflow: TextOverflow.ellipsis,
-            S.of(context).friendRequest,
-            style: AppTextStyles.of(context).bold20,
-          ),
-        ),
-        enabled: false, // Disable the item so it can't be selected
+        enabled: false,
+        child: Text(
+          overflow: TextOverflow.ellipsis,
+          S.of(context).friendRequest,
+          style: AppTextStyles.of(context).bold20,
+        ), // Disable the item so it can't be selected
       ),
     );
     return items;
+  }
+
+  void deleteFriend(BuildContext ct) async {
+    int statusCode = await UserService.deleteFriendOfUserById(widget.user.id);
+    if (statusCode == 200) {
+      setState(() {
+        isDelete = true;
+      });
+      print("Huỷ kết bạn thành công");
+      Navigator.pop(ct);
+    } else {
+      print("Huỷ kết bạn thất bại");
+    }
+  }
+
+  void showDialogDeleteFriend(String fullName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            'Bạn có chắc chắn muốn huỷ kết bạn với ${fullName} không?',
+            textAlign: TextAlign.center,
+            style: AppTextStyles.of(context)
+                .bold20
+                .copyWith(color: AppColors.of(context).neutralColor11),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: _button(
+                    "Có",
+                    AppColors.of(context).primaryColor4,
+                    AppColors.of(context).neutralColor11,
+                    () async {
+                      deleteFriend(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 12.w,
+                ),
+                Expanded(
+                  child: _button(
+                    "Không",
+                    AppColors.of(context).primaryColor7,
+                    AppColors.of(context).neutralColor12,
+                    () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void navigateToChatScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatMessageView(
+          user: widget.user,
+        ),
+      ),
+    );
   }
 }
 

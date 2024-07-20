@@ -12,6 +12,7 @@ import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/auth/auth_view.dart';
+import 'package:hit_moments/app/views/list_my_friend/list_my_friend_view.dart';
 import 'package:hit_moments/app/views/moment/moment_view.dart';
 import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class _ExampleViewState extends State<ExampleView> {
   @override
   Widget build(BuildContext context) {
     print(Platform.localeName);
+    print(getToken());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.of(context).primaryColor12,
@@ -39,12 +41,17 @@ class _ExampleViewState extends State<ExampleView> {
             Text(
               AppLocalizations.of(context)!.hello,
               style: AppTextStyles.of(context).regular32.copyWith(
-                color: AppColors.of(context).primaryColor12,
-              ),
+                    color: AppColors.of(context).primaryColor12,
+                  ),
             ),
-            ElevatedButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MomentView(),) );
-            },
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MomentView(),
+                      ));
+                },
                 child: Text("Moment")),
             ElevatedButton(onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestedFriendsView(),));
@@ -73,10 +80,14 @@ class _ExampleViewState extends State<ExampleView> {
               print(value);
               if (value) {
                 context.read<LocaleProvider>().changeLocale(const Locale('en'));
-                context.read<ThemeProvider>().setThemeData(ThemeConfig.darkTheme);
+                context
+                    .read<ThemeProvider>()
+                    .setThemeData(ThemeConfig.darkTheme);
               } else {
                 context.read<LocaleProvider>().changeLocale(const Locale('vi'));
-                context.read<ThemeProvider>().setThemeData(ThemeConfig.lightTheme);
+                context
+                    .read<ThemeProvider>()
+                    .setThemeData(ThemeConfig.lightTheme);
               }
             });
           },
