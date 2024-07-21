@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/custom/widgets/button_select_option.dart';
 import 'package:hit_moments/app/views/list_my_friend/components/chat_message_view.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
-import '../../../core/constants/assets.dart';
-import '../../../core/constants/color_constants.dart';
-import '../../../core/extensions/theme_extensions.dart';
-import '../../../datasource/network_services/user_service.dart';
-import '../../../l10n/l10n.dart';
-import '../../../models/user_model.dart';
-import '../../../providers/user_provider.dart';
-import 'friend_request.dart';
+import '../../../../core/constants/assets.dart';
+import '../../../../core/constants/color_constants.dart';
+import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../custom/widgets/tool_tip_shape.dart';
+import '../../../../datasource/network_services/user_service.dart';
+import '../../../../l10n/l10n.dart';
+import '../../../../models/user_model.dart';
+import '../../../../providers/user_provider.dart';
+import '../friend_request.dart';
 
 class MyFriendInfomationScreen extends StatefulWidget {
   final User user;
@@ -40,10 +42,9 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
 
   String formatPhone(String phone) {
     final String firstPart = phone.substring(0, 4);
-    final String remaining = phone.substring(4); // Start from the 5th character
+    final String remaining = phone.substring(4);
     final tmp =
         remaining.replaceRange(0, remaining.length, 'X' * remaining.length);
-    // Add space after every 3 characters for the remaining part
     final String formattedRemaining =
         tmp.replaceAllMapped(RegExp(r".{3}"), (match) {
       return '${match.group(0)} ';
@@ -57,6 +58,8 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
   bool isDelete = false;
   bool isConfirmFriendRequest = false;
   bool isDelinceFriendRequest = false;
+  bool isSentRequest = false;
+  bool cancelSentRequest = false;
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +234,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(
-          horizontal: 32.w,
+          horizontal: 20.w,
           vertical: 8.h,
         ),
         decoration: BoxDecoration(
@@ -258,42 +261,86 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
       children: option == 0
           ? [
               Expanded(
-                child: _button(
-                  S.of(context).delete,
-                  AppColors.of(context).neutralColor2,
-                  AppColors.of(context).primaryColor9,
-                  () {},
+                child: ButtonSelectOption(
+                  title: S.of(context).delete,
+                  colorBackGround: AppColors.of(context).neutralColor2,
+                  color: AppColors.of(context).primaryColor9,
+                  onTap: () {},
+                  //  S.of(context).delete,
+                  // AppColors.of(context).neutralColor2,
+                  // AppColors.of(context).primaryColor9,
+                  //     () {},
                 ),
               ),
               SizedBox(
                 width: 52.w,
               ),
-              Expanded(
-                child: _button(
-                  S.of(context).addFriend,
-                  AppColors.of(context).primaryColor9,
-                  AppColors.of(context).neutralColor2,
-                  () {},
-                ),
-              ),
+              isSentRequest == false
+                  ? Expanded(
+                      child:
+                          // _button(
+                          //   S.of(context).addFriend,
+                          //   AppColors.of(context).primaryColor9,
+                          //   AppColors.of(context).neutralColor2,
+                          //   () => sentRequestFriend(),
+                          // ),
+                          ButtonSelectOption(
+                        title: S.of(context).addFriend,
+                        colorBackGround: AppColors.of(context).primaryColor9,
+                        color: AppColors.of(context).neutralColor2,
+                        onTap: () => sentRequestFriend(),
+                      ),
+                    )
+                  : Expanded(
+                      child:
+                          // _button(
+                          //   S.of(context).cancelAddFriend,
+                          //   AppColors.of(context).primaryColor9,
+                          //   AppColors.of(context).neutralColor2,
+                          //   () {},
+                          // ),
+                          ButtonSelectOption(
+                        title: S.of(context).cancelAddFriend,
+                        colorBackGround: AppColors.of(context).primaryColor9,
+                        color: AppColors.of(context).neutralColor2,
+                        onTap: () {},
+                      ),
+                    ),
             ]
           : (option == 1
               ? [
                   !isDelete
                       ? Expanded(
-                          child: _button(
-                            S.of(context).deleteFriend,
-                            AppColors.of(context).neutralColor2,
-                            AppColors.of(context).primaryColor9,
-                            () => showDialogDeleteFriend(widget.user.fullName),
+                          child:
+                              // _button(
+                              //   S.of(context).deleteFriend,
+                              //   AppColors.of(context).neutralColor2,
+                              //   AppColors.of(context).primaryColor9,
+                              //   () => showDialogDeleteFriend(widget.user.fullName),
+                              // ),
+                              ButtonSelectOption(
+                            title: S.of(context).deleteFriend,
+                            colorBackGround:
+                                AppColors.of(context).neutralColor2,
+                            color: AppColors.of(context).primaryColor9,
+                            onTap: () =>
+                                showDialogDeleteFriend(widget.user.fullName),
                           ),
                         )
                       : Expanded(
-                          child: _button(
-                            S.of(context).delete,
-                            AppColors.of(context).neutralColor2,
-                            AppColors.of(context).primaryColor9,
-                            () {},
+                          child:
+                              // _button(
+                              //   S.of(context).delete,
+                              //   AppColors.of(context).neutralColor2,
+                              //   AppColors.of(context).primaryColor9,
+                              //   () {},
+                              // ),
+                              ButtonSelectOption(
+                            title: S.of(context).delete,
+                            colorBackGround:
+                                AppColors.of(context).neutralColor2,
+                            color: AppColors.of(context).primaryColor9,
+                            onTap: () {},
                           ),
                         ),
                   SizedBox(
@@ -301,74 +348,173 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   ),
                   !isDelete
                       ? Expanded(
-                          child: _button(
-                            S.of(context).sendMessage,
-                            AppColors.of(context).primaryColor10,
-                            AppColors.of(context).neutralColor2,
-                            () => navigateToChatScreen(),
+                          child:
+                              // _button(
+                              //   S.of(context).sendMessage,
+                              //   AppColors.of(context).primaryColor10,
+                              //   AppColors.of(context).neutralColor2,
+                              //   () => navigateToChatScreen(),
+                              // ),
+                              ButtonSelectOption(
+                            title: S.of(context).sendMessage,
+                            colorBackGround:
+                                AppColors.of(context).primaryColor10,
+                            color: AppColors.of(context).neutralColor2,
+                            onTap: () => navigateToChatScreen(),
                           ),
                         )
-                      : Expanded(
-                          child: _button(
-                            S.of(context).addFriend,
-                            AppColors.of(context).primaryColor10,
-                            AppColors.of(context).neutralColor2,
-                            () {},
-                          ),
-                        ),
-                ]
-              : [
-                  !isConfirmFriendRequest
-                      ? (!isDelinceFriendRequest
+                      : (isSentRequest == false
                           ? Expanded(
-                              child: _button(
-                                S.of(context).delete,
-                                AppColors.of(context).neutralColor2,
-                                AppColors.of(context).primaryColor9,
-                                () =>confirmFriendRequest(0),
+                              child:
+                                  // _button(
+                                  //   S.of(context).addFriend,
+                                  //   AppColors.of(context).primaryColor9,
+                                  //   AppColors.of(context).neutralColor2,
+                                  //   () => sentRequestFriend(),
+                                  // ),
+                                  ButtonSelectOption(
+                                title: S.of(context).addFriend,
+                                colorBackGround:
+                                    AppColors.of(context).primaryColor9,
+                                color: AppColors.of(context).neutralColor2,
+                                onTap: () => sentRequestFriend(),
                               ),
                             )
                           : Expanded(
-                              child: _button(
-                                S.of(context).delete,
-                                AppColors.of(context).neutralColor2,
-                                AppColors.of(context).primaryColor9,
-                                (){},
+                              child:
+                                  // _button(
+                                  //   S.of(context).cancelAddFriend,
+                                  //   AppColors.of(context).primaryColor9,
+                                  //   AppColors.of(context).neutralColor2,
+                                  //   () {},
+                                  // ),
+                                  ButtonSelectOption(
+                                title: S.of(context).cancelAddFriend,
+                                colorBackGround:
+                                    AppColors.of(context).primaryColor9,
+                                color: AppColors.of(context).neutralColor2,
+                                onTap: () {},
+                              ),
+                            )),
+                ]
+              : [
+                  isConfirmFriendRequest == false
+                      ? (isDelinceFriendRequest == false
+                          ? Expanded(
+                              child:
+                                  // _button(
+                                  //   S.of(context).delete,
+                                  //   AppColors.of(context).neutralColor2,
+                                  //   AppColors.of(context).primaryColor9,
+                                  //   () => confirmFriendRequest(0),
+                                  // ),
+                                  ButtonSelectOption(
+                                title: S.of(context).delete,
+                                colorBackGround:
+                                    AppColors.of(context).neutralColor2,
+                                color: AppColors.of(context).primaryColor9,
+                                onTap: () => confirmFriendRequest(0),
+                              ),
+                            )
+                          : Expanded(
+                              child:
+                                  // _button(
+                                  //   S.of(context).delete,
+                                  //   AppColors.of(context).neutralColor2,
+                                  //   AppColors.of(context).primaryColor9,
+                                  //   () {},
+                                  // ),
+                                  ButtonSelectOption(
+                                title: S.of(context).delete,
+                                colorBackGround:
+                                    AppColors.of(context).neutralColor2,
+                                color: AppColors.of(context).primaryColor9,
+                                onTap: () {},
                               ),
                             ))
                       : Expanded(
-                          child: _button(
-                            S.of(context).deleteFriend,
-                            AppColors.of(context).neutralColor2,
-                            AppColors.of(context).primaryColor9,
-                            () => showDialogDeleteFriend(widget.user.fullName),
+                          child:
+                              // _button(
+                              //   S.of(context).deleteFriend,
+                              //   AppColors.of(context).neutralColor2,
+                              //   AppColors.of(context).primaryColor9,
+                              //   () => showDialogDeleteFriend(widget.user.fullName),
+                              // ),
+                              ButtonSelectOption(
+                            title: S.of(context).deleteFriend,
+                            colorBackGround:
+                                AppColors.of(context).neutralColor2,
+                            color: AppColors.of(context).primaryColor9,
+                            onTap: () =>
+                                showDialogDeleteFriend(widget.user.fullName),
                           ),
                         ),
                   SizedBox(
                     width: 52.w,
                   ),
-                  !isConfirmFriendRequest
-                      ? (!isDelinceFriendRequest
+                  isConfirmFriendRequest == false
+                      ? (isDelinceFriendRequest == false
                           ? Expanded(
-                              child: _button(
-                              S.of(context).accept,
-                              AppColors.of(context).primaryColor10,
-                              AppColors.of(context).neutralColor2,
-                              () => confirmFriendRequest(1),
-                            ))
-                          : Expanded(
-                              child: _button(
-                              S.of(context).addFriend,
-                              AppColors.of(context).primaryColor10,
-                              AppColors.of(context).neutralColor2,
-                              () {},
-                            )))
+                              child:
+                                  //   _button(
+                                  //   S.of(context).accept,
+                                  //   AppColors.of(context).primaryColor10,
+                                  //   AppColors.of(context).neutralColor2,
+                                  //   () => confirmFriendRequest(1),
+                                  // )
+                                  ButtonSelectOption(
+                                title: S.of(context).accept,
+                                colorBackGround:
+                                    AppColors.of(context).primaryColor10,
+                                color: AppColors.of(context).neutralColor2,
+                                onTap: () => confirmFriendRequest(1),
+                              ),
+                            )
+                          : (isSentRequest == false
+                              ? Expanded(
+                                  child:
+                                      // _button(
+                                      //   S.of(context).addFriend,
+                                      //   AppColors.of(context).primaryColor9,
+                                      //   AppColors.of(context).neutralColor2,
+                                      //   () => sentRequestFriend(),
+                                      // ),
+                                      ButtonSelectOption(
+                                        title: S.of(context).addFriend,
+                                        colorBackGround:
+                                          AppColors.of(context).primaryColor9,
+                                        color: AppColors.of(context).neutralColor2,
+                                        onTap: () => sentRequestFriend(),
+                                  ),
+                                )
+                              : Expanded(
+                                  child:
+                                  // _button(
+                                  //   S.of(context).cancelAddFriend,
+                                  //   AppColors.of(context).primaryColor9,
+                                  //   AppColors.of(context).neutralColor2,
+                                  //   () {},
+                                  // ),
+                                  ButtonSelectOption(
+                                    title: S.of(context).cancelAddFriend,
+                                    colorBackGround: AppColors.of(context).primaryColor9,
+                                    color: AppColors.of(context).neutralColor2,
+                                    onTap: () {},
+                                  ),
+                                )))
                       : Expanded(
-                          child: _button(
-                            S.of(context).sendMessage,
-                            AppColors.of(context).primaryColor10,
-                            AppColors.of(context).neutralColor2,
-                            () => navigateToChatScreen(),
+                          child:
+                          // _button(
+                          //   S.of(context).sendMessage,
+                          //   AppColors.of(context).primaryColor10,
+                          //   AppColors.of(context).neutralColor2,
+                          //   () => navigateToChatScreen(),
+                          // ),
+                          ButtonSelectOption(
+                            title: S.of(context).sendMessage,
+                            colorBackGround: AppColors.of(context).primaryColor10,
+                            color: AppColors.of(context).neutralColor2,
+                            onTap: () => navigateToChatScreen(),
                           ),
                         ),
                 ]),
@@ -413,19 +559,33 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
     }
   }
 
+  void sentRequestFriend() async {
+    int statusCode = await UserService.sentRequestById(widget.user.id);
+    if (statusCode == 200) {
+      setState(() {
+        isSentRequest = true;
+      });
+      print("Gửi yêu cầu kết bạn thành công");
+    } else {
+      print("Gửi yêu cầu kết bạn thất bại");
+    }
+  }
+
   void confirmFriendRequest(int option) async {
     int statusCode =
         await UserService.confirmFriendRequestOfUserBy(widget.user.id, option);
     if (statusCode == 200) {
       if (option == 1) {
-        isConfirmFriendRequest = true;
+        setState(() {
+          isConfirmFriendRequest = true;
+        });
       } else {
-        isDelinceFriendRequest = true;
+        setState(() {
+          isDelinceFriendRequest = true;
+        });
       }
-      setState(() {
-        context.read<UserProvider>().getFriendRequestOfUser();
-        context.read<UserProvider>().getFriendOfUser();
-      });
+      context.read<UserProvider>().getFriendRequestOfUser();
+      context.read<UserProvider>().getFriendOfUser();
     } else {
       print("Xác nhận yêu cầu lỗi");
     }
@@ -452,9 +612,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                     S.of(context).yes,
                     AppColors.of(context).primaryColor4,
                     AppColors.of(context).neutralColor11,
-                    () async {
-                      deleteFriend(context);
-                    },
+                    () => deleteFriend(context),
                   ),
                 ),
                 SizedBox(
@@ -524,57 +682,4 @@ class Information extends StatelessWidget {
       ),
     );
   }
-}
-
-class TooltipShape extends ShapeBorder {
-  const TooltipShape();
-
-  final BorderSide _side = BorderSide.none;
-  final BorderRadiusGeometry _borderRadius = BorderRadius.zero;
-
-  @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.all(_side.width);
-
-  @override
-  Path getInnerPath(
-    Rect rect, {
-    TextDirection? textDirection,
-  }) {
-    final Path path = Path();
-
-    path.addRRect(
-      _borderRadius.resolve(textDirection).toRRect(rect).deflate(_side.width),
-    );
-
-    return path;
-  }
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    final Path path = Path();
-    final RRect rrect = _borderRadius.resolve(textDirection).toRRect(rect);
-
-    path.moveTo(0, 10);
-    path.quadraticBezierTo(0, 0, 10, 0);
-    path.lineTo(rrect.width - 30, 0);
-    path.lineTo(rrect.width - 20, -10);
-    path.lineTo(rrect.width - 10, 0);
-    path.quadraticBezierTo(rrect.width, 0, rrect.width, 10);
-    path.lineTo(rrect.width, rrect.height - 10);
-    path.quadraticBezierTo(
-        rrect.width, rrect.height, rrect.width - 10, rrect.height);
-    path.lineTo(10, rrect.height);
-    path.quadraticBezierTo(0, rrect.height, 0, rrect.height - 10);
-
-    return path;
-  }
-
-  @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
-
-  @override
-  ShapeBorder scale(double t) => RoundedRectangleBorder(
-        side: _side.scale(t),
-        borderRadius: _borderRadius * t,
-      );
 }

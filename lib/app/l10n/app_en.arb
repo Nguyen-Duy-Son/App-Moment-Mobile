@@ -43,5 +43,6 @@
         "reject":"Reject",
         "addFriend":"Add friend",
         "no":"No",
-        "yes":"Yes"
+        "yes":"Yes",
+        "cancelAddFriend":"Cancel add friend"
 }
