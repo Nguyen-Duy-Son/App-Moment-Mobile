@@ -227,34 +227,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
     );
   }
 
-  Widget _button(
-      String title, Color colorBackGround, Color color, Function onTap) {
-    return GestureDetector(
-      onTap: () => onTap(),
-      child: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 8.h,
-        ),
-        decoration: BoxDecoration(
-          color: colorBackGround,
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
-            color: AppColors.of(context).primaryColor9,
-            width: 2,
-          ),
-        ),
-        child: Text(
-          title,
-          style: AppTextStyles.of(context).light20.copyWith(
-                color: color,
-              ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildSelectButtonByOption(int option) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -266,10 +238,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   colorBackGround: AppColors.of(context).neutralColor2,
                   color: AppColors.of(context).primaryColor9,
                   onTap: () {},
-                  //  S.of(context).delete,
-                  // AppColors.of(context).neutralColor2,
-                  // AppColors.of(context).primaryColor9,
-                  //     () {},
                 ),
               ),
               SizedBox(
@@ -278,12 +246,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
               isSentRequest == false
                   ? Expanded(
                       child:
-                          // _button(
-                          //   S.of(context).addFriend,
-                          //   AppColors.of(context).primaryColor9,
-                          //   AppColors.of(context).neutralColor2,
-                          //   () => sentRequestFriend(),
-                          // ),
                           ButtonSelectOption(
                         title: S.of(context).addFriend,
                         colorBackGround: AppColors.of(context).primaryColor9,
@@ -293,12 +255,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                     )
                   : Expanded(
                       child:
-                          // _button(
-                          //   S.of(context).cancelAddFriend,
-                          //   AppColors.of(context).primaryColor9,
-                          //   AppColors.of(context).neutralColor2,
-                          //   () {},
-                          // ),
                           ButtonSelectOption(
                         title: S.of(context).cancelAddFriend,
                         colorBackGround: AppColors.of(context).primaryColor9,
@@ -312,12 +268,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   !isDelete
                       ? Expanded(
                           child:
-                              // _button(
-                              //   S.of(context).deleteFriend,
-                              //   AppColors.of(context).neutralColor2,
-                              //   AppColors.of(context).primaryColor9,
-                              //   () => showDialogDeleteFriend(widget.user.fullName),
-                              // ),
                               ButtonSelectOption(
                             title: S.of(context).deleteFriend,
                             colorBackGround:
@@ -329,12 +279,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                         )
                       : Expanded(
                           child:
-                              // _button(
-                              //   S.of(context).delete,
-                              //   AppColors.of(context).neutralColor2,
-                              //   AppColors.of(context).primaryColor9,
-                              //   () {},
-                              // ),
                               ButtonSelectOption(
                             title: S.of(context).delete,
                             colorBackGround:
@@ -349,12 +293,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   !isDelete
                       ? Expanded(
                           child:
-                              // _button(
-                              //   S.of(context).sendMessage,
-                              //   AppColors.of(context).primaryColor10,
-                              //   AppColors.of(context).neutralColor2,
-                              //   () => navigateToChatScreen(),
-                              // ),
                               ButtonSelectOption(
                             title: S.of(context).sendMessage,
                             colorBackGround:
@@ -366,12 +304,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                       : (isSentRequest == false
                           ? Expanded(
                               child:
-                                  // _button(
-                                  //   S.of(context).addFriend,
-                                  //   AppColors.of(context).primaryColor9,
-                                  //   AppColors.of(context).neutralColor2,
-                                  //   () => sentRequestFriend(),
-                                  // ),
                                   ButtonSelectOption(
                                 title: S.of(context).addFriend,
                                 colorBackGround:
@@ -382,12 +314,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                             )
                           : Expanded(
                               child:
-                                  // _button(
-                                  //   S.of(context).cancelAddFriend,
-                                  //   AppColors.of(context).primaryColor9,
-                                  //   AppColors.of(context).neutralColor2,
-                                  //   () {},
-                                  // ),
                                   ButtonSelectOption(
                                 title: S.of(context).cancelAddFriend,
                                 colorBackGround:
@@ -402,12 +328,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                       ? (isDelinceFriendRequest == false
                           ? Expanded(
                               child:
-                                  // _button(
-                                  //   S.of(context).delete,
-                                  //   AppColors.of(context).neutralColor2,
-                                  //   AppColors.of(context).primaryColor9,
-                                  //   () => confirmFriendRequest(0),
-                                  // ),
                                   ButtonSelectOption(
                                 title: S.of(context).delete,
                                 colorBackGround:
@@ -418,12 +338,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                             )
                           : Expanded(
                               child:
-                                  // _button(
-                                  //   S.of(context).delete,
-                                  //   AppColors.of(context).neutralColor2,
-                                  //   AppColors.of(context).primaryColor9,
-                                  //   () {},
-                                  // ),
                                   ButtonSelectOption(
                                 title: S.of(context).delete,
                                 colorBackGround:
@@ -434,12 +348,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                             ))
                       : Expanded(
                           child:
-                              // _button(
-                              //   S.of(context).deleteFriend,
-                              //   AppColors.of(context).neutralColor2,
-                              //   AppColors.of(context).primaryColor9,
-                              //   () => showDialogDeleteFriend(widget.user.fullName),
-                              // ),
                               ButtonSelectOption(
                             title: S.of(context).deleteFriend,
                             colorBackGround:
@@ -456,12 +364,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                       ? (isDelinceFriendRequest == false
                           ? Expanded(
                               child:
-                                  //   _button(
-                                  //   S.of(context).accept,
-                                  //   AppColors.of(context).primaryColor10,
-                                  //   AppColors.of(context).neutralColor2,
-                                  //   () => confirmFriendRequest(1),
-                                  // )
                                   ButtonSelectOption(
                                 title: S.of(context).accept,
                                 colorBackGround:
@@ -473,12 +375,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                           : (isSentRequest == false
                               ? Expanded(
                                   child:
-                                      // _button(
-                                      //   S.of(context).addFriend,
-                                      //   AppColors.of(context).primaryColor9,
-                                      //   AppColors.of(context).neutralColor2,
-                                      //   () => sentRequestFriend(),
-                                      // ),
                                       ButtonSelectOption(
                                         title: S.of(context).addFriend,
                                         colorBackGround:
@@ -489,12 +385,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                                 )
                               : Expanded(
                                   child:
-                                  // _button(
-                                  //   S.of(context).cancelAddFriend,
-                                  //   AppColors.of(context).primaryColor9,
-                                  //   AppColors.of(context).neutralColor2,
-                                  //   () {},
-                                  // ),
                                   ButtonSelectOption(
                                     title: S.of(context).cancelAddFriend,
                                     colorBackGround: AppColors.of(context).primaryColor9,
@@ -504,12 +394,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                                 )))
                       : Expanded(
                           child:
-                          // _button(
-                          //   S.of(context).sendMessage,
-                          //   AppColors.of(context).primaryColor10,
-                          //   AppColors.of(context).neutralColor2,
-                          //   () => navigateToChatScreen(),
-                          // ),
                           ButtonSelectOption(
                             title: S.of(context).sendMessage,
                             colorBackGround: AppColors.of(context).primaryColor10,
@@ -608,22 +492,24 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: _button(
-                    S.of(context).yes,
-                    AppColors.of(context).primaryColor4,
-                    AppColors.of(context).neutralColor11,
-                    () => deleteFriend(context),
+                  child:
+                  ButtonSelectOption(
+                    title: S.of(context).yes,
+                    colorBackGround: AppColors.of(context).primaryColor4,
+                    color: AppColors.of(context).neutralColor11,
+                    onTap: () => deleteFriend(context),
                   ),
                 ),
                 SizedBox(
                   width: 12.w,
                 ),
                 Expanded(
-                  child: _button(
-                    S.of(context).no,
-                    AppColors.of(context).primaryColor7,
-                    AppColors.of(context).neutralColor12,
-                    () {
+                  child:
+                  ButtonSelectOption(
+                    title: S.of(context).no,
+                    colorBackGround: AppColors.of(context).primaryColor7,
+                    color: AppColors.of(context).neutralColor12,
+                    onTap: () {
                       Navigator.pop(context);
                     },
                   ),
