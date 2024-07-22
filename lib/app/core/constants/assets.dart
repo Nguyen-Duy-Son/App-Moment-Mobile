@@ -1,4 +1,5 @@
-// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+// app/core/constants/assets.dart
+// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 
 class Assets {
   Assets._();
@@ -38,6 +39,7 @@ class _AssetsIcons {
   final call = 'assets/icons/Call.svg';
   final mail = 'assets/icons/Mail.svg';
   final calendar = 'assets/icons/Calendar.svg';
+  final swap = 'assets/icons/Swap 3.svg';
 }
 
 class _AssetsImages {

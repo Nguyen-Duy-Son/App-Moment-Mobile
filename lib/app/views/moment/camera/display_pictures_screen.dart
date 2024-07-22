@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
@@ -40,7 +41,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: Image.file(File(imagePath), width: 400, height: 470, fit: BoxFit.fill),
+                      child: Image.file(File(imagePath), width: 400.w, height: 470.h, fit: BoxFit.fill),
                     ),
                     SingleChildScrollView(
                       reverse: true,
@@ -61,6 +62,7 @@ class DisplayPictureScreen extends StatelessWidget {
                           ]
                         ),
                         child: TextField(
+                          style: const TextStyle( fontSize: 24),
                           decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.feel, hintStyle: AppTextStyles.of(context).light24.copyWith(color: AppColors.of(context).neutralColor10))
                         ), //TODO: Cảm nghĩ...
                       ), 
@@ -75,27 +77,27 @@ class DisplayPictureScreen extends StatelessWidget {
                       child: Stack(
                         children: [
                           Container(
-                            width: 130, height: 50,
+                            width: 130.w, height: 50.h,
                             decoration: BoxDecoration(
                               color: AppColors.of(context).neutralColor9,
                             ),
                           ),
-                          Positioned(left: 0, top: 0,
+                          Positioned(left: 0.w, top: 0.h,
                             child: ClipRRect( 
                               child: BackdropFilter(
                                 filter: ui.ImageFilter.blur(sigmaX: 80, sigmaY: 0, tileMode: ui.TileMode.mirror),
                                 child: Container(
                                   alignment: Alignment.centerLeft,
-                                  width: 130, height: 50,
+                                  width: 130.w, height: 57.h,
                                   color: Colors.transparent,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SvgPicture.asset(Assets.icons.sunSVG, width: 40, height: 40,),
+                                      SvgPicture.asset(Assets.icons.sunSVG, width: 40.w, height: 40.h,),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
-                                          Text('Hà Nội', style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 14)),
+                                          Text('Hà Nội', style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 18)),
                                           Text('29°C', style: AppTextStyles.of(context).regular20.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 20))
                                         ],
                                       ),
@@ -136,7 +138,7 @@ class DisplayPictureScreen extends StatelessWidget {
                       side: BorderSide(color: AppColors.of(context).primaryColor10, width: 4),
                       padding: const EdgeInsets.fromLTRB(4, 6, 12, 2)
                     ),
-                    child: SvgPicture.asset(Assets.icons.sendSVG, height: 60, width: 60, color: AppColors.of(context).neutralColor12,),
+                    child: SvgPicture.asset(Assets.icons.sendSVG, height: 60.w, width: 60.w, color: AppColors.of(context).neutralColor12,),
                   ), //TODO: Gửi đến...
                 IconButton(
                   onPressed: () {}, 
@@ -149,19 +151,3 @@ class DisplayPictureScreen extends StatelessWidget {
     );
   }
 }
-
-class CustomClipPath extends CustomClipper<Path> {
-    @override
-    Path getClip(Size size) {
-      var path = Path();
-      path.lineTo(0, size.height);
-      path.lineTo(size.width, size.height);
-      path.lineTo(size.width, 0);
-      path.close();
-      return path;
-    }
-    @override
-    bool shouldReclip(CustomClipper<Path> oldClipper) {
-      return false;
-    }
-  }
