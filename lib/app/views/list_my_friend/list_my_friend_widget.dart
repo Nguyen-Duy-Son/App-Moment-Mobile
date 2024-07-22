@@ -24,14 +24,6 @@ class ListMyFriendWidget extends StatefulWidget {
 }
 
 class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
-  @override
-  void initState() {
-    // context.read<UserProvider>().getMyFriendsUsers();
-    // context.read<UserProvider>().getFriendRequestsUsers();
-    // context.read<UserProvider>().getFriendProposalsUsers();
-    super.initState();
-  }
-
   bool checkColorList = false;
   bool isExpandedMyFriend = false;
   bool isExpandedFriendProposals = false;
@@ -231,7 +223,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                                       ? _searchController.text
                                       : "",
                                 )
-                              : SearchDataNotFound())
+                              : const SearchDataNotFound())
                           : const Center(
                               child: CircularProgressIndicator(),
                             ),

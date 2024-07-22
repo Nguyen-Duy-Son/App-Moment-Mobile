@@ -11,4 +11,5 @@ mixin class ApiUrl {
   static const confirmFriendRequest = "$_urlBase/friends/confirm-request";
   static const searchFriendOfUser = "$_urlBase/friends/search-user";
   static const declineFriendRequest = "$_urlBase/friends/delince-request";
+  static const sentFriendRequestOfUser = "$_urlBase/friends/invite";
 }

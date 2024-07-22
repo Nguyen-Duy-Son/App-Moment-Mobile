@@ -43,5 +43,6 @@
     "reject":"Từ chối",
     "addFriend":"Kết bạn",
     "no":"Không",
-    "yes":"Có"
+    "yes":"Có",
+    "cancelAddFriend":"Hủy kết bạn"
 }
