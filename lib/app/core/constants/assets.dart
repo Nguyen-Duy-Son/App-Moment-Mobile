@@ -28,22 +28,43 @@ class _AssetsIcons {
   final download2SVG = 'assets/icons/Download 2.svg';
   final leftSVG = 'assets/icons/Left.svg';
   final sunSVG = 'assets/icons/Sun.svg';
+  final leftSVG = 'assets/icons/Left.svg';
   final bell = 'assets/icons/Bell.svg';
   final search = 'assets/icons/Search.svg';
+  final searchNotFound = 'assets/icons/SearchNotFound.svg';
   final rightArrow = 'assets/icons/Right.svg';
   final upSVG = 'assets/icons/Up.svg';
-  final up2 = 'assets/icons/Zoom in.svg';
-  final delete = 'assets/icons/Zoom out.svg';
+  final up2SVG = 'assets/icons/Up2.svg';
+  final zoomIn = 'assets/icons/Zoom in.svg';
+  final zoomOut = 'assets/icons/Zoom out.svg';
   final searchOff = 'assets/icons/search-off.svg';
   final vector2 = 'assets/icons/Vector.svg';
   final call = 'assets/icons/Call.svg';
   final mail = 'assets/icons/Mail.svg';
   final calendar = 'assets/icons/Calendar.svg';
   final swap = 'assets/icons/Swap 3.svg';
+  final usersSVG = 'assets/icons/Users.svg';
+  final userSVG = 'assets/icons/User.svg';
+  final cloudSVG = 'assets/icons/Cloud.svg';
+  final cloudBoltSVG = 'assets/icons/Cloud Bolt.svg';
+  final cloudRainSVG = 'assets/icons/Cloud Rain.svg';
+  final cloudSmallRainSVG = 'assets/icons/Cloud Small Rain.svg';
+  final cloudSnowfallSVG = 'assets/icons/Cloud Snowfall.svg';
+  final cloudSnowfallMinimalisticSVG = 'assets/icons/Cloud Snowfall Minimalistic.svg';
+  final cloudStormSVG = 'assets/icons/Cloud Storm.svg';
+  final cloudStorm1SVG = 'assets/icons/Cloud Storm-1.svg';
+  final cloudSunSVG = 'assets/icons/Cloud Sun.svg';
+  final cloudSun2SVG = 'assets/icons/Cloud Sun 2.svg';
+  final fogSVG = 'assets/icons/Fog.svg';
+  final moonSVG = 'assets/icons/Moon.svg';
+  final sunSVG = 'assets/icons/Sun.svg';
 }
 
 class _AssetsImages {
   _AssetsImages._();
+  final authPNG = 'assets/images/auth.png';
+  final verifyEmailPNG = 'assets/images/verify_email.png';
+  final suggestedFriendsPNG = 'assets/images/suggested-friends.png';
 
   //final viDuPNG = 'assets/images/viDu.png';
 }

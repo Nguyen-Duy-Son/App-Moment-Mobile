@@ -5,7 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hit_moments/app/core/config/app_config.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
+import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
+import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/providers_list.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
               //không hiểu sao thêm MomentProvider vào cái là nó bị lỗi k tìm thấy
               //ThemeProvider nên e khai báo nó thẳng vào đây luôn ạ
               ChangeNotifierProvider(create: (context) => ThemeProvider()),
+              ChangeNotifierProvider(create: (context) => AuthProvider()),
+              ChangeNotifierProvider(create: (context) => MomentProvider()),
               //provider ngôn ngữ làm riêng
               ChangeNotifierProvider(
                 create: (context) => locale,
