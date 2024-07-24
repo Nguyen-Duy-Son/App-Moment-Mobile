@@ -1,10 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
+import 'package:hit_moments/app/core/extensions/format_time_extension.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:hit_moments/app/models/moment_model.dart';
+import 'package:hit_moments/app/views/moment/widget/bottom_sheet_input.dart';
+import 'package:hit_moments/app/views/moment/widget/moment_content_widget.dart';
 import 'package:hit_moments/app/views/moment/widget/select_funtion_widget.dart';
 import '../../../core/extensions/theme_extensions.dart';
 
@@ -17,7 +21,28 @@ class MomentWidget extends StatefulWidget {
 }
 
 class _MomentWidgetState extends State<MomentWidget> {
-
+  void showBottomSheetInput(){
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: BottomSheetInput(fullName: widget.momentModel.userName??""),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,226 +58,91 @@ class _MomentWidgetState extends State<MomentWidget> {
           end: Alignment.bottomCenter
         )
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 16.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                border: Border.all(
-                    width: 0.1,
-                    color: AppColors.of(context).neutralColor10
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 16.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  border: Border.all(
+                      width: 0.1,
+                      color: AppColors.of(context).neutralColor10
+                  ),
                 ),
-              ),
-              child: Stack(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 3/4,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.w),
-                      child: Image.network(widget.momentModel.image!, fit: BoxFit.fill,),
-                    ),
-                  ),
-                  Positioned(
-                    top: 16.w,
-                    left: 16.w,
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(100))
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(40.w),
-                            child: Image.network(
-                              "https://image.phunuonline.com.vn/fckeditor/upload/2024/20240509/images/fan-taylor-swift-cuu-doanh-_791715219308.jpg",
-                              width: 40.w,
-                              height: 40.w,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8.w,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Bộ Bộ",
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.of(context).regular16.copyWith(
-                                color: AppColors.of(context).neutralColor1,
-                                shadows: [
-                                  const Shadow(
-                                    blurRadius: 1.0,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text("1 giờ trước",
-                            style: AppTextStyles.of(context).light14.copyWith(
-                              color: AppColors.of(context).neutralColor8,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 1.0,
-                                  color: AppColors.of(context).neutralColor12,
-                                ),
-                              ],
-                            ),)
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 16.w,
-                    right: 0,
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(Assets.icons.sunSVG),
-                        SizedBox(width: 8.w,),
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                          ),
-                          padding: EdgeInsets.only(right: 16.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Hà Nội",
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.of(context).light14.copyWith(
-                                  color: AppColors.of(context).neutralColor1,
-                                  shadows: [
-                                    Shadow(
-                                      blurRadius: 1.0,
-                                      color: AppColors.of(context).neutralColor12,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Text("29 độ C",
-                              style: AppTextStyles.of(context).regular20.copyWith(
-                                color: AppColors.of(context).neutralColor3,
-                                shadows: [
-                                  Shadow(
-                                    blurRadius: 1.0,
-                                    color: AppColors.of(context).neutralColor12,
-                                  ),
-                                ],
-                              ),)
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 16.w,
-                    left: 0,
-                    right: 0,
-                    child: Align(
-                      alignment: Alignment.center,
+                child: MomentContentWidget(momentModel: widget.momentModel)
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: ScaleOnTapWidget(
+                      onTap: (isSelect) {
+                        showBottomSheetInput();
+                      },
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        margin: EdgeInsets.symmetric(horizontal: 8.w),
+                        padding: EdgeInsets.only(top: 6.w, bottom: 2.w, left: 24.w, right: 24.w),
                         decoration: BoxDecoration(
-                          color: AppColors.of(context).neutralColor6,
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AppColors.of(context).neutralColor11,
-                                  blurRadius: 5.h,
-                                  offset: Offset(0, 3.h)
-                              )
-                            ]
+                            color: AppColors.of(context).neutralColor1,
+                            border: Border.all(
+                              width: 1.w,
+                              color: AppColors.of(context).primaryColor10
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(100))
                         ),
-                        child: Text("Con mèo đẹp quá trời!",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.of(context).light24.copyWith(
-                            color: AppColors.of(context).neutralColor12
+                        child: Text("Viết bình luận...",
+                          style: AppTextStyles.of(context).light20.copyWith(
+                            color: AppColors.of(context).neutralColor8
                           ),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              )
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: ScaleOnTapWidget(
-                    onTap: (isSelect) {
-
-                    },
+                    )
+                ),
+                Expanded(
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 8.w),
-                      padding: EdgeInsets.only(top: 6.w, bottom: 2.w, left: 24.w, right: 24.w),
-                      decoration: BoxDecoration(
-                          color: AppColors.of(context).neutralColor1,
-                          border: Border.all(
-                            width: 1.w,
-                            color: AppColors.of(context).primaryColor10
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconOnTapScale(
+                            icon1Path: Assets.icons.heartOutlineSVG,
+                            icon2Color: AppColors.of(context).primaryColor9,
+                            icon2Path: Assets.icons.heartOrangeSVG,
+                            backGroundColor: AppColors.of(context).neutralColor1,
+                            icon1Color: AppColors.of(context).neutralColor9,
+                            iconHeight: 28.w, iconWidth: 28.w,
+                            borderColor: AppColors.of(context).primaryColor10,
+                            onPress: () {
+
+                            },
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(100))
-                      ),
-                      child: Text("Viết bình luận...",
-                        style: AppTextStyles.of(context).light20.copyWith(
-                          color: AppColors.of(context).neutralColor8
-                        ),
-                      ),
-                    ),
-                  )
-              ),
-              Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconOnTapScale(
-                          icon1Path: Assets.icons.heartOutlineSVG,
-                          icon2Color: AppColors.of(context).primaryColor9,
-                          icon2Path: Assets.icons.heartOrangeSVG,
-                          backGroundColor: AppColors.of(context).neutralColor1,
-                          icon1Color: AppColors.of(context).neutralColor9,
-                          iconHeight: 28.w, iconWidth: 28.w,
-                          borderColor: AppColors.of(context).primaryColor10,
-                          onPress: () {
+                          IconOnTapScale(
+                            icon1Path: Assets.icons.sendSVG,
+                            icon2Color: AppColors.of(context).primaryColor9,
+                            backGroundColor: AppColors.of(context).neutralColor1,
+                            icon1Color: AppColors.of(context).neutralColor9,
+                            iconHeight: 28.w, iconWidth: 28.w,
+                            borderColor: AppColors.of(context).primaryColor10,
+                            onPress: () {
 
-                          },
-                        ),
-                        IconOnTapScale(
-                          icon1Path: Assets.icons.sendSVG,
-                          icon2Color: AppColors.of(context).primaryColor9,
-                          backGroundColor: AppColors.of(context).neutralColor1,
-                          icon1Color: AppColors.of(context).neutralColor9,
-                          iconHeight: 28.w, iconWidth: 28.w,
-                          borderColor: AppColors.of(context).primaryColor10,
-                          onPress: () {
-
-                          },
-                        ),
-                        SelectFuntionWidget()
-                      ],
-                                  ),
-                  ))
-            ],
-          ),
-          SizedBox(),
-          SizedBox(
-              height: 50,
-              child: SvgPicture.asset(Assets.icons.downOutLineSolidSVG,
-                color: AppColors.of(context).neutralColor12,),
-          )
-        ],
+                            },
+                          ),
+                          const SelectFuntionWidget()
+                        ],
+                                    ),
+                    ))
+              ],
+            ),
+            const SizedBox(),
+            SizedBox(
+                height: 50,
+                child: SvgPicture.asset(Assets.icons.downOutLineSolidSVG,
+                  color: AppColors.of(context).neutralColor12,),
+            )
+          ],
+        ),
       ),
     );
   }

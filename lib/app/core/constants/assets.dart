@@ -31,6 +31,8 @@ class _AssetsIcons {
   final call = 'assets/icons/Call.svg';
   final mail = 'assets/icons/Mail.svg';
   final calendar = 'assets/icons/Calendar.svg';
+  final usersSVG = 'assets/icons/Users.svg';
+  final userSVG = 'assets/icons/User.svg';
 
   final cloudSVG = 'assets/icons/Cloud.svg';
   final cloudBoltSVG = 'assets/icons/Cloud Bolt.svg';

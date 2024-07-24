@@ -26,15 +26,13 @@ class _MomentViewState extends State<MomentView> {
   void initState() {
     super.initState();
     getData();
+    context.read<MomentProvider>().getListFriendOfUser();
   }
   int selected = 5;
 
-
   Future<void> getData() async{
     listMoment = await context.read<MomentProvider>().getListMoment();
-    print("Là ${listMoment.length}");
     _list = listMoment.map((e) => MomentWidget(momentModel: e,)).toList();
-    //_list.add(SuggestedFriendsView());
     setState(() {
       _list;
     });
