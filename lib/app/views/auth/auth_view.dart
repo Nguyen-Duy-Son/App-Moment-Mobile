@@ -28,7 +28,6 @@ class _AuthViewState extends State<AuthView> {
     checkToken();
   }
 
-
   Future<void> checkToken() async{
     await context.read<AuthProvider>().checkToken();
     if (context.read<AuthProvider>().loginStatus == ModuleStatus.success) {
@@ -54,12 +53,7 @@ class _AuthViewState extends State<AuthView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              context.read<AuthProvider>().checkToken();
-                            },
-                            child: Image.asset(Assets.images.authPNG),
-                          ),
+                          Image.asset(Assets.images.authPNG),
                           SizedBox(height: 16.h,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

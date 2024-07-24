@@ -25,7 +25,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   final _channel = WebSocketChannel.connect(
     Uri.parse('wss://echo.websocket.events'),
   );
-  late WebSocketChannel channel; //channel variable for websocket
+  late WebSocketChannel channel;
   late bool connected; // boolean value to track connection status
 
   String myid = "4321";
