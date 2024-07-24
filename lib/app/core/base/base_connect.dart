@@ -88,7 +88,6 @@ class BaseConnect {
     request = await requestInterceptor(request);
     http.Response response;
     // var headers = {'Content-Type': 'application/json'};
-    print(requestBody);
     try {
       switch (method) {
         case RequestMethod.POST:

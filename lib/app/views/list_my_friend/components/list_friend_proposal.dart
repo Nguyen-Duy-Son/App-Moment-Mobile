@@ -6,7 +6,7 @@ import 'package:hit_moments/app/custom/widgets/search_data_not_found.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../models/user_model.dart';
-import 'my_friend_infomation.dart';
+import 'my_friend_information/my_friend_infomation.dart';
 
 class ListFriendSuggestions extends StatefulWidget {
   const ListFriendSuggestions(
@@ -35,74 +35,76 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
         .toList();
     return lists.isNotEmpty
         ? SingleChildScrollView(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.isExpanded
-                  ? lists.length
-                  : (lists.length > 3 ? 3 : lists.length),
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyFriendInfomationScreen(
-                              user: widget.users[index],
-                              option: 0,
-                            ),
-                          ),
-                        );
-                      },
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                          lists[index].avatar!,
-                          height: 36.w,
-                          width: 36.w,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            lists[index].fullName,
-                            style: AppTextStyles.of(context).light20.copyWith(
-                                  color: AppColors.of(context).neutralColor12,
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.isExpanded
+                      ? lists.length
+                      : (lists.length > 3 ? 3 : lists.length),
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyFriendInfomationScreen(
+                                  user: widget.users[index],
+                                  option: 0,
                                 ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          InkWell(
-                            onTap: () {},
-                            child: SvgPicture.asset(
-                              Assets.icons.zoomIn,
-                              width: 20.w,
-                              height: 20.w,
+                              ),
+                            );
+                          },
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              lists[index].avatar!,
+                              height: 36.w,
+                              width: 36.w,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Opacity(
-                      opacity: 0.5,
-                      child: Container(
-                        height: 1.0,
-                        margin: EdgeInsets.only(
-                          top: 6.h,
-                          bottom: 6.h,
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                lists[index].fullName,
+                                style: AppTextStyles.of(context).light20.copyWith(
+                                      color: AppColors.of(context).neutralColor12,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SvgPicture.asset(
+                                Assets.icons.up2SVG,
+                                width: 28.w,
+                                height: 28.h,
+                              ),
+                            ],
+                          ),
                         ),
-                        padding: EdgeInsets.only(
-                          left: 12.w,
-                          right: 12.w,
+                        Opacity(
+                          opacity: 0.5,
+                          child: Container(
+                            height: 1.0,
+                            margin: EdgeInsets.only(
+                              top: 6.h,
+                              bottom: 6.h,
+                            ),
+                            padding: EdgeInsets.only(
+                              left: 12.w,
+                              right: 12.w,
+                            ),
+                            color: AppColors.of(context).neutralColor11,
+                          ),
                         ),
-                        color: AppColors.of(context).neutralColor11,
-                      ),
-                    ),
-                  ],
-                );
-              },
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
           )
         : const SearchDataNotFound();

@@ -39,5 +39,14 @@
       "userNotFound": "Không tìm thấy người dùng",
       "mutualFriends": "bạn chung",
     "sendMessage":"Gửi tin nhắn...",
-    "noNotification":"Không có thông báo"
+    "noNotification":"Không có thông báo",
+    "delete":"Xóa",
+    "deleteFriend":"Xóa bạn",
+    "sendMessage":"Nhắn tin",
+    "accept":"Đồng ý",
+    "reject":"Từ chối",
+    "addFriend":"Kết bạn",
+    "no":"Không",
+    "yes":"Có",
+    "cancelAddFriend":"Hủy kết bạn"
 }

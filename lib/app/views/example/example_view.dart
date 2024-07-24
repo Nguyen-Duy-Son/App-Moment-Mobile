@@ -69,6 +69,15 @@ class _ExampleViewState extends State<ExampleView> {
             },
                 child: Text("Đăng xuất")
             ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ListMyFriendView(),
+                      ));
+                },
+                child: Text("List My Friend")),
           ],
         ),
       ),

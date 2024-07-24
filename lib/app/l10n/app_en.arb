@@ -39,5 +39,14 @@
        "userNotFound": "User not found",
        "mutualFriends": "mutual friends",
     "sendMessage":"Send message",
-    "noNotification":"No notification"
+    "noNotification":"No notification",
+    "delete":"Delete",
+        "deleteFriend":"Delete friend",
+        "sendMessage":"Send message",
+        "accept":"Accept",
+        "reject":"Reject",
+        "addFriend":"Add friend",
+        "no":"No",
+        "yes":"Yes",
+        "cancelAddFriend":"Cancel add friend"
 }
