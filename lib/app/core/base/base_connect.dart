@@ -100,7 +100,7 @@ class BaseConnect {
           response = await http.get(uri, headers: request.headers);
           break;
         case RequestMethod.DELETE:
-          response = await http.delete(uri, headers: request.headers,body: requestBody);
+          response = await http.delete(uri, headers: request.headers);
           break;
         default:
           throw Exception('Unsupported request method');

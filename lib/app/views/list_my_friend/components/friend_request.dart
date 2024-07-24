@@ -101,6 +101,7 @@ class _FriendRequestState extends State<FriendRequest> {
                     ),
                 overflow: TextOverflow.ellipsis,
               ),
+
               !isConfirmFriendRequest
                   ? !isDeleteFriendRequest
                       ? Row(
@@ -108,7 +109,7 @@ class _FriendRequestState extends State<FriendRequest> {
                             GestureDetector(
                               onTap: () => confirmFriendRequest(0),
                               child: SvgPicture.asset(
-                                Assets.icons.delete,
+                                Assets.icons.zoomOut,
                                 width: 24.w,
                                 height: 24.w,
                               ),
@@ -117,7 +118,7 @@ class _FriendRequestState extends State<FriendRequest> {
                             GestureDetector(
                               onTap: () => confirmFriendRequest(1),
                               child: SvgPicture.asset(
-                                Assets.icons.up2,
+                                Assets.icons.up2SVG,
                                 width: 24.w,
                                 height: 24.w,
                               ),
