@@ -15,6 +15,7 @@ import '../../../../l10n/l10n.dart';
 import '../../../../models/user_model.dart';
 import '../../../../providers/user_provider.dart';
 import '../friend_request.dart';
+import 'information.dart';
 
 class MyFriendInfomationScreen extends StatefulWidget {
   final User user;
@@ -59,7 +60,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
   bool isConfirmFriendRequest = false;
   bool isDelinceFriendRequest = false;
   bool isSentRequest = false;
-  bool cancelSentRequest = false;
+  bool isCancelSentRequest = false;
 
   @override
   Widget build(BuildContext context) {
@@ -244,18 +245,25 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                 width: 52.w,
               ),
               isSentRequest == false
-                  ? Expanded(
-                      child:
-                          ButtonSelectOption(
-                        title: S.of(context).addFriend,
-                        colorBackGround: AppColors.of(context).primaryColor9,
-                        color: AppColors.of(context).neutralColor2,
-                        onTap: () => sentRequestFriend(),
-                      ),
-                    )
+                  ? (isCancelSentRequest == false
+                      ? Expanded(
+                          child: ButtonSelectOption(
+                          title: S.of(context).addFriend,
+                          colorBackGround: AppColors.of(context).primaryColor9,
+                          color: AppColors.of(context).neutralColor2,
+                          onTap: () => sentRequestFriend(),
+                        ))
+                      : Expanded(
+                          child: ButtonSelectOption(
+                            title: S.of(context).cancelAddFriend,
+                            colorBackGround:
+                                AppColors.of(context).primaryColor9,
+                            color: AppColors.of(context).neutralColor2,
+                            onTap: () => cancelSentRequestByUserId(),
+                          ),
+                        ))
                   : Expanded(
-                      child:
-                          ButtonSelectOption(
+                      child: ButtonSelectOption(
                         title: S.of(context).cancelAddFriend,
                         colorBackGround: AppColors.of(context).primaryColor9,
                         color: AppColors.of(context).neutralColor2,
@@ -267,8 +275,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
               ? [
                   !isDelete
                       ? Expanded(
-                          child:
-                              ButtonSelectOption(
+                          child: ButtonSelectOption(
                             title: S.of(context).deleteFriend,
                             colorBackGround:
                                 AppColors.of(context).neutralColor2,
@@ -278,8 +285,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                           ),
                         )
                       : Expanded(
-                          child:
-                              ButtonSelectOption(
+                          child: ButtonSelectOption(
                             title: S.of(context).delete,
                             colorBackGround:
                                 AppColors.of(context).neutralColor2,
@@ -292,8 +298,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   ),
                   !isDelete
                       ? Expanded(
-                          child:
-                              ButtonSelectOption(
+                          child: ButtonSelectOption(
                             title: S.of(context).sendMessage,
                             colorBackGround:
                                 AppColors.of(context).primaryColor10,
@@ -303,8 +308,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                         )
                       : (isSentRequest == false
                           ? Expanded(
-                              child:
-                                  ButtonSelectOption(
+                              child: ButtonSelectOption(
                                 title: S.of(context).addFriend,
                                 colorBackGround:
                                     AppColors.of(context).primaryColor9,
@@ -313,8 +317,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                               ),
                             )
                           : Expanded(
-                              child:
-                                  ButtonSelectOption(
+                              child: ButtonSelectOption(
                                 title: S.of(context).cancelAddFriend,
                                 colorBackGround:
                                     AppColors.of(context).primaryColor9,
@@ -327,8 +330,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   isConfirmFriendRequest == false
                       ? (isDelinceFriendRequest == false
                           ? Expanded(
-                              child:
-                                  ButtonSelectOption(
+                              child: ButtonSelectOption(
                                 title: S.of(context).delete,
                                 colorBackGround:
                                     AppColors.of(context).neutralColor2,
@@ -337,8 +339,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                               ),
                             )
                           : Expanded(
-                              child:
-                                  ButtonSelectOption(
+                              child: ButtonSelectOption(
                                 title: S.of(context).delete,
                                 colorBackGround:
                                     AppColors.of(context).neutralColor2,
@@ -347,8 +348,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                               ),
                             ))
                       : Expanded(
-                          child:
-                              ButtonSelectOption(
+                          child: ButtonSelectOption(
                             title: S.of(context).deleteFriend,
                             colorBackGround:
                                 AppColors.of(context).neutralColor2,
@@ -363,8 +363,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   isConfirmFriendRequest == false
                       ? (isDelinceFriendRequest == false
                           ? Expanded(
-                              child:
-                                  ButtonSelectOption(
+                              child: ButtonSelectOption(
                                 title: S.of(context).accept,
                                 colorBackGround:
                                     AppColors.of(context).primaryColor10,
@@ -374,29 +373,28 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                             )
                           : (isSentRequest == false
                               ? Expanded(
-                                  child:
-                                      ButtonSelectOption(
-                                        title: S.of(context).addFriend,
-                                        colorBackGround:
-                                          AppColors.of(context).primaryColor9,
-                                        color: AppColors.of(context).neutralColor2,
-                                        onTap: () => sentRequestFriend(),
+                                  child: ButtonSelectOption(
+                                    title: S.of(context).addFriend,
+                                    colorBackGround:
+                                        AppColors.of(context).primaryColor9,
+                                    color: AppColors.of(context).neutralColor2,
+                                    onTap: () => sentRequestFriend(),
                                   ),
                                 )
                               : Expanded(
-                                  child:
-                                  ButtonSelectOption(
+                                  child: ButtonSelectOption(
                                     title: S.of(context).cancelAddFriend,
-                                    colorBackGround: AppColors.of(context).primaryColor9,
+                                    colorBackGround:
+                                        AppColors.of(context).primaryColor9,
                                     color: AppColors.of(context).neutralColor2,
                                     onTap: () {},
                                   ),
                                 )))
                       : Expanded(
-                          child:
-                          ButtonSelectOption(
+                          child: ButtonSelectOption(
                             title: S.of(context).sendMessage,
-                            colorBackGround: AppColors.of(context).primaryColor10,
+                            colorBackGround:
+                                AppColors.of(context).primaryColor10,
                             color: AppColors.of(context).neutralColor2,
                             onTap: () => navigateToChatScreen(),
                           ),
@@ -440,6 +438,19 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
       Navigator.pop(ct);
     } else {
       print("Huỷ kết bạn thất bại");
+    }
+  }
+
+  void cancelSentRequestByUserId() async {
+    print("Huỷ yêu cầu kết bạn");
+    int statusCode = await UserService.cancelRequestByUserId(widget.user.id);
+    if (statusCode == 200) {
+      setState(() {
+        isSentRequest = false;
+      });
+      print("Huỷ yêu cầu kết bạn thành công");
+    } else {
+      print("Huỷ yêu cầu kết bạn thất bại");
     }
   }
 
@@ -492,8 +503,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child:
-                  ButtonSelectOption(
+                  child: ButtonSelectOption(
                     title: S.of(context).yes,
                     colorBackGround: AppColors.of(context).primaryColor4,
                     color: AppColors.of(context).neutralColor11,
@@ -504,8 +514,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                   width: 12.w,
                 ),
                 Expanded(
-                  child:
-                  ButtonSelectOption(
+                  child: ButtonSelectOption(
                     title: S.of(context).no,
                     colorBackGround: AppColors.of(context).primaryColor7,
                     color: AppColors.of(context).neutralColor12,
@@ -529,42 +538,6 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
         builder: (context) => ChatMessageView(
           user: widget.user,
         ),
-      ),
-    );
-  }
-}
-
-class Information extends StatelessWidget {
-  const Information({super.key, required this.iconUrl, required this.title});
-
-  final String iconUrl;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            iconUrl,
-            width: 36.w,
-            height: 36.h,
-          ),
-          SizedBox(
-            width: 24.w, // Add spacing between icon and text
-          ),
-          SizedBox(
-            width: 180.w,
-            child: Text(
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
-              title,
-              style: AppTextStyles.of(context).light20,
-            ),
-          ),
-        ],
       ),
     );
   }

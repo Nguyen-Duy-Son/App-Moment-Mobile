@@ -114,4 +114,20 @@ class UserService{
       return 0;
     }
   }
+  static Future<int>cancelRequestByUserId(String id) async{
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.cancelRequestByUserId,
+          RequestMethod.POST,
+          body: {
+            "receiverId": id
+          }
+      );
+      print("message: ${response['message']}");
+      return response['statusCode'];
+    }catch(e){
+      print("Lỗi: ${e}");
+      return 0;
+    }
+  }
 }
