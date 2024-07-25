@@ -10,8 +10,10 @@ class UserService{
           RequestMethod.GET,
       );
       int statusCode = response['statusCode'];
+      print(response['data']["friendList"]);
       if(statusCode == 200){
         return response['data']["friendList"];
+
       }else{
         print("Lỗi: ${response['message']} ");
       }

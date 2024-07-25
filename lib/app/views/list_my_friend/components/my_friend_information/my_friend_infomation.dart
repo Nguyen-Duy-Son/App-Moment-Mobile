@@ -322,7 +322,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                                 colorBackGround:
                                     AppColors.of(context).primaryColor9,
                                 color: AppColors.of(context).neutralColor2,
-                                onTap: () {},
+                                onTap: ()=>cancelSentRequestByUserId(),
                               ),
                             )),
                 ]
@@ -387,7 +387,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                                     colorBackGround:
                                         AppColors.of(context).primaryColor9,
                                     color: AppColors.of(context).neutralColor2,
-                                    onTap: () {},
+                                    onTap: () =>cancelSentRequestByUserId,
                                   ),
                                 )))
                       : Expanded(

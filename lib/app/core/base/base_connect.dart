@@ -32,7 +32,7 @@ class BaseConnect {
       case 404:
       case 500:
         final Map<String, dynamic> errorMessage =
-            jsonDecode(response.body.toString());
+        jsonDecode(response.body.toString());
         String message = '';
         if (errorMessage.containsKey('error') ||
             errorMessage.containsKey('message')) {
@@ -66,11 +66,11 @@ class BaseConnect {
   }
 
   static Future<dynamic> onRequest(
-    String url,
-    RequestMethod method, {
-    dynamic body,
-    Map<String, dynamic>? queryParam,
-  }) async {
+      String url,
+      RequestMethod method, {
+        dynamic body,
+        Map<String, dynamic>? queryParam,
+      }) async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (!connectivityResult.contains(ConnectivityResult.mobile) &&
         !connectivityResult.contains(ConnectivityResult.wifi)) {
@@ -100,7 +100,7 @@ class BaseConnect {
           response = await http.get(uri, headers: request.headers);
           break;
         case RequestMethod.DELETE:
-          response = await http.delete(uri, headers: request.headers);
+          response = await http.delete(uri, headers: request.headers,body: requestBody);
           break;
         default:
           throw Exception('Unsupported request method');
