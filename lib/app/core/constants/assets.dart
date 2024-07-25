@@ -47,6 +47,8 @@ class _AssetsIcons {
   final fogSVG = 'assets/icons/Fog.svg';
   final moonSVG = 'assets/icons/Moon.svg';
   final sunSVG = 'assets/icons/Sun.svg';
+
+  final addFriendSVG = 'assets/icons/add-friend.svg';
 }
 
 class _AssetsImages {

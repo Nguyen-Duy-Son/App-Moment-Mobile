@@ -48,5 +48,6 @@
         "addFriend":"Add friend",
         "no":"No",
         "yes":"Yes",
-        "cancelAddFriend":"Cancel add friend"
+        "cancelAddFriend":"Cancel add friend",
+        "titleFriendEmpty":"You haven't made any friends yet. Add some friends to chat with!"
 }

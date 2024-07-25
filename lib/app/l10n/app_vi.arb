@@ -48,5 +48,6 @@
     "addFriend":"Kết bạn",
     "no":"Không",
     "yes":"Có",
-    "cancelAddFriend":"Hủy kết bạn"
+    "cancelAddFriend":"Hủy kết bạn",
+    "titleFriendEmpty":"Bạn chưa kết bạn với ai. Hãy thêm một số bạn để trò chuyện!"
 }
