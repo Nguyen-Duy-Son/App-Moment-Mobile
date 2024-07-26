@@ -11,6 +11,7 @@ import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/providers_list.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
+import 'package:hit_moments/app/providers/weather_provider.dart';
 import 'package:hit_moments/app/routes/app_pages.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (context) => ThemeProvider()),
               ChangeNotifierProvider(create: (context) => AuthProvider()),
               ChangeNotifierProvider(create: (context) => MomentProvider()),
+              ChangeNotifierProvider(create: (context) => WeatherProvider()),
               //provider ngôn ngữ làm riêng
               ChangeNotifierProvider(
                 create: (context) => locale,
