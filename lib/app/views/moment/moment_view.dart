@@ -27,6 +27,7 @@ class _MomentViewState extends State<MomentView> {
     super.initState();
     getData();
     context.read<MomentProvider>().getListFriendOfUser();
+    context.read<MomentProvider>().getWeather('21.0314268', '105.7792771');
   }
   int selected = 5;
 
@@ -74,7 +75,7 @@ class _MomentViewState extends State<MomentView> {
             )
           ],
         ),
-        body: _list.isEmpty?CircularProgressIndicator():
+        body: _list.isEmpty?Center(child: CircularProgressIndicator()):
         PageView(
           children: _list,
           scrollDirection: Axis.vertical,

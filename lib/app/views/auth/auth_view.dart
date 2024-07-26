@@ -25,7 +25,9 @@ class _AuthViewState extends State<AuthView> {
   @override
   void initState() {
     super.initState();
-    checkToken();
+    if(getToken().isNotEmpty){
+      checkToken();
+    }
   }
 
   Future<void> checkToken() async{

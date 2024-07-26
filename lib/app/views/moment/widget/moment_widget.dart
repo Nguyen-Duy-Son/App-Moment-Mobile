@@ -58,91 +58,89 @@ class _MomentWidgetState extends State<MomentWidget> {
           end: Alignment.bottomCenter
         )
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 16.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  border: Border.all(
-                      width: 0.1,
-                      color: AppColors.of(context).neutralColor10
-                  ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 16.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                border: Border.all(
+                    width: 0.1,
+                    color: AppColors.of(context).neutralColor10
                 ),
-                child: MomentContentWidget(momentModel: widget.momentModel)
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: ScaleOnTapWidget(
-                      onTap: (isSelect) {
-                        showBottomSheetInput();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 8.w),
-                        padding: EdgeInsets.only(top: 6.w, bottom: 2.w, left: 24.w, right: 24.w),
-                        decoration: BoxDecoration(
-                            color: AppColors.of(context).neutralColor1,
-                            border: Border.all(
-                              width: 1.w,
-                              color: AppColors.of(context).primaryColor10
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(100))
-                        ),
-                        child: Text("Viết bình luận...",
-                          style: AppTextStyles.of(context).light20.copyWith(
-                            color: AppColors.of(context).neutralColor8
-                          ),
-                        ),
-                      ),
-                    )
-                ),
-                Expanded(
+              ),
+              child: MomentContentWidget(momentModel: widget.momentModel)
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: ScaleOnTapWidget(
+                    onTap: (isSelect) {
+                      showBottomSheetInput();
+                    },
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 8.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconOnTapScale(
-                            icon1Path: Assets.icons.heartOutlineSVG,
-                            icon2Color: AppColors.of(context).primaryColor9,
-                            icon2Path: Assets.icons.heartOrangeSVG,
-                            backGroundColor: AppColors.of(context).neutralColor1,
-                            icon1Color: AppColors.of(context).neutralColor9,
-                            iconHeight: 28.w, iconWidth: 28.w,
-                            borderColor: AppColors.of(context).primaryColor10,
-                            onPress: () {
-
-                            },
+                      padding: EdgeInsets.only(top: 6.w, bottom: 2.w, left: 24.w, right: 24.w),
+                      decoration: BoxDecoration(
+                          color: AppColors.of(context).neutralColor1,
+                          border: Border.all(
+                            width: 1.w,
+                            color: AppColors.of(context).primaryColor10
                           ),
-                          IconOnTapScale(
-                            icon1Path: Assets.icons.sendSVG,
-                            icon2Color: AppColors.of(context).primaryColor9,
-                            backGroundColor: AppColors.of(context).neutralColor1,
-                            icon1Color: AppColors.of(context).neutralColor9,
-                            iconHeight: 28.w, iconWidth: 28.w,
-                            borderColor: AppColors.of(context).primaryColor10,
-                            onPress: () {
+                          borderRadius: BorderRadius.all(Radius.circular(100))
+                      ),
+                      child: Text("Viết bình luận...",
+                        style: AppTextStyles.of(context).light20.copyWith(
+                          color: AppColors.of(context).neutralColor8
+                        ),
+                      ),
+                    ),
+                  )
+              ),
+              Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconOnTapScale(
+                          icon1Path: Assets.icons.heartOutlineSVG,
+                          icon2Color: AppColors.of(context).primaryColor9,
+                          icon2Path: Assets.icons.heartOrangeSVG,
+                          backGroundColor: AppColors.of(context).neutralColor1,
+                          icon1Color: AppColors.of(context).neutralColor9,
+                          iconHeight: 28.w, iconWidth: 28.w,
+                          borderColor: AppColors.of(context).primaryColor10,
+                          onPress: () {
 
-                            },
-                          ),
-                          const SelectFuntionWidget()
-                        ],
-                                    ),
-                    ))
-              ],
-            ),
-            const SizedBox(),
-            SizedBox(
-                height: 50,
-                child: SvgPicture.asset(Assets.icons.downOutLineSolidSVG,
-                  color: AppColors.of(context).neutralColor12,),
-            )
-          ],
-        ),
+                          },
+                        ),
+                        IconOnTapScale(
+                          icon1Path: Assets.icons.sendSVG,
+                          icon2Color: AppColors.of(context).primaryColor9,
+                          backGroundColor: AppColors.of(context).neutralColor1,
+                          icon1Color: AppColors.of(context).neutralColor9,
+                          iconHeight: 28.w, iconWidth: 28.w,
+                          borderColor: AppColors.of(context).primaryColor10,
+                          onPress: () {
+
+                          },
+                        ),
+                        const SelectFuntionWidget()
+                      ],
+                                  ),
+                  ))
+            ],
+          ),
+          const SizedBox(),
+          SizedBox(
+              height: 50,
+              child: SvgPicture.asset(Assets.icons.downOutLineSolidSVG,
+                color: AppColors.of(context).neutralColor12,),
+          )
+        ],
       ),
     );
   }
