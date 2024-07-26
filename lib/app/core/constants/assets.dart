@@ -45,18 +45,7 @@ class _AssetsIcons {
   final swap = 'assets/icons/Swap 3.svg';
   final usersSVG = 'assets/icons/Users.svg';
   final userSVG = 'assets/icons/User.svg';
-  final cloudSVG = 'assets/icons/Cloud.svg';
-  final cloudBoltSVG = 'assets/icons/Cloud Bolt.svg';
-  final cloudRainSVG = 'assets/icons/Cloud Rain.svg';
-  final cloudSmallRainSVG = 'assets/icons/Cloud Small Rain.svg';
-  final cloudSnowfallSVG = 'assets/icons/Cloud Snowfall.svg';
-  final cloudSnowfallMinimalisticSVG = 'assets/icons/Cloud Snowfall Minimalistic.svg';
-  final cloudStormSVG = 'assets/icons/Cloud Storm.svg';
-  final cloudStorm1SVG = 'assets/icons/Cloud Storm-1.svg';
-  final cloudSunSVG = 'assets/icons/Cloud Sun.svg';
-  final cloudSun2SVG = 'assets/icons/Cloud Sun 2.svg';
   final fogSVG = 'assets/icons/Fog.svg';
-  final moonSVG = 'assets/icons/Moon.svg';
   final sunSVG = 'assets/icons/Sun.svg';
 }
 
