@@ -32,7 +32,13 @@ class _GetWeatherWidgetState extends State<GetWeatherWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Thời tiết của ${weatherProvider.weather?.city} là ${weatherProvider.weather?.conditionText}",
+                      "Thời tiết của ${weatherProvider.weather?.city}"
+                          " là ${weatherProvider.weather?.conditionText} "
+                          "và nhiệt độ là ${weatherProvider.weather?.tempC}℃",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18
+                      ),
                     ),
                     CachedNetworkImage(imageUrl: "https:${weatherProvider.weather?.icon}")
                   ],
