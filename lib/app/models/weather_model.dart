@@ -1,6 +1,7 @@
 class WeatherModel{
   final String? city;
   final String? country;
+  final double? tempC;
   final String? timeZone;
   final String? conditionText;
   final String? icon;
@@ -9,6 +10,7 @@ class WeatherModel{
   WeatherModel({
     required this.city,
     required this.country,
+    required this.tempC,
     required this.timeZone,
     required this.conditionText,
     required this.icon,
@@ -21,6 +23,7 @@ class WeatherModel{
       timeZone: json['location']['tz_id'] as String?,
       conditionText: json['current']['condition']['text'] as String?,
       icon: json['current']['condition']['icon'] as String?,
+      tempC: json['current']['temp_c'] as double?,
       codeWeather: json['current']['condition']['code'].toString(),
     );
   }

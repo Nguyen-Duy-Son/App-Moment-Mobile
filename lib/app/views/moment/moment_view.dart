@@ -75,7 +75,7 @@ class _MomentViewState extends State<MomentView> {
             )
           ],
         ),
-        body: _list.isEmpty?CircularProgressIndicator():
+        body: _list.isEmpty?Center(child: CircularProgressIndicator()):
         PageView(
           children: _list,
           scrollDirection: Axis.vertical,
