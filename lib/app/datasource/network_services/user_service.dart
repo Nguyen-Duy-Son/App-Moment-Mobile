@@ -10,8 +10,10 @@ class UserService{
           RequestMethod.GET,
       );
       int statusCode = response['statusCode'];
+      print(response['data']["friendList"]);
       if(statusCode == 200){
         return response['data']["friendList"];
+
       }else{
         print("Lỗi: ${response['message']} ");
       }
@@ -102,6 +104,22 @@ class UserService{
     try{
       var response = await BaseConnect.onRequest(
           ApiUrl.sentFriendRequestOfUser,
+          RequestMethod.POST,
+          body: {
+            "receiverId": id
+          }
+      );
+      print("message: ${response['message']}");
+      return response['statusCode'];
+    }catch(e){
+      print("Lỗi: ${e}");
+      return 0;
+    }
+  }
+  static Future<int>cancelRequestByUserId(String id) async{
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.cancelRequestByUserId,
           RequestMethod.POST,
           body: {
             "receiverId": id
