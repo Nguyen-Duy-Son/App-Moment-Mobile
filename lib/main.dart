@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hit_moments/app/core/config/app_config.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
+import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/providers_list.dart';
@@ -39,10 +40,13 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (context) => AuthProvider()),
               ChangeNotifierProvider(create: (context) => MomentProvider()),
               ChangeNotifierProvider(create: (context) => WeatherProvider()),
+
               //provider ngôn ngữ làm riêng
               ChangeNotifierProvider(
                 create: (context) => locale,
-              ), ChangeNotifierProvider(create: (context) => UserProvider())
+              ),
+              ChangeNotifierProvider(create: (context) => UserProvider()),
+              ChangeNotifierProvider(create: (context) => ConversationProvider()),
             ],
             child: Consumer<LocaleProvider>(
               builder: (context, provider, child) {

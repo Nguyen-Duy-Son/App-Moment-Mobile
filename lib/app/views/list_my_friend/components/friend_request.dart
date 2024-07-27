@@ -114,7 +114,6 @@ class _FriendRequestState extends State<FriendRequest> {
                                 height: 24.w,
                               ),
                             ),
-                            SizedBox(width: 10.w),git
                             GestureDetector(
                               onTap: () => confirmFriendRequest(1),
                               child: SvgPicture.asset(
