@@ -210,10 +210,11 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                 child: TextFormField(
                   controller: _controller,
                   decoration: InputDecoration(
-                    hintText: S.of(context).sendMessage,
+                    hintText: S.of(context).titleSendMessage,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none),
+                        borderSide: BorderSide.none
+                    ),
                     suffixIcon: Container(
                       width: 16.w,
                       margin: EdgeInsets.only(right: 12.w),

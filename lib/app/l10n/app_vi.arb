@@ -38,7 +38,7 @@
       "searchByEmailPhone": "Tìm kiếm theo email, số điện thoại...",
       "userNotFound": "Không tìm thấy người dùng",
       "mutualFriends": "bạn chung",
-    "sendMessage":"Gửi tin nhắn...",
+    "titleSendMessage":"Gửi tin nhắn...",
     "noNotification":"Không có thông báo",
     "delete":"Xóa",
     "deleteFriend":"Xóa bạn",
@@ -48,5 +48,8 @@
     "addFriend":"Kết bạn",
     "no":"Không",
     "yes":"Có",
-    "cancelAddFriend":"Hủy kết bạn"
+    "cancelAddFriend":"Hủy kết bạn",
+    "titleFriendEmpty":"Bạn chưa kết bạn với ai. Hãy thêm một số bạn để trò chuyện!",
+
+    "message":"Tin nhắn"
 }

@@ -114,11 +114,10 @@ class _FriendRequestState extends State<FriendRequest> {
                                 height: 24.w,
                               ),
                             ),
-                            SizedBox(width: 10.w),
                             GestureDetector(
                               onTap: () => confirmFriendRequest(1),
                               child: SvgPicture.asset(
-                                Assets.icons.up2SVG,
+                                Assets.icons.zoomIn,
                                 width: 24.w,
                                 height: 24.w,
                               ),

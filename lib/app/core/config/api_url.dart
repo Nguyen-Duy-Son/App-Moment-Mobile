@@ -16,4 +16,5 @@ mixin class ApiUrl {
   static const sentFriendRequestOfUser = "$_urlBase/friends/invite";
   static const getCurrentWeather = "http://api.weatherapi.com/v1/current.json";
   static const cancelRequestByUserId = "$_urlBase/friends/cancel-request";
+  static const getConversation = "$_urlBase/conversations/my-conversation";
 }
