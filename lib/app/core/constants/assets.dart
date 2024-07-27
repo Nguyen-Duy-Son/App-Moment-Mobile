@@ -20,21 +20,31 @@ class _AssetsIcons {
   final leftSVG = 'assets/icons/Left.svg';
   final bell = 'assets/icons/Bell.svg';
   final search = 'assets/icons/Search.svg';
+  final searchNotFound = 'assets/icons/SearchNotFound.svg';
   final rightArrow = 'assets/icons/Right.svg';
   final upSVG = 'assets/icons/Up.svg';
-  final up2 = 'assets/icons/Zoom in.svg';
-  final delete = 'assets/icons/Zoom out.svg';
+  final up2SVG = 'assets/icons/Up2.svg';
+  final zoomIn = 'assets/icons/Zoom in.svg';
+  final zoomOut = 'assets/icons/Zoom out.svg';
   final searchOff = 'assets/icons/search-off.svg';
   final vector = 'assets/icons/Vector.svg';
   final call = 'assets/icons/Call.svg';
   final mail = 'assets/icons/Mail.svg';
   final calendar = 'assets/icons/Calendar.svg';
+  final usersSVG = 'assets/icons/Users.svg';
+  final userSVG = 'assets/icons/User.svg';
+
+  final fogSVG = 'assets/icons/Fog.svg';
+  final sunSVG = 'assets/icons/Sun.svg';
+
+  final addFriendSVG = 'assets/icons/add-friend.svg';
 }
 
 class _AssetsImages {
   _AssetsImages._();
   final authPNG = 'assets/images/auth.png';
   final verifyEmailPNG = 'assets/images/verify_email.png';
+  final suggestedFriendsPNG = 'assets/images/suggested-friends.png';
 
   //final viDuPNG = 'assets/images/viDu.png';
 }

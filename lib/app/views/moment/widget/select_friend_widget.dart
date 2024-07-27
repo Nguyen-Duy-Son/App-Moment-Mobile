@@ -46,10 +46,10 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
         showPopover(
             context: context,
             bodyBuilder: (context) =>
-                PopoverSelectFriend(options: context.read<MomentProvider>().getListFriend(),
-                  isBack: () {
-
-            },),
+                PopoverSelectFriend(listFriend: context.watch<MomentProvider>().friendList,
+                  isBack: (friendSelect) {
+                    context.read<MomentProvider>().setUserSort(friendSelect);
+                  },),
             onPop: () => print("Đã ấn"),
             direction: PopoverDirection.bottom,
             width: MediaQuery.of(context).size.width/1.6,
@@ -63,7 +63,7 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
             padding: EdgeInsets.only(left: 24.w,top: 4.w, right: 24.w,),
             decoration: BoxDecoration(
                 color: AppColors.of(context).neutralColor6,
-                borderRadius: BorderRadius.all(Radius.circular(100)),
+                borderRadius: const BorderRadius.all(Radius.circular(100)),
                 border: Border.all(
                     color: _isChangeColor?AppColors.of(context).primaryColor8:AppColors.of(context).neutralColor6,
                     width: 1.w
@@ -72,10 +72,15 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Tất cả",
-                  style: AppTextStyles.of(context).regular24.copyWith(
-                      color: AppColors.of(context).neutralColor11
-                  ),),
+                Flexible(
+                  child: Text(context.watch<MomentProvider>().friendSort==null
+                      ?"Tất cả"
+                      :context.watch<MomentProvider>().friendSort!.fullName,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.of(context).regular24.copyWith(
+                        color: AppColors.of(context).neutralColor11
+                    ),),
+                ),
                 SizedBox(width: 8.w,),
                 Padding(
                   padding: EdgeInsets.only(bottom: 6.w),

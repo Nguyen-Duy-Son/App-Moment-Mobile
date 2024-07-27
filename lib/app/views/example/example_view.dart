@@ -5,14 +5,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hit_moments/app/core/config/theme_config.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
-import 'package:hit_moments/app/providers/auth_provider.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/auth/auth_view.dart';
+import 'package:hit_moments/app/views/conversation/conversation_view.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_view.dart';
 import 'package:hit_moments/app/views/moment/moment_view.dart';
+import 'package:hit_moments/app/views/moment/widget/get_weather_widget.dart';
+import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
 import 'package:provider/provider.dart';
 
 class ExampleView extends StatefulWidget {
@@ -52,9 +54,9 @@ class _ExampleViewState extends State<ExampleView> {
                 },
                 child: Text("Moment")),
             ElevatedButton(onPressed: () {
-              context.read<AuthProvider>().checkToken();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestedFriendsView(),));
             },
-                child: Text("Get me")),
+                child: Text("Suggested Friends")),
             ElevatedButton(onPressed: () {
               setEmail('');
               setPassWord('');
@@ -76,6 +78,25 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("List My Friend")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ConversationView(),
+                      ));
+                },
+                child: Text("My Conversation")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GetWeatherWidget(),
+                      ));
+                },
+                child: Text("Get weather")),
+
           ],
         ),
       ),

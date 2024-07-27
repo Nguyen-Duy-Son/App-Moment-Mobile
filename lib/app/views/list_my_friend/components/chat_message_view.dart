@@ -25,7 +25,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   final _channel = WebSocketChannel.connect(
     Uri.parse('wss://echo.websocket.events'),
   );
-  late WebSocketChannel channel; //channel variable for websocket
+  late WebSocketChannel channel;
   late bool connected; // boolean value to track connection status
 
   String myid = "4321";
@@ -210,10 +210,11 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                 child: TextFormField(
                   controller: _controller,
                   decoration: InputDecoration(
-                    hintText: S.of(context).sendMessage,
+                    hintText: S.of(context).titleSendMessage,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none),
+                        borderSide: BorderSide.none
+                    ),
                     suffixIcon: Container(
                       width: 16.w,
                       margin: EdgeInsets.only(right: 12.w),

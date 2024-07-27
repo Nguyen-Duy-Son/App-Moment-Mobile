@@ -34,14 +34,22 @@
        "verifyEmail": "Verify your email",
        "thankYouForRegistering": "Thank you for registering an account on our app. Please check your email to verify your account. After completing this, please press the button below to finish registration.",
        "complete": "Complete",
-    "sendMessage":"Send message",
-    "noNotification":"No notification",
-    "delete":"Delete",
+       "makeNewFriends": "Make new friends!",
+       "searchByEmailPhone": "Search by email, phone number...",
+       "userNotFound": "User not found",
+       "mutualFriends": "mutual friends",
+        "titleSendMessage":"Send message",
+        "noNotification":"No notification",
+        "delete":"Delete",
         "deleteFriend":"Delete friend",
         "sendMessage":"Send message",
         "accept":"Accept",
         "reject":"Reject",
         "addFriend":"Add friend",
         "no":"No",
-        "yes":"Yes"
+        "yes":"Yes",
+        "cancelAddFriend":"Cancel add friend",
+        "titleFriendEmpty":"You haven't made any friends yet. Add some friends to chat with!",
+
+        "message":"Message"
 }

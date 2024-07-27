@@ -37,7 +37,7 @@ class AuthProvider extends ChangeNotifier {
     emailExist = null;
     isFullFieldLogin = isFull;
     isFullFieldRegister = isFull;
-    isRemember = false;
+    isRemember = isFull;
   }
   void fullFieldLogin(bool isFull) {
     isFullFieldLogin = isFull;

@@ -8,6 +8,7 @@ class IconOnTapScale extends StatefulWidget {
   final Color backGroundColor;  //màu nền
   final Color icon1Color;  //màu icon mặc định
   final Color? icon2Color;  //màu của "icon thay đổi khi ấn"
+  final Color? borderColor;  //màu của viền
   final double? padding;
   final double iconHeight;  //dài icon
   final double iconWidth;   // rộng icon
@@ -21,7 +22,8 @@ class IconOnTapScale extends StatefulWidget {
     required this.onPress,
     this.icon2Path,
     this.padding,
-    this.icon2Color,});
+    this.icon2Color,
+    this.borderColor,});
   @override
   _IconOnTapScale createState() => _IconOnTapScale();
 }
@@ -61,7 +63,7 @@ class _IconOnTapScale extends State<IconOnTapScale> {
             shape: BoxShape.circle,
             color: widget.backGroundColor,
             border: Border.all(
-              color: widget.icon1Color,
+              color: widget.borderColor??widget.icon1Color,
               width: 1.w
             )
           ),

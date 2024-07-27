@@ -6,7 +6,7 @@ import 'package:hit_moments/app/custom/widgets/search_data_not_found.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../models/user_model.dart';
-import 'my_friend_infomation.dart';
+import 'my_friend_information/my_friend_infomation.dart';
 
 class ListFriendSuggestions extends StatefulWidget {
   const ListFriendSuggestions(
@@ -78,7 +78,7 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               SvgPicture.asset(
-                                Assets.icons.up2,
+                                Assets.icons.up2SVG,
                                 width: 28.w,
                                 height: 28.h,
                               ),

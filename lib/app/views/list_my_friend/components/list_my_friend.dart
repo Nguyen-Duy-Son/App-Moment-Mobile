@@ -6,7 +6,7 @@ import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/search_data_not_found.dart';
 import '../../../models/user_model.dart';
-import 'my_friend_infomation.dart';
+import 'my_friend_information/my_friend_infomation.dart';
 
 class ListMyFriend extends StatefulWidget {
   const ListMyFriend({

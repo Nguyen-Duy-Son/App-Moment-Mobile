@@ -22,6 +22,7 @@ class _SelectFuntionWidgetState extends State<SelectFuntionWidget> {
       icon2Path: Assets.icons.closeSVG,
       icon2Color: AppColors.of(context).primaryColor9,
       padding: 3.w,
+      borderColor: AppColors.of(context).primaryColor10,
       backGroundColor: AppColors.of(context).neutralColor1,
       icon1Color: AppColors.of(context).neutralColor9,
       iconHeight: 28.w, iconWidth: 28.w,

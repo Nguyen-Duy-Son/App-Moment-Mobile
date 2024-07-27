@@ -7,6 +7,7 @@ import 'package:hit_moments/app/views/auth/register/verify_email_view.dart';
 import 'package:hit_moments/app/views/example/example_view.dart';
 import 'package:hit_moments/app/views/splash/splash_view.dart';
 
+import '../views/conversation/conversation_view.dart';
 import '../views/list_my_friend/list_my_friend_view.dart';
 
 abstract class AppPages {
@@ -18,5 +19,7 @@ abstract class AppPages {
     AppRoutes.SIGNUP: (context) => const RegisterView(),
     AppRoutes.LOGIN: (context) => const LoginView(),
     AppRoutes.VERIFYEMAIL: (context) => const VerifyEmailView(),
+    AppRoutes.LIST_MY_FRIEND: (context) => const ListMyFriendView(),
+    AppRoutes.MY_CONVERSATION : (context) => const ConversationView(),
   };
 }

@@ -8,7 +8,7 @@ import '../../../core/extensions/theme_extensions.dart';
 import '../../../datasource/network_services/user_service.dart';
 import '../../../models/user_model.dart';
 import '../../../providers/user_provider.dart';
-import 'my_friend_infomation.dart';
+import 'my_friend_information/my_friend_infomation.dart';
 
 class FriendRequest extends StatefulWidget {
   const FriendRequest({
@@ -35,12 +35,12 @@ class _FriendRequestState extends State<FriendRequest> {
           isDeleteFriendRequest = true;
         });
       } else {
-        isConfirmFriendRequest = true;
+        setState(() {
+          isConfirmFriendRequest = true;
+        });
       }
-      setState(() {
-        context.read<UserProvider>().getFriendRequestOfUser();
-        context.read<UserProvider>().getFriendOfUser();
-      });
+      context.read<UserProvider>().getFriendRequestOfUser();
+      context.read<UserProvider>().getFriendOfUser();
     } else {}
   }
 
@@ -52,8 +52,8 @@ class _FriendRequestState extends State<FriendRequest> {
       children: [
         ListTile(
           onTap: () {
-            !isConfirmFriendRequest
-                ? (!isDeleteFriendRequest
+            isConfirmFriendRequest == false
+                ? (isDeleteFriendRequest == false
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -101,40 +101,39 @@ class _FriendRequestState extends State<FriendRequest> {
                     ),
                 overflow: TextOverflow.ellipsis,
               ),
-              !isConfirmFriendRequest?
-              !isDeleteFriendRequest
-                  ? Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () => confirmFriendRequest(0),
-                          child: SvgPicture.asset(
-                            Assets.icons.delete,
-                            width: 24.w,
-                            height: 24.w,
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        GestureDetector(
-                          onTap: () => confirmFriendRequest(1),
-                          child: SvgPicture.asset(
-                            Assets.icons.up2,
-                            width: 24.w,
-                            height: 24.w,
-                          ),
-                        ),
-                      ],
-                    )
+
+              !isConfirmFriendRequest
+                  ? !isDeleteFriendRequest
+                      ? Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => confirmFriendRequest(0),
+                              child: SvgPicture.asset(
+                                Assets.icons.zoomOut,
+                                width: 24.w,
+                                height: 24.w,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => confirmFriendRequest(1),
+                              child: SvgPicture.asset(
+                                Assets.icons.zoomIn,
+                                width: 24.w,
+                                height: 24.w,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SvgPicture.asset(
+                          Assets.icons.rightArrow,
+                          width: 22.w,
+                          height: 22.h,
+                        )
                   : SvgPicture.asset(
                       Assets.icons.rightArrow,
                       width: 22.w,
                       height: 22.h,
-                    ):
-              SvgPicture.asset(
-                Assets.icons.rightArrow,
-                width: 22.w,
-                height: 22.h,
-              )
-
+                    )
             ],
           ),
         ),
