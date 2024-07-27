@@ -1,7 +1,8 @@
+// app/core/base/base_connect.dart
+// ignore_for_file: constant_identifier_names
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:http/http.dart' as http;
