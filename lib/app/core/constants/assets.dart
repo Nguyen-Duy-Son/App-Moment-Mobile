@@ -28,7 +28,6 @@ class _AssetsIcons {
   final download2SVG = 'assets/icons/Download 2.svg';
   final leftSVG = 'assets/icons/Left.svg';
   final sunSVG = 'assets/icons/Sun.svg';
-  final leftSVG = 'assets/icons/Left.svg';
   final bell = 'assets/icons/Bell.svg';
   final search = 'assets/icons/Search.svg';
   final searchNotFound = 'assets/icons/SearchNotFound.svg';
@@ -46,7 +45,6 @@ class _AssetsIcons {
   final usersSVG = 'assets/icons/Users.svg';
   final userSVG = 'assets/icons/User.svg';
   final fogSVG = 'assets/icons/Fog.svg';
-  final sunSVG = 'assets/icons/Sun.svg';
 
   final addFriendSVG = 'assets/icons/add-friend.svg';
 }
