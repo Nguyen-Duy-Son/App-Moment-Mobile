@@ -46,10 +46,10 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           leading: Padding(
             padding: EdgeInsets.only(top: 15.w),
             child: BackButton(
-              onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => TakePictureScreen()));},
-              color: AppColors
-                  .of(context)
-                  .neutralColor9,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TakePictureScreen()));
+              },
               color: AppColors.of(context).neutralColor9,
             ),
           ),
@@ -199,5 +199,4 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
 
     return items;
   }
-
 }

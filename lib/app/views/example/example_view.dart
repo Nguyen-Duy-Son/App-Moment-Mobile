@@ -43,9 +43,7 @@ class _ExampleViewState extends State<ExampleView> {
             Text(
               AppLocalizations.of(context)!.hello,
               style: AppTextStyles.of(context).regular32.copyWith(
-                color: AppColors.of(context).neutralColor12,
-              ),
-                    color: AppColors.of(context).primaryColor12,
+                    color: AppColors.of(context).neutralColor12,
                   ),
             ),
             ElevatedButton(
@@ -57,23 +55,33 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Moment")),
-            ElevatedButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TakePictureScreen(),) );
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestedFriendsView(),));
-            },
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TakePictureScreen(),
+                      ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SuggestedFriendsView(),
+                      ));
+                },
                 child: Text("Suggested Friends")),
-            ElevatedButton(onPressed: () {
-              setEmail('');
-              setPassWord('');
-              setToken('');
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AuthView(),),
-                ModalRoute.withName(AppRoutes.AUTHENTICATION)
-              );
-            },
-                child: Text("Đăng xuất")
-            ),
+            ElevatedButton(
+                onPressed: () {
+                  setEmail('');
+                  setPassWord('');
+                  setToken('');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuthView(),
+                      ),
+                      ModalRoute.withName(AppRoutes.AUTHENTICATION));
+                },
+                child: Text("Đăng xuất")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -101,7 +109,6 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Get weather")),
-
           ],
         ),
       ),
