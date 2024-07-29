@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/custom/widgets/search_data_not_found.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
+import '../../../datasource/network_services/user_service.dart';
 import '../../../models/user_model.dart';
+import '../../../providers/user_provider.dart';
 import 'my_friend_information/my_friend_infomation.dart';
 
 class ListFriendSuggestions extends StatefulWidget {
@@ -26,6 +30,18 @@ class ListFriendSuggestions extends StatefulWidget {
 }
 
 class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
+  bool isSentRequest = false;
+  void sentRequestFriend(User user) async {
+    int statusCode = await UserService.sentRequestById(user.id);
+    if (statusCode == 200) {
+      setState(() {
+        isSentRequest = true;
+      });
+      print("Gửi yêu cầu kết bạn thành công");
+    } else {
+      print("Gửi yêu cầu kết bạn thất bại");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     List<User> lists = widget.users
@@ -47,16 +63,16 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
                     return Column(
                       children: [
                         ListTile(
-                          onTap: (){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MyFriendInfomationScreen(
-                                  user: widget.users[index],
-                                  option: 0,
-                                ),
-                              ),
-                            );
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => MyFriendInfomationScreen(
+                            //       user: widget.users[index],
+                            //       option: 0,
+                            //     ),
+                            //   ),
+                            // );
                           },
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(50),
@@ -72,15 +88,22 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
                             children: [
                               Text(
                                 lists[index].fullName,
-                                style: AppTextStyles.of(context).light20.copyWith(
-                                      color: AppColors.of(context).neutralColor12,
+                                style: AppTextStyles.of(context)
+                                    .light20
+                                    .copyWith(
+                                      color:
+                                          AppColors.of(context).neutralColor12,
                                     ),
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SvgPicture.asset(
-                                Assets.icons.up2SVG,
-                                width: 28.w,
-                                height: 28.h,
+                              GestureDetector(
+                                child: SvgPicture.asset(
+                                  Assets.icons.zoomIn,
+                                  width: 28.w,
+                                  height: 28.h,
+                                  color:AppColors.of(context).primaryColor10,
+                                ),
+                                // onTap: ()=>sentRequestFriend(lists[index]),
                               ),
                             ],
                           ),
