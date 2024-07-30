@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hit_moments/app/providers/conversation_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../core/constants/assets.dart';
@@ -12,125 +14,25 @@ import '../../../l10n/l10n.dart';
 import '../../../models/user_model.dart';
 
 class ChatMessageView extends StatefulWidget {
-  const ChatMessageView({super.key, required this.user});
+  const ChatMessageView({super.key, required this.convaersationId, required this.receiver});
 
-  final User user;
-
+  final String convaersationId;
+  final User receiver;
   @override
   State<ChatMessageView> createState() => _ChatMessageViewState();
 }
 
 class _ChatMessageViewState extends State<ChatMessageView> {
   final TextEditingController _controller = TextEditingController();
-  final _channel = WebSocketChannel.connect(
-    Uri.parse('wss://echo.websocket.events'),
-  );
-  late WebSocketChannel channel;
-  late bool connected; // boolean value to track connection status
-
-  String myid = "4321";
-  String friendid = "1234";
-  String token = "addauthkeyifrequired"; //auth key
-
-  List<MessageData> msglist = [];
-
-  TextEditingController msgtext = TextEditingController();
-
   @override
   void initState() {
-    connected = false;
-    msgtext.text = "";
-    channelconnect();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ConversationProvider>().getChatMessage(widget.convaersationId);
+    });
   }
 
-  channelconnect() {
-    //function to connect
-    try {
-      channel = WebSocketChannel.connect(
-        Uri.parse('ws://10.0.2.2:6060/$myid'), //connect to node.js server
-      );
-      channel.stream.listen(
-            (message) {
-          if (kDebugMode) {
-            print(message);
-          }
-          setState(() {
-            if (message == "connected") {
-              connected = true;
-              setState(() {});
-              if (kDebugMode) {
-                print("Connection establised.");
-              }
-            } else if (message == "send:success") {
-              if (kDebugMode) {
-                print("Message send success");
-              }
-              setState(() {
-                msgtext.text = "";
-              });
-            } else if (message == "send:error") {
-              if (kDebugMode) {
-                print("Message send error");
-              }
-            } else if (message.substring(0, 6) == "{'cmd'") {
-              if (kDebugMode) {
-                print("Message data");
-              }
-              message = message.replaceAll(RegExp("'"), '"');
-              var jsondata = json.decode(message);
 
-              msglist.add(MessageData(
-                //on message recieve, add data to model
-                msgtext: jsondata["msgtext"],
-                userid: jsondata["userid"],
-                isme: false,
-              ));
-              setState(() {
-                //update UI after adding data to message model
-              });
-            }
-          });
-        },
-        onDone: () {
-          //if WebSocket is disconnected
-          if (kDebugMode) {
-            print("Web socket is closed");
-          }
-          setState(() {
-            connected = false;
-          });
-        },
-        onError: (error) {
-          if (kDebugMode) {
-            print(error.toString());
-          }
-        },
-      );
-    } catch (_) {
-      if (kDebugMode) {
-        print("error on connecting to websocket.");
-      }
-    }
-  }
-
-  Future<void> sendmsg(String sendmsg, String id) async {
-    if (connected == true) {
-      String msg =
-          "{'auth':'$token','cmd':'send','userid':'$id', 'msgtext':'$sendmsg'}";
-      setState(() {
-        msgtext.text = "";
-        msglist.add(MessageData(msgtext: sendmsg, userid: myid, isme: true));
-      });
-      channel.sink.add(msg); //send message to reciever channel
-    } else {
-      channelconnect();
-      if (kDebugMode) {
-        print("Websocket is not connected.");
-      }
-    }
-  }
-  List<Map<String, dynamic>> messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -143,57 +45,49 @@ class _ChatMessageViewState extends State<ChatMessageView> {
             child: Column(
               children: [
                 Text(
-                  widget.user.fullName,
+                  widget.receiver.fullName,
                   style: AppTextStyles.of(context).light20.copyWith(
                         color: AppColors.of(context).neutralColor12,
                         height: 0.9,
                       ),
-                ),
-                !connected?Text(
-                  "1 giờ trước",
-                  style: AppTextStyles.of(context).light14.copyWith(
-                        color: AppColors.of(context).neutralColor12,
-                      ),
-                ):Text(
-                  "Đang hoạt động",
-                  style: AppTextStyles.of(context).light14.copyWith(
-                        color: AppColors.of(context).neutralColor12,
-                      ),
-
                 ),
               ],
             ),
           ),
           centerTitle: true,
         ),
-        body: Column(
+        body: !context.watch<ConversationProvider>().isLoadingChatMessage? Column(
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: messages.length,
+                itemCount: context.watch<ConversationProvider>().chatMessages.length,
                 itemBuilder: (context, index) {
-                  final message = messages[index];
-                  final bool isMe = message['sender'] == 'me';
+                  final message = context.watch<ConversationProvider>().chatMessages[index];
+                  final bool isMe = context.watch<ConversationProvider>().chatMessages[0].id != widget.receiver.id;
                   return Container(
                     alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                     child: Container(
-                      margin: EdgeInsets.symmetric(
-                        vertical: 5.h,
-                        horizontal: 10.w,
+                      margin: EdgeInsets.only(
+                        top: 4.h,
+                        bottom: 4.h,
+                        left: isMe ? 92.w : 8.w,
+                        right: !isMe ? 0 : 8.w,
                       ),
                       padding: EdgeInsets.symmetric(
-                        vertical: 10.h,
-                        horizontal: 15.w,
+                        vertical: 4.h,
+                        horizontal: 12.w,
                       ),
                       decoration: BoxDecoration(
                         color: isMe
-                            ? AppColors.of(context).primaryColor5
-                            : Colors.white, // if the message is from 'me', set the color to primaryColor5, otherwise set it to white
+                            ? AppColors.of(context).primaryColor3
+                            : AppColors.of(context).neutralColor4, // if the message is from 'me', set the color to primaryColor5, otherwise set it to white
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Text(
-                        message['text'],
-                        style: AppTextStyles.of(context).regular20,
+                        message.text,
+                        style: AppTextStyles.of(context).regular20.copyWith(
+                          color: AppColors.of(context).neutralColor12,
+                        ),
                       ),
                     ),
                   );
@@ -227,48 +121,42 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                       ),
                     ),
                   ),
-                  onTap: _sendMessage,
+                  // onTap: _sendMessage,
                 ),
               ),
             ),
           ],
-        ),
+        ): const Center(
+          child: CircularProgressIndicator(),
+        )
       ),
     );
   }
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      final message = {
-        'user_id': widget.user.id,
-        'text': _controller.text,
-        'sender':"me",
-      };
-      _channel.sink.add(json.encode(message));
-      setState(() {
-        messages.add(message);
-        print(messages);
-      });
-      _controller.clear();
-    }
-  }
-
-  @override
-  void dispose() {
-    _channel.sink.close();
-    _controller.dispose();
-    super.dispose();
-  }
+  // void _sendMessage() {
+  //   if (_controller.text.isNotEmpty) {
+  //     final message = {
+  //       'user_id': widget.user.id,
+  //       'text': _controller.text,
+  //       'sender':"me",
+  //     };
+  //     _channel.sink.add(json.encode(message));
+  //     setState(() {
+  //       messages.add(message);
+  //       print(messages);
+  //     });
+  //     _controller.clear();
+  //   }
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   _channel.sink.close();
+  //   _controller.dispose();
+  //   super.dispose();
+  // }
 }
 
-class MessageData {
-  //message data model
-  String msgtext, userid;
-  bool isme;
-
-  MessageData(
-      {required this.msgtext, required this.userid, required this.isme});
-}
 // return Scaffold(
 //     appBar: AppBar(
 //       title: Text("My ID: $myid - Chat App Example"),

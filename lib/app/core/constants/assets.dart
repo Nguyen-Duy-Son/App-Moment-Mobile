@@ -47,6 +47,7 @@ class _AssetsIcons {
   final fogSVG = 'assets/icons/Fog.svg';
 
   final addFriendSVG = 'assets/icons/add-friend.svg';
+  final play = 'assets/icons/Play.svg';
 }
 
 class _AssetsImages {

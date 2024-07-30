@@ -42,7 +42,6 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
         checkColorList = true;
       }
     });
-
   }
 
   void setExpandedMyFriend() {
@@ -93,10 +92,12 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
       });
     }
   }
+
   Future<void> _refreshData() async {
     context.read<UserProvider>().getFriendOfUser();
     context.read<UserProvider>().getFriendRequestOfUser();
   }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -221,7 +222,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                     child: Column(
                       children: [
                         !context.watch<UserProvider>().isSearchFriend
-                            ? (isSearch==true
+                            ? (isSearch == true
                                 ? ListMyFriend(
                                     users: widget.friendsUsers,
                                     setExpanded: setExpandedMyFriend,
@@ -236,8 +237,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                               ),
                         context.watch<UserProvider>().isSearchFriend
                             ? const SizedBox()
-                            : (
-                            widget.friendsUsers.length > 3
+                            : (widget.friendsUsers.length > 3
                                 ? Padding(
                                     padding: EdgeInsets.all(6.w),
                                     child: InkWell(
@@ -259,8 +259,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                                             ),
                                     ),
                                   )
-                                : const SizedBox()
-                        )
+                                : const SizedBox())
                       ],
                     ),
                   )

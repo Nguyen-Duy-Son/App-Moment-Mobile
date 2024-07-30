@@ -87,6 +87,15 @@ class _ExampleViewState extends State<ExampleView> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
+                        builder: (context) => const TakePictureScreen(),
+                      ));
+                },
+                child: Text("Home")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
                         builder: (context) => const ListMyFriendView(),
                       ));
                 },
