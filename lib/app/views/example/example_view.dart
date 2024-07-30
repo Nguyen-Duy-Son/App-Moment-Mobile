@@ -45,8 +45,6 @@ class _ExampleViewState extends State<ExampleView> {
               style: AppTextStyles.of(context).regular32.copyWith(
                 color: AppColors.of(context).neutralColor12,
               ),
-                    color: AppColors.of(context).primaryColor12,
-                  ),
             ),
             ElevatedButton(
                 onPressed: () {
