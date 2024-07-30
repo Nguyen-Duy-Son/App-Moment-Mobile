@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/custom/widgets/button_select_option.dart';
-import 'package:hit_moments/app/views/list_my_friend/components/chat_message_view.dart';
+import 'package:hit_moments/app/views/conversation/components/chat_message_view.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
@@ -267,7 +267,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                         title: S.of(context).cancelAddFriend,
                         colorBackGround: AppColors.of(context).primaryColor9,
                         color: AppColors.of(context).neutralColor2,
-                        onTap: () {},
+                        onTap: () => cancelSentRequestByUserId(),
                       ),
                     ),
             ]
@@ -532,13 +532,13 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
   }
 
   void navigateToChatScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatMessageView(
-          user: widget.user,
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+      // MaterialPageRoute(
+      //   builder: (context) => ChatMessageView(
+      //     user: widget.user,
+      //   ),
+      // ),
+    // );
   }
 }

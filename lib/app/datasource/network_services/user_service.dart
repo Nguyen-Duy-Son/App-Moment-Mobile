@@ -1,5 +1,3 @@
-import 'package:hit_moments/app/datasource/local/storage.dart';
-
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
 
@@ -94,7 +92,7 @@ class UserService {
       var response = await BaseConnect.onRequest(
           ApiUrl.sentFriendRequestOfUser, RequestMethod.POST,
           body: {"receiverId": id});
-      print("message: ${response['message']}");
+
       return response['statusCode'];
     } catch (e) {
       print("Lỗi: ${e}");
@@ -107,7 +105,6 @@ class UserService {
       var response = await BaseConnect.onRequest(
           ApiUrl.cancelRequestByUserId, RequestMethod.POST,
           body: {"receiverId": id});
-      print("message: ${response['message']}");
       return response['statusCode'];
     } catch (e) {
       print("Lỗi: ${e}");

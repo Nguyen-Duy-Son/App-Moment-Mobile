@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/datasource/network_services/user_service.dart';
-import '../models/friend.model.dart';
+import '../models/friend_model.dart';
 import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
@@ -38,7 +38,6 @@ class UserProvider extends ChangeNotifier {
     var response = await UserService.searchFriendUserByEmail(emailOfFriend);
     friendList = [];
     if (response != 200) {
-      print("alo$friendList.length");
       isSearchFriend = false;
       notifyListeners();
       return;
