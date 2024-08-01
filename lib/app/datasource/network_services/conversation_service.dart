@@ -39,7 +39,7 @@ class ConversationService{
         print("Lỗi: ${response['message']} ");
       }
     } catch (e) {
-      print("Lỗi: ${e}");
+      print("Lỗi: $e");
     }
     return [];
   }
@@ -62,5 +62,27 @@ class ConversationService{
       print("Lỗi: ${e}");
     }
     return [];
+  }
+
+  Future<dynamic>sendMessage(String conversationId, String text) async {
+    try {
+      var response = await BaseConnect.onRequest(
+        ApiUrl.sendMessage,
+        RequestMethod.POST,
+        body: {
+          "conversationId": conversationId,
+          "text": text,
+        },
+      );
+      int statusCode = response['statusCode'];
+      if (statusCode == 200) {
+        print("Gửi tin nhắn thành công");
+      } else {
+        print("Lỗi: ${response['message']} ");
+      }
+      return response['statusCode'];
+    } catch (e) {
+      print("Lỗi: ${e}");
+    }
   }
 }

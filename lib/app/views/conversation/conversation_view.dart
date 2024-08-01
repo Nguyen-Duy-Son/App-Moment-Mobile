@@ -72,7 +72,7 @@ class _ConversationViewState extends State<ConversationView> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ChatMessageView(
-                                  convaersationId: provider.conversations[index].id,
+                                  conversationId: provider.conversations[index].id,
                                   receiver: provider.conversations[index].user,
                                 ),
                               ),

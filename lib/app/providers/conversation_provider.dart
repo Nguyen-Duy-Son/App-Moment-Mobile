@@ -9,6 +9,7 @@ class ConversationProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isLoadingChatMessage = false;
   List<ChatMessage> chatMessages = [];
+  bool isSending = false;
   void getConversations() async {
     isLoading = true;
     notifyListeners();
@@ -21,6 +22,15 @@ class ConversationProvider extends ChangeNotifier {
     notifyListeners();
     chatMessages = await ConversationService().getChatMessage(conversationId);
     isLoadingChatMessage = false;
+    notifyListeners();
+  }
+  void sendMessage(String conversationId, String message) async {
+    isSending = true;
+    int status = await ConversationService().sendMessage(conversationId, message);
+    if(status == 200){
+      chatMessages = await ConversationService().getChatMessage(conversationId);
+      isSending = false;
+    }
     notifyListeners();
   }
 }
