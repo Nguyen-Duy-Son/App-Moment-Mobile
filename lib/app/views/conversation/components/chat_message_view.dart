@@ -307,7 +307,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'dart:io';
+
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../l10n/l10n.dart';
@@ -329,25 +329,32 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   final ScrollController _scrollController = ScrollController();
   late IO.Socket socket;
   final StreamController<String> _streamController = StreamController<String>();
+
   Stream<String> get messagesStream => _streamController.stream;
+
   @override
   void initState() {
     super.initState();
     connect();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
+      context
+          .read<ConversationProvider>()
+          .getChatMessage(widget.conversationId);
+      await Future.delayed(const Duration(milliseconds: 100));
       _scrollToBottom();
     });
   }
 
   void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   void connect() {
@@ -388,9 +395,9 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                   Text(
                     widget.receiver.fullName,
                     style: AppTextStyles.of(context).light20.copyWith(
-                      color: AppColors.of(context).neutralColor12,
-                      height: 0.9,
-                    ),
+                          color: AppColors.of(context).neutralColor12,
+                          height: 0.9,
+                        ),
                   ),
                 ],
               ),
@@ -399,103 +406,102 @@ class _ChatMessageViewState extends State<ChatMessageView> {
           ),
           body: !context.watch<ConversationProvider>().isLoadingChatMessage
               ? Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  scrollDirection: Axis.vertical,
-                  itemCount: context
-                      .watch<ConversationProvider>()
-                      .chatMessages
-                      .length,
-                  itemBuilder: (context, index) {
-                    final message = context
-                        .watch<ConversationProvider>()
-                        .chatMessages[index];
-                    final bool isMe =
-                        message.sender.id != widget.receiver.id;
-                    return Container(
-                      alignment: isMe
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: 4.h,
-                              left: isMe ? 92.w : 8.w,
-                              right: !isMe ? 0 : 8.w,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        scrollDirection: Axis.vertical,
+                        itemCount: context
+                            .watch<ConversationProvider>()
+                            .chatMessages
+                            .length,
+                        itemBuilder: (context, index) {
+                          final message = context
+                              .watch<ConversationProvider>()
+                              .chatMessages[index];
+                          final bool isMe =
+                              message.sender.id != widget.receiver.id;
+                          return Container(
+                            alignment: isMe
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    top: 4.h,
+                                    left: isMe ? 92.w : 8.w,
+                                    right: !isMe ? 0 : 8.w,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    // vertical: 4.h,
+                                    horizontal: 12.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isMe
+                                        ? AppColors.of(context).primaryColor3
+                                        : AppColors.of(context).neutralColor4,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Text(
+                                    message.text,
+                                    style: AppTextStyles.of(context)
+                                        .regular20
+                                        .copyWith(
+                                          color: AppColors.of(context)
+                                              .neutralColor12,
+                                        ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            padding: EdgeInsets.symmetric(
-                              // vertical: 4.h,
-                              horizontal: 12.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isMe
-                                  ? AppColors.of(context).primaryColor3
-                                  : AppColors.of(context).neutralColor4,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Text(
-                              message.text,
-                              style: AppTextStyles.of(context)
-                                  .regular20
-                                  .copyWith(
-                                color: AppColors.of(context)
-                                    .neutralColor12,
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.of(context).neutralColor7,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Form(
+                        child: TextFormField(
+                          controller: _controller,
+                          decoration: InputDecoration(
+                            hintText: S.of(context).titleSendMessage,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50),
+                                borderSide: BorderSide.none),
+                            suffixIcon: GestureDetector(
+                              onTap: _sendMessage,
+                              child: Container(
+                                width: 16.w,
+                                margin: EdgeInsets.only(right: 12.w),
+                                alignment: Alignment.center,
+                                child: SvgPicture.asset(
+                                  Assets.icons.sendSVG,
+                                  color: AppColors.of(context).neutralColor9,
+                                  width: 24.w,
+                                  height: 24.h,
+                                ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  color: AppColors.of(context).neutralColor7,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Form(
-                  child: TextFormField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: S.of(context).titleSendMessage,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          borderSide: BorderSide.none),
-                      suffixIcon: GestureDetector(
-                        // onTap: _sendMessage,
-                        child: Container(
-                          width: 16.w,
-                          margin: EdgeInsets.only(right: 12.w),
-                          alignment: Alignment.center,
-                          child: SvgPicture.asset(
-                            Assets.icons.sendSVG,
-                            color:
-                            AppColors.of(context).neutralColor9,
-                            width: 24.w,
-                            height: 24.h,
-                          ),
+                          onTap: ()=>_sendMessage(),
                         ),
                       ),
                     ),
-                    // onTap: ()=>sendmsg(),
-                  ),
-                ),
-              ),
-            ],
-          )
+                  ],
+                )
               : const Center(
-            child: CircularProgressIndicator(),
-          )),
+                  child: CircularProgressIndicator(),
+                )),
     );
   }
 
-  Future<void> _sendMessage() async {
+  void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
       final conversationProvider = context.read<ConversationProvider>();
       conversationProvider.sendMessage(widget.conversationId, _controller.text);
@@ -505,6 +511,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
             .read<ConversationProvider>()
             .getChatMessage(widget.conversationId);
         context.read<ConversationProvider>().getConversations();
+
       }
     }
     _scrollToBottom();
