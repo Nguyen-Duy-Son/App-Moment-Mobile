@@ -24,9 +24,9 @@ class ConversationProvider extends ChangeNotifier {
     isLoadingChatMessage = false;
     notifyListeners();
   }
-  void sendMessage(String conversationId, String message) async {
+  void sendMessage(String conversationId,String userId, String message) async {
     isSending = true;
-    int status = await ConversationService().sendMessage(conversationId, message);
+    int status = await ConversationService().sendMessage(userId, message);
     if(status == 200){
       chatMessages = await ConversationService().getChatMessage(conversationId);
       isSending = false;

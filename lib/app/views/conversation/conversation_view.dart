@@ -23,6 +23,7 @@ class _ConversationViewState extends State<ConversationView> {
       context.read<ConversationProvider>().getConversations();
     });
   }
+
   String compareTime(DateTime inputTime) {
     final currentTime = DateTime.now();
     final difference = currentTime.difference(inputTime);
@@ -37,6 +38,7 @@ class _ConversationViewState extends State<ConversationView> {
       return '${difference.inDays} ngày trước';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -72,7 +74,8 @@ class _ConversationViewState extends State<ConversationView> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ChatMessageView(
-                                  conversationId: provider.conversations[index].id,
+                                  conversationId:
+                                      provider.conversations[index].id,
                                   receiver: provider.conversations[index].user,
                                 ),
                               ),
@@ -93,7 +96,8 @@ class _ConversationViewState extends State<ConversationView> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(25),
                                   child: Image.network(
-                                    provider.conversations[index].user.avatar!,
+                                    provider
+                                        .conversations[index].user.avatar!,
                                     width: 40.w,
                                     height: 40.w,
                                     fit: BoxFit.cover,
@@ -105,12 +109,14 @@ class _ConversationViewState extends State<ConversationView> {
                                 Expanded(
                                   // Add this
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
                                           Text(
-                                            provider.conversations[index].user.fullName,
+                                            provider.conversations[index].user
+                                                .fullName,
                                             style: AppTextStyles.of(context)
                                                 .regular20
                                                 .copyWith(
@@ -121,42 +127,46 @@ class _ConversationViewState extends State<ConversationView> {
                                           SizedBox(
                                             width: 8.w,
                                           ),
-                                          provider.conversations[index].lastMessage
-                                              ?.createdAt ==
-                                              null ? SizedBox():
-                                              Text(
-                                              compareTime(provider.conversations[index].lastMessage!.createdAt!),
-                                                style: AppTextStyles.of(context)
-                                                  .light16
-                                                  .copyWith(
-                                                color: AppColors.of(context)
-                                                    .neutralColor11,
-                                              ),
-
-                                              )
+                                          // provider.conversations[index].lastMessage
+                                          //     ?.createdAt ==
+                                          //     null ? SizedBox():
+                                          //     Text(
+                                          //     compareTime(provider.conversations[index].lastMessage!.createdAt!),
+                                          //       style: AppTextStyles.of(context)
+                                          //         .light16
+                                          //         .copyWith(
+                                          //       color: AppColors.of(context)
+                                          //           .neutralColor11,
+                                          //     ),
+                                          //
+                                          //     )
                                         ],
                                       ),
-                                      provider.conversations[index].lastMessage
-                                                  ?.text ==
+                                      provider.conversations[index]
+                                                  .lastMessage ==
                                               null
                                           ? Text(
                                               "Chưa có câu trả lời nào",
                                               style: AppTextStyles.of(context)
                                                   .light16
                                                   .copyWith(
-                                                    color: AppColors.of(context)
-                                                        .neutralColor11,
+                                                    color:
+                                                        AppColors.of(context)
+                                                            .neutralColor11,
                                                   ),
+                                              overflow: TextOverflow.ellipsis,
                                             )
                                           : Text(
                                               provider.conversations[index]
-                                                  .lastMessage!.text!,
+                                                  .lastMessage!,
                                               style: AppTextStyles.of(context)
                                                   .light16
                                                   .copyWith(
-                                                    color: AppColors.of(context)
-                                                        .neutralColor11,
+                                                    color:
+                                                        AppColors.of(context)
+                                                            .neutralColor11,
                                                   ),
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                     ],
                                   ),

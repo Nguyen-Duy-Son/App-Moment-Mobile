@@ -33,7 +33,7 @@ class ConversationService{
       );
       int statusCode = response['statusCode'];
       if (statusCode == 200) {
-        List< dynamic> conversationList = response['data']["myConversations"] ;
+        List< dynamic> conversationList = response['data']["conversations"]??[] ;
         return conversationList.map((item) => Conversation.fromJson(item as dynamic)).toList();
       } else {
         print("Lỗi: ${response['message']} ");
@@ -46,13 +46,13 @@ class ConversationService{
   Future<List<ChatMessage>> getChatMessage(String conversationId) async {
     try {
       var response = await BaseConnect.onRequest(
-        ApiUrl.getChatMessage,
+        ApiUrl.getConversationById,
         RequestMethod.GET,
         idParam: conversationId,
       );
       int statusCode = response['statusCode'];
       if (statusCode == 200) {
-        List<dynamic> messageList = response['data']["message"] ;
+        List<dynamic> messageList = response['data']["conversation"]["messages"];
         // print("messageList: ${response['data']["message"]}");
         return messageList.map((item) => ChatMessage.fromJson(item as dynamic)).toList();
       } else {
@@ -64,15 +64,15 @@ class ConversationService{
     return [];
   }
 
-  Future<dynamic>sendMessage(String conversationId, String text) async {
+  Future<dynamic>sendMessage(String userId,String text) async {
     try {
       var response = await BaseConnect.onRequest(
         ApiUrl.sendMessage,
         RequestMethod.POST,
         body: {
-          "conversationId": conversationId,
           "text": text,
         },
+        idParam: userId,
       );
       int statusCode = response['statusCode'];
       if (statusCode == 200) {
