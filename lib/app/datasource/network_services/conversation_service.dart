@@ -54,7 +54,7 @@ class ConversationService{
       int statusCode = response['statusCode'];
       if (statusCode == 200) {
         List<dynamic> messageList = response['data']["conversation"]["messages"];
-        return messageList.map((item) => Message.fromJson(item as Map<String, dynamic>, conversationId)).toList();
+        return messageList.map((item) => Message.fromJson(item as Map<String, dynamic>)).toList();
       } else {
         print("Lỗi: ${response['message']} ");
       }
@@ -63,7 +63,26 @@ class ConversationService{
     }
     return [];
   }
-
+  Future<List<Message>> getConversationByReceiverId(String userId) async {
+    try {
+      var response = await BaseConnect.onRequest(
+        ApiUrl.getChatMessageByReceiverId,
+        RequestMethod.GET,
+        idParam: userId,
+      );
+      int statusCode = response['statusCode'];
+      if (statusCode == 200) {
+        List<dynamic> messageList = response['data']["message"];
+        print("messageList: $messageList");
+        return messageList.map((item) => Message.fromJson(item as Map<String, dynamic>)).toList();
+      } else {
+        print("Lỗi: ${response['message']} ");
+      }
+    } catch (e) {
+      print("Lỗi: ${e}");
+    }
+    return [];
+  }
   Future<dynamic>sendMessage(String userId,String text) async {
     try {
       var response = await BaseConnect.onRequest(

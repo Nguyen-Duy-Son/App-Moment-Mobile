@@ -16,7 +16,6 @@ import '../../../models/user_model.dart';
 class ChatMessageView extends StatefulWidget {
   const ChatMessageView(
       {super.key, required this.conversationId, required this.receiver});
-
   final String conversationId;
   final User receiver;
 
@@ -45,7 +44,12 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   }
 
   void callApi() async {
-    context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+    if(widget.conversationId.isNotEmpty){
+      context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+    }
+    else{
+      context.read<ConversationProvider>().getChatMessageByReceiverId(widget.receiver.id);
+    }
     messages =
         Provider.of<ConversationProvider>(context, listen: false).messages;
     var chatMessages =
@@ -76,7 +80,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
     });
     socket.on('newMessage', (data) {
       print('newMessage event triggered'); // Debug print
-      messages.add(Message.fromJson(data, widget.conversationId));
+      messages.add(Message.fromJson(data));
       _streamController.add(data);
     });
 
