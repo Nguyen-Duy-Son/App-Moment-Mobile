@@ -73,7 +73,6 @@ class ConversationService{
       int statusCode = response['statusCode'];
       if (statusCode == 200) {
         List<dynamic> messageList = response['data']["message"];
-        print("messageList: $messageList");
         return messageList.map((item) => Message.fromJson(item as Map<String, dynamic>)).toList();
       } else {
         print("Lỗi: ${response['message']} ");
