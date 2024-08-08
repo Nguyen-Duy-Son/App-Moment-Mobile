@@ -1,38 +1,99 @@
-import 'dart:convert';
+import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../l10n/l10n.dart';
+import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
 
 class ChatMessageView extends StatefulWidget {
-  const ChatMessageView({super.key, required this.convaersationId, required this.receiver});
+  const ChatMessageView(
+      {super.key, required this.conversationId, required this.receiver});
 
-  final String convaersationId;
+  final String conversationId;
   final User receiver;
+
   @override
   State<ChatMessageView> createState() => _ChatMessageViewState();
 }
 
 class _ChatMessageViewState extends State<ChatMessageView> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  late IO.Socket socket;
+  final StreamController<String> _streamController = StreamController<String>();
+
+  Stream<String> get messagesStream => _streamController.stream;
+  late String senderId;
+
+  List<Message> messages = [];
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ConversationProvider>().getChatMessage(widget.convaersationId);
+    connect();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      callApi();
     });
   }
 
+  void callApi() async {
+    context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+    messages =
+        Provider.of<ConversationProvider>(context, listen: false).messages;
+    var chatMessages =
+        Provider.of<ConversationProvider>(context, listen: false).chatMessages;
+    var filteredMessages = chatMessages
+        .where((element) => element.sender.id != widget.receiver.id);
+    if (filteredMessages.isNotEmpty) {
+      senderId = filteredMessages.first.sender.id;
+    }
+  }
 
+  void connect() {
+    socket = IO.io('https://api.hitmoments.com', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+    socket.on(
+        'connection',
+        (socket) => {
+              socket.on(
+                  'error',
+                  (error) => {
+                        print('Error: $error'),
+                      })
+            });
+    socket.onConnect((_) {
+      print('Connected to the server'); // Debug print
+    });
+    socket.on('newMessage', (data) {
+      print('newMessage event triggered'); // Debug print
+      messages.add(Message.fromJson(data, widget.conversationId));
+      _streamController.add(data);
+    });
+
+    socket.onDisconnect((_) {
+      print('Disconnected from the server'); // Debug print
+    });
+    socket.on('fromServer', (_) {
+      print('fromServer event triggered'); // Debug print
+    });
+
+    socket.connect();
+  }
+
+  void handleOnlineUsers(dynamic data) {
+    // Handle the list of online users
+    print('Online users: $data');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,41 +117,84 @@ class _ChatMessageViewState extends State<ChatMessageView> {
           ),
           centerTitle: true,
         ),
-        body: !context.watch<ConversationProvider>().isLoadingChatMessage? Column(
+        body: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: context.watch<ConversationProvider>().chatMessages.length,
-                itemBuilder: (context, index) {
-                  final message = context.watch<ConversationProvider>().chatMessages[index];
-                  final bool isMe = context.watch<ConversationProvider>().chatMessages[0].id != widget.receiver.id;
-                  return Container(
-                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: 4.h,
-                        bottom: 4.h,
-                        left: isMe ? 92.w : 8.w,
-                        right: !isMe ? 0 : 8.w,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 4.h,
-                        horizontal: 12.w,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isMe
-                            ? AppColors.of(context).primaryColor3
-                            : AppColors.of(context).neutralColor4, // if the message is from 'me', set the color to primaryColor5, otherwise set it to white
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Text(
-                        message.text,
-                        style: AppTextStyles.of(context).regular20.copyWith(
-                          color: AppColors.of(context).neutralColor12,
-                        ),
-                      ),
-                    ),
-                  );
+              child: StreamBuilder<String>(
+                stream: messagesStream,
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.hasData) {
+                    // var messageData = jsonDecode(snapshot.data!);
+                    // var message = ChatMessage.fromJson(messageData);
+                    // print('message: $message');
+                    // context.read<ConversationProvider>().sendMessage(widget.conversationId,widget.receiver.id,_controller.text);
+                    // context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  return !context
+                          .watch<ConversationProvider>()
+                          .isLoadingChatMessage
+                      ? SingleChildScrollView(
+                          reverse: true,
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: context
+                                .watch<ConversationProvider>()
+                                .messages
+                                .length,
+                            itemBuilder: (context, index) {
+                              final message = context
+                                  .watch<ConversationProvider>()
+                                  .messages[index];
+                              final bool isMe =
+                                  message.senderId != widget.receiver.id;
+                              return Container(
+                                alignment: isMe
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        top: 4.h,
+                                        left: isMe ? 92.w : 8.w,
+                                        right: !isMe ? 0 : 8.w,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isMe
+                                            ? AppColors.of(context)
+                                                .primaryColor3
+                                            : AppColors.of(context)
+                                                .neutralColor4,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Text(
+                                        message.text ?? '',
+                                        style: AppTextStyles.of(context)
+                                            .regular20
+                                            .copyWith(
+                                              color: AppColors.of(context)
+                                                  .neutralColor12,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : const Center(child: CircularProgressIndicator());
                 },
               ),
             ),
@@ -107,153 +211,46 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                     hintText: S.of(context).titleSendMessage,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none
-                    ),
-                    suffixIcon: Container(
-                      width: 16.w,
-                      margin: EdgeInsets.only(right: 12.w),
-                      alignment: Alignment.center,
-                      child: SvgPicture.asset(
-                        Assets.icons.sendSVG,
-                        color: AppColors.of(context).neutralColor9,
-                        width: 24.w,
-                        height: 24.h,
+                        borderSide: BorderSide.none),
+                    suffixIcon: GestureDetector(
+                      onTap: _sendMessage,
+                      child: Container(
+                        width: 16.w,
+                        margin: EdgeInsets.only(right: 12.w),
+                        alignment: Alignment.center,
+                        child: SvgPicture.asset(
+                          Assets.icons.sendSVG,
+                          color: AppColors.of(context).neutralColor9,
+                          width: 24.w,
+                          height: 24.h,
+                        ),
                       ),
                     ),
                   ),
-                  // onTap: _sendMessage,
                 ),
               ),
             ),
           ],
-        ): const Center(
-          child: CircularProgressIndicator(),
-        )
+        ),
       ),
     );
   }
 
-  // void _sendMessage() {
-  //   if (_controller.text.isNotEmpty) {
-  //     final message = {
-  //       'user_id': widget.user.id,
-  //       'text': _controller.text,
-  //       'sender':"me",
-  //     };
-  //     _channel.sink.add(json.encode(message));
-  //     setState(() {
-  //       messages.add(message);
-  //       print(messages);
-  //     });
-  //     _controller.clear();
-  //   }
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   _channel.sink.close();
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
+  void _sendMessage() async {
+    if (_controller.text.isNotEmpty) {
+      final conversationProvider = context.read<ConversationProvider>();
+      conversationProvider.sendMessage(
+          widget.conversationId, widget.receiver.id, _controller.text);
+      if (conversationProvider.isSending != true) {
+        socket.emit('newMessage', {
+          'text': _controller.text,
+        });
+        context
+            .read<ConversationProvider>()
+            .getChatMessage(widget.conversationId);
+        context.read<ConversationProvider>().getConversations();
+      }
+      _controller.clear();
+    }
+  }
 }
-
-// return Scaffold(
-//     appBar: AppBar(
-//       title: Text("My ID: $myid - Chat App Example"),
-//       leading: Icon(Icons.circle,
-//           color: connected ? Colors.greenAccent : Colors.redAccent),
-//       //if app is connected to node.js then it will be gree, else red.
-//       titleSpacing: 0,
-//     ),
-//     body: Stack(
-//       children: [
-//         Positioned(
-//             top: 0,
-//             bottom: 70,
-//             left: 0,
-//             right: 0,
-//             child: Container(
-//                 padding: const EdgeInsets.all(15),
-//                 child: SingleChildScrollView(
-//                     child: Column(
-//                       children: [
-//                         const Text("Your Messages",
-//                             style: TextStyle(fontSize: 20)),
-//                         Column(
-//                           children: msglist.map((onemsg) {
-//                             return Container(
-//                                 margin: EdgeInsets.only(
-//                                   //if is my message, then it has margin 40 at left
-//                                   left: onemsg.isme ? 40 : 0,
-//                                   right: onemsg.isme
-//                                       ? 0
-//                                       : 40, //else margin at right
-//                                 ),
-//                                 child: Card(
-//                                     color: onemsg.isme
-//                                         ? Colors.blue[100]
-//                                         : Colors.red[100],
-//                                     //if its my message then, blue background else red background
-//                                     child: Container(
-//                                       width: double.infinity,
-//                                       padding: const EdgeInsets.all(15),
-//                                       child: Column(
-//                                         crossAxisAlignment:
-//                                         CrossAxisAlignment.start,
-//                                         children: [
-//                                           Text(onemsg.isme
-//                                               ? "ID: ME"
-//                                               : "ID: ${onemsg.userid}"),
-//                                           Container(
-//                                             margin: const EdgeInsets.only(
-//                                                 top: 10, bottom: 10),
-//                                             child: Text(
-//                                                 "Message: ${onemsg.msgtext}",
-//                                                 style: const TextStyle(
-//                                                     fontSize: 17)),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     )));
-//                           }).toList(),
-//                         )
-//                       ],
-//                     )))),
-//         Positioned(
-//           //position text field at bottom of screen
-//
-//           bottom: 0, left: 0, right: 0,
-//           child: Container(
-//               color: Colors.black12,
-//               height: 70,
-//               child: Row(
-//                 children: [
-//                   Expanded(
-//                       child: Container(
-//                         margin: const EdgeInsets.all(10),
-//                         child: TextField(
-//                           controller: msgtext,
-//                           decoration: const InputDecoration(
-//                               hintText: "Enter your Message"),
-//                         ),
-//                       )),
-//                   Container(
-//                       margin: const EdgeInsets.all(10),
-//                       child: ElevatedButton(
-//                         child: const Icon(Icons.send),
-//                         onPressed: () {
-//                           if (msgtext.text != "") {
-//                             sendmsg(msgtext.text,
-//                                 recieverid); //send message with webspcket
-//                           } else {
-//                             if (kDebugMode) {
-//                               print("Enter message");
-//                             }
-//                           }
-//                         },
-//                       ))
-//                 ],
-//               )),
-//         )
-//       ],
-//     ));

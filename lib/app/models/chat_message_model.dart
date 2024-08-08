@@ -4,14 +4,15 @@ class ChatMessage{
   final String text;
   final String id;
   final User sender;
-
-  ChatMessage({required this.text, required this.id, required this.sender});
+  final DateTime createdAt;
+  ChatMessage({required this.text, required this.id, required this.sender,required this.createdAt });
 
   factory ChatMessage.fromJson(dynamic json){
     return ChatMessage(
       text: json['text'],
       id: json['_id'],
-      sender: User.fromJson(json['senderId'])
+      sender: User.fromJson(json['sender']),
+      createdAt: DateTime.parse(json['createdAt']),
     );
   }
 }
