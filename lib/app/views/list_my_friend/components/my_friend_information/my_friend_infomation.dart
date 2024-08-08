@@ -532,13 +532,14 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
   }
 
   void navigateToChatScreen() {
-    // Navigator.push(
-    //   context,
-      // MaterialPageRoute(
-      //   builder: (context) => ChatMessageView(
-      //     user: widget.user,
-      //   ),
-      // ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatMessageView(
+          receiver: widget.user,
+          conversationId: '',
+        ),
+      ),
+    );
   }
 }
