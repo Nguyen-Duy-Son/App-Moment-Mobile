@@ -11,10 +11,10 @@ class Message{
 
   factory Message.fromJson(Map<String, dynamic> json){
     return Message(
-      id: json['_id'] as String,
-      text: json['text'],
+      id: json['_id'] ?? '',
+      text: json['text'] ?? '',
       createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt']),
-      senderId: json['sender']['_id'],
+      senderId: (json['sender']?['_id'] ?? json['senderId']) ?? '',
       // conversationId: conversationId,
     );
   }
