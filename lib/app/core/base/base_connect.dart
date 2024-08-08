@@ -1,7 +1,8 @@
+// app/core/base/base_connect.dart
+// ignore_for_file: constant_identifier_names
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:http/http.dart' as http;
@@ -70,6 +71,7 @@ class BaseConnect {
       RequestMethod method, {
         dynamic body,
         Map<String, dynamic>? queryParam,
+        String? idParam,
       }) async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (!connectivityResult.contains(ConnectivityResult.mobile) &&
@@ -83,7 +85,9 @@ class BaseConnect {
     if (queryParam != null) {
       uri = uri.replace(queryParameters: queryParam);
     }
-
+    if (idParam != null) {
+      uri = Uri.parse('$url/$idParam');
+    }
     var request = http.Request(method.toString().split('.').last, uri);
     request = await requestInterceptor(request);
     http.Response response;

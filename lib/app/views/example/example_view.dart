@@ -1,3 +1,4 @@
+// app/views/example/example_view.dart
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:hit_moments/app/datasource/local/storage.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
+import 'package:hit_moments/app/views/moment/camera/take_pictures_screen.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/auth/auth_view.dart';
 import 'package:hit_moments/app/views/conversation/conversation_view.dart';
@@ -41,7 +43,7 @@ class _ExampleViewState extends State<ExampleView> {
             Text(
               AppLocalizations.of(context)!.hello,
               style: AppTextStyles.of(context).regular32.copyWith(
-                    color: AppColors.of(context).primaryColor12,
+                    color: AppColors.of(context).neutralColor12,
                   ),
             ),
             ElevatedButton(
@@ -53,22 +55,42 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Moment")),
-            ElevatedButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestedFriendsView(),));
-            },
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TakePictureScreen(),
+                      ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SuggestedFriendsView(),
+                      ));
+                },
                 child: Text("Suggested Friends")),
-            ElevatedButton(onPressed: () {
-              setEmail('');
-              setPassWord('');
-              setToken('');
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AuthView(),),
-                ModalRoute.withName(AppRoutes.AUTHENTICATION)
-              );
-            },
-                child: Text("Đăng xuất")
-            ),
+            ElevatedButton(
+                onPressed: () {
+                  setEmail('');
+                  setPassWord('');
+                  setToken('');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuthView(),
+                      ),
+                      ModalRoute.withName(AppRoutes.AUTHENTICATION));
+                },
+                child: Text("Đăng xuất")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TakePictureScreen(),
+                      ));
+                },
+                child: Text("Home")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -96,7 +118,6 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Get weather")),
-
           ],
         ),
       ),

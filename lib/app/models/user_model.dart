@@ -39,12 +39,16 @@ class User {
       phoneNumber: json['phoneNumber'],
       avatar: json['avatar'],
       dob: json['dob'] != null ? DateTime.parse(json['dob']) : null,
-      lastActive: json['lastActive'] != null ? DateTime.parse(json['lastActive']) : null,
+      lastActive: json['lastActive'] != null
+          ? DateTime.parse(json['lastActive'])
+          : null,
       isLocked: json['isLocked'],
       role: json['role'],
       isVerified: json['isVerified'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
 }
