@@ -1,4 +1,5 @@
 import 'package:hit_moments/app/models/chat_message_model.dart';
+import 'package:hit_moments/app/models/message_model.dart';
 
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
@@ -43,7 +44,7 @@ class ConversationService{
     }
     return [];
   }
-  Future<List<ChatMessage>> getChatMessage(String conversationId) async {
+  Future<List<Message>> getConversationById(String conversationId) async {
     try {
       var response = await BaseConnect.onRequest(
         ApiUrl.getConversationById,
@@ -53,8 +54,7 @@ class ConversationService{
       int statusCode = response['statusCode'];
       if (statusCode == 200) {
         List<dynamic> messageList = response['data']["conversation"]["messages"];
-        // print("messageList: ${response['data']["message"]}");
-        return messageList.map((item) => ChatMessage.fromJson(item as dynamic)).toList();
+        return messageList.map((item) => Message.fromJson(item as Map<String, dynamic>, conversationId)).toList();
       } else {
         print("Lỗi: ${response['message']} ");
       }

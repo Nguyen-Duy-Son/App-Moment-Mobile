@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hit_moments/app/models/message_model.dart';
 
 import '../datasource/network_services/conversation_service.dart';
 import '../models/chat_message_model.dart';
@@ -9,6 +10,7 @@ class ConversationProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isLoadingChatMessage = false;
   List<ChatMessage> chatMessages = [];
+  List<Message>messages = [];
   bool isSending = false;
   void getConversations() async {
     isLoading = true;
@@ -20,7 +22,7 @@ class ConversationProvider extends ChangeNotifier {
   void getChatMessage(String conversationId) async {
     isLoadingChatMessage = true;
     notifyListeners();
-    chatMessages = await ConversationService().getChatMessage(conversationId);
+    messages = await ConversationService().getConversationById(conversationId);
     isLoadingChatMessage = false;
     notifyListeners();
   }
@@ -28,7 +30,7 @@ class ConversationProvider extends ChangeNotifier {
     isSending = true;
     int status = await ConversationService().sendMessage(userId, message);
     if(status == 200){
-      chatMessages = await ConversationService().getChatMessage(conversationId);
+      messages = await ConversationService().getConversationById(conversationId);
       isSending = false;
     }
     notifyListeners();

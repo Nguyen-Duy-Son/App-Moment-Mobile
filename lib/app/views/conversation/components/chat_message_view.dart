@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../l10n/l10n.dart';
-import '../../../models/chat_message_model.dart';
+import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
 
 class ChatMessageView extends StatefulWidget {
@@ -30,44 +28,63 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late IO.Socket socket;
+  final StreamController<String> _streamController = StreamController<String>();
+
   Stream<String> get messagesStream => _streamController.stream;
-  final _streamController= StreamController<String>();
+  late String senderId;
 
-  void Function(String) get addResponse => _streamController.sink.add;
+  List<Message> messages = [];
 
-  Stream<String> get getResponse => _streamController.stream;
   @override
   void initState() {
     super.initState();
     connect();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      context
-          .read<ConversationProvider>()
-          .getChatMessage(widget.conversationId);
+      callApi();
     });
   }
 
+  void callApi() async {
+    context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+    messages =
+        Provider.of<ConversationProvider>(context, listen: false).messages;
+    var chatMessages =
+        Provider.of<ConversationProvider>(context, listen: false).chatMessages;
+    var filteredMessages = chatMessages
+        .where((element) => element.sender.id != widget.receiver.id);
+    if (filteredMessages.isNotEmpty) {
+      senderId = filteredMessages.first.sender.id;
+    }
+  }
 
   void connect() {
     socket = IO.io('https://api.hitmoments.com', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
+    socket.on(
+        'connection',
+        (socket) => {
+              socket.on(
+                  'error',
+                  (error) => {
+                        print('Error: $error'),
+                      })
+            });
     socket.onConnect((_) {
-      print('Connected to the server');  // Debug print
+      print('Connected to the server'); // Debug print
     });
     socket.on('newMessage', (data) {
-      print('New message event triggered');  // Debug print
-      var messageData = jsonDecode(data);
-      messagesStream.listen((event) {
-        print('event: $event');  // Debug print
-      });
+      print('newMessage event triggered'); // Debug print
+      messages.add(Message.fromJson(data, widget.conversationId));
+      _streamController.add(data);
     });
+
     socket.onDisconnect((_) {
-      print('Disconnected from the server');  // Debug print
+      print('Disconnected from the server'); // Debug print
     });
     socket.on('fromServer', (_) {
-      print('fromServer event triggered');  // Debug print
+      print('fromServer event triggered'); // Debug print
     });
 
     socket.connect();
@@ -91,9 +108,9 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                 Text(
                   widget.receiver.fullName,
                   style: AppTextStyles.of(context).light20.copyWith(
-                    color: AppColors.of(context).neutralColor12,
-                    height: 0.9,
-                  ),
+                        color: AppColors.of(context).neutralColor12,
+                        height: 0.9,
+                      ),
                 ),
               ],
             ),
@@ -104,8 +121,9 @@ class _ChatMessageViewState extends State<ChatMessageView> {
           children: [
             Expanded(
               child: StreamBuilder<String>(
-                stream: getResponse,
-                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                stream: messagesStream,
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
                   if (snapshot.hasData) {
                     // var messageData = jsonDecode(snapshot.data!);
                     // var message = ChatMessage.fromJson(messageData);
@@ -113,49 +131,69 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                     // context.read<ConversationProvider>().sendMessage(widget.conversationId,widget.receiver.id,_controller.text);
                     // context.read<ConversationProvider>().getChatMessage(widget.conversationId);
                   }
-                  return !context.watch<ConversationProvider>().isLoadingChatMessage
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  return !context
+                          .watch<ConversationProvider>()
+                          .isLoadingChatMessage
                       ? SingleChildScrollView(
-                    reverse: true,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: context.watch<ConversationProvider>().chatMessages.length,
-                      itemBuilder: (context, index) {
-                        final message = context.watch<ConversationProvider>().chatMessages[index];
-                        final bool isMe = message.sender.id != widget.receiver.id;
-                        return Container(
-                          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: 4.h,
-                                  left: isMe ? 92.w : 8.w,
-                                  right: !isMe ? 0 : 8.w,
+                          reverse: true,
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: context
+                                .watch<ConversationProvider>()
+                                .messages
+                                .length,
+                            itemBuilder: (context, index) {
+                              final message = context
+                                  .watch<ConversationProvider>()
+                                  .messages[index];
+                              final bool isMe =
+                                  message.senderId != widget.receiver.id;
+                              return Container(
+                                alignment: isMe
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        top: 4.h,
+                                        left: isMe ? 92.w : 8.w,
+                                        right: !isMe ? 0 : 8.w,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isMe
+                                            ? AppColors.of(context)
+                                                .primaryColor3
+                                            : AppColors.of(context)
+                                                .neutralColor4,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Text(
+                                        message.text ?? '',
+                                        style: AppTextStyles.of(context)
+                                            .regular20
+                                            .copyWith(
+                                              color: AppColors.of(context)
+                                                  .neutralColor12,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12.w,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isMe ? AppColors.of(context).primaryColor3 : AppColors.of(context).neutralColor4,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Text(
-                                  message.text,
-                                  style: AppTextStyles.of(context).regular20.copyWith(
-                                    color: AppColors.of(context).neutralColor12,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  )
+                        )
                       : const Center(child: CircularProgressIndicator());
                 },
               ),
@@ -200,16 +238,19 @@ class _ChatMessageViewState extends State<ChatMessageView> {
 
   void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
-
       final conversationProvider = context.read<ConversationProvider>();
-      conversationProvider.sendMessage(widget.conversationId,widget.receiver.id, _controller.text);
-
+      conversationProvider.sendMessage(
+          widget.conversationId, widget.receiver.id, _controller.text);
       if (conversationProvider.isSending != true) {
-        _controller.clear();
-        socket.emit('newMessage', _controller.text);
-        context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+        socket.emit('newMessage', {
+          'text': _controller.text,
+        });
+        context
+            .read<ConversationProvider>()
+            .getChatMessage(widget.conversationId);
         context.read<ConversationProvider>().getConversations();
       }
+      _controller.clear();
     }
   }
 }

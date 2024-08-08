@@ -2,14 +2,17 @@ class Message{
   final String? id;
   final String? text;
   final DateTime? createdAt;
+  final String? senderId;
+  final String? conversationId;
+  Message({required this.id, required this.text, required this.createdAt, required this.senderId,required this.conversationId});
 
-  Message({required this.id, required this.text, required this.createdAt});
-
-  factory Message.fromJson(dynamic json){
+  factory Message.fromJson(Map<String, dynamic> json, String conversationId){
     return Message(
       id: json['_id'] as String,
       text: json['text'],
-      createdAt: DateTime.parse(json['createdAt'])
+      createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt']),
+      senderId: json['sender']['_id'],
+      conversationId: conversationId,
     );
   }
 }
