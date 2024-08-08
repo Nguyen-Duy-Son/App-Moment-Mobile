@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -37,9 +38,10 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   @override
   void initState() {
     super.initState();
-    connect();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       callApi();
+      print('id: ${getUserId()}');
+      connect();
     });
   }
 
@@ -50,30 +52,29 @@ class _ChatMessageViewState extends State<ChatMessageView> {
     else{
       context.read<ConversationProvider>().getChatMessageByReceiverId(widget.receiver.id);
     }
-    messages =
-        Provider.of<ConversationProvider>(context, listen: false).messages;
-    var chatMessages =
-        Provider.of<ConversationProvider>(context, listen: false).chatMessages;
-    var filteredMessages = chatMessages
-        .where((element) => element.sender.id != widget.receiver.id);
-    if (filteredMessages.isNotEmpty) {
-      senderId = filteredMessages.first.sender.id;
-    }
+    // messages =
+    //     Provider.of<ConversationProvider>(context, listen: false).messages;
+    // var chatMessages =
+    //     Provider.of<ConversationProvider>(context, listen: false).chatMessages;
+    // var filteredMessages = chatMessages
+    //     .where((element) => element.sender.id != widget.receiver.id);
+    // if (filteredMessages.isNotEmpty) {
+    //   senderId = filteredMessages.first.sender.id;
+    // }
   }
 
-  void connect() {
+  void connect() async{
     socket = IO.io('https://api.hitmoments.com', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
+      'query':{
+        'userId': getUserId(),
+      }
     });
     socket.on(
         'connection',
-        (socket) => {
-              socket.on(
-                  'error',
-                  (error) => {
-                        print('Error: $error'),
-                      })
+        (data) => {
+              print('Connected to the server'),
             });
     socket.onConnect((_) {
       print('Connected to the server'); // Debug print
