@@ -54,7 +54,14 @@ class ConversationProvider extends ChangeNotifier {
       socket.emit('newMessage', {
         'text': message,
       });
-      messages = await ConversationService().getConversationByReceiverId(userId);
+      Message newMessage = Message(
+        id: '',
+        text: message,
+        createdAt: DateTime.now(),
+        senderId: getUserId(),
+      );
+      messages.add(newMessage);
+      // messages = await ConversationService().getConversationByReceiverId(userId);
       isSending = false;
     }
     notifyListeners();
@@ -66,17 +73,8 @@ class ConversationProvider extends ChangeNotifier {
     });
     socket.on('newMessage', (data) {
       print('newMessage event triggered $data'); // Debug print
-
       messages.add(Message.fromJson(data as Map<String, dynamic>));
-
       notifyListeners();
-    });
-
-    // socket.onDisconnect((_) {
-    //   print('Disconnected from the server'); // Debug print
-    // });
-    socket.on('fromServer', (_) {
-      print('fromServer event triggered'); // Debug print
     });
     socket.connect();
   }
