@@ -7,6 +7,7 @@ mixin class ApiUrl {
   static const register = "$_urlBase/auth/register";
   static const getMe = "$_urlBase/auth/me";
   static const getListMoment = "$_urlBase/moments/";
+  static const getListMomentByUserID = "$_urlBase/moments/user/";
   static const getFriends = "$_urlBase/friends/list-friends";
   static const getFriendsRequest = "$_urlBase/friends/list-received-request";
   static const deleteFriend = "$_urlBase/friends/delete-friend";
@@ -17,4 +18,7 @@ mixin class ApiUrl {
   static const getCurrentWeather = "http://api.weatherapi.com/v1/current.json";
   static const cancelRequestByUserId = "$_urlBase/friends/cancel-request";
   static const getConversation = "$_urlBase/conversations/my-conversation";
+  static const createReport = "$_urlBase/reports/";
+
+  static const reacts = "$_urlBase/reacts";
 }

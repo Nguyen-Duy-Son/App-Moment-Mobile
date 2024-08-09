@@ -29,9 +29,6 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   void initState() {
     super.initState();
-
-    // _emailController.text = 'duyson2003@gmail.com';
-    // _passwordController.text = 'Son2003@';
     _emailController.text = getEmail()??'';
     _passwordController.text = getPassWord()??'';
     if(_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty){
@@ -59,11 +56,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     if(form.validate()){
       form.save();
       form.validate();
-      print(_emailController.text);
-      print(_passwordController.text);
       await context.read<AuthProvider>().login(_emailController.text, _passwordController.text, context);
       if(context.read<AuthProvider>().loginStatus == ModuleStatus.success){
-        print("ok");
         Navigator.pushAndRemoveUntil<void>(context, MaterialPageRoute(builder: (context) => ExampleView()),
               ModalRoute.withName(AppRoutes.EXAMPLE),);
       }else{

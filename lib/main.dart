@@ -8,7 +8,7 @@ import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
-import 'package:hit_moments/app/providers/moment_provider.dart';
+import 'package:hit_moments/app/providers/list_moment_provider.dart';
 import 'package:hit_moments/app/providers/providers_list.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
               //ThemeProvider nên e khai báo nó thẳng vào đây luôn ạ
               ChangeNotifierProvider(create: (context) => ThemeProvider()),
               ChangeNotifierProvider(create: (context) => AuthProvider()),
-              ChangeNotifierProvider(create: (context) => MomentProvider()),
+              ChangeNotifierProvider(create: (context) => ListMomentProvider()),
               ChangeNotifierProvider(create: (context) => WeatherProvider()),
 
               //provider ngôn ngữ làm riêng

@@ -1,26 +1,41 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/format_time_extension.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:hit_moments/app/models/moment_model.dart';
+import 'package:hit_moments/app/providers/list_moment_provider.dart';
+import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/views/moment/widget/bottom_sheet_input.dart';
 import 'package:hit_moments/app/views/moment/widget/moment_content_widget.dart';
 import 'package:hit_moments/app/views/moment/widget/select_funtion_widget.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../core/extensions/theme_extensions.dart';
 
 class MomentWidget extends StatefulWidget {
-  const MomentWidget({super.key, required this.momentModel});
+  const MomentWidget({
+    super.key,
+    required this.momentModel,
+    required this.pageViewController});
   final MomentModel momentModel;
+  final PageController pageViewController;
 
   @override
   State<MomentWidget> createState() => _MomentWidgetState();
 }
 
 class _MomentWidgetState extends State<MomentWidget> {
+
   void showBottomSheetInput(){
     showModalBottomSheet(
       isScrollControlled: true,
@@ -114,7 +129,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                           iconHeight: 28.w, iconWidth: 28.w,
                           borderColor: AppColors.of(context).primaryColor10,
                           onPress: () {
-
+                            context.read<MomentProvider>().sendReact(widget.momentModel.momentID!);
                           },
                         ),
                         IconOnTapScale(
@@ -125,23 +140,39 @@ class _MomentWidgetState extends State<MomentWidget> {
                           iconHeight: 28.w, iconWidth: 28.w,
                           borderColor: AppColors.of(context).primaryColor10,
                           onPress: () {
-
                           },
                         ),
-                        const SelectFuntionWidget()
+                        SelectFunctionWidget(
+                          idUser: widget.momentModel.userID!,
+                          urlImage: widget.momentModel.image!,
+                        )
                       ],
-                                  ),
-                  ))
+                    ),
+                  )
+              )
             ],
           ),
           const SizedBox(),
-          SizedBox(
-              height: 50,
-              child: SvgPicture.asset(Assets.icons.downOutLineSolidSVG,
-                color: AppColors.of(context).neutralColor12,),
+          ScaleOnTapWidget(
+            onTap: (_) {
+              final currentPage = widget.pageViewController.page ?? 0.0;
+              final totalPages = context.read<ListMomentProvider>().momentList.length.toDouble();
+              if (currentPage < totalPages - 1) {
+                widget.pageViewController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+            child: SizedBox(
+                height: 50,
+                child: SvgPicture.asset(Assets.icons.downOutLineSolidSVG,
+                  color: AppColors.of(context).neutralColor12,),
+            ),
           )
         ],
       ),
     );
   }
 }
+

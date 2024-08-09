@@ -1,11 +1,17 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ToolShapePopup extends ShapeBorder {
-  const ToolShapePopup({this.trianglePosition = TooltipTrianglePosition.left});
+  ToolShapePopup({
+    this.trianglePosition = TooltipTrianglePosition.left,
+    this.borderColor = Colors.black,
+  });
 
   final TooltipTrianglePosition trianglePosition;
-
-  final BorderSide _side = BorderSide.none;
+  final Color borderColor;
+  final BorderSide _side = BorderSide(color: Colors.black, width: 1.0); // Initial value, corrected later
   final BorderRadiusGeometry _borderRadius = BorderRadius.zero;
 
   @override
@@ -58,7 +64,14 @@ class ToolShapePopup extends ShapeBorder {
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    final Paint paint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _side.width;
+    final Path path = getOuterPath(rect, textDirection: textDirection);
+    canvas.drawPath(path, paint);
+  }
 
   @override
   ShapeBorder scale(double t) => RoundedRectangleBorder(

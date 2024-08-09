@@ -23,22 +23,18 @@ class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: AppColors.of(context).neutralColor1,
-            automaticallyImplyLeading: false,
-            title: SvgPicture.asset(Assets.icons.up2SVG,
-              color: AppColors.of(context).neutralColor12,),
-            centerTitle: true,
-          ),
           body: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
             },
             child: SingleChildScrollView(
+
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  SvgPicture.asset(Assets.icons.up2SVG,
+                    color: AppColors.of(context).neutralColor12, height: 30.h,),
                   Text(
                     S.of(context).makeNewFriends,
                     style: AppTextStyles.of(context).bold32.copyWith(
@@ -141,7 +137,7 @@ class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
                           )
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24.w),
+                            padding: EdgeInsets.symmetric(horizontal: 32.w),
                           child: Image.asset(Assets.images.suggestedFriendsPNG),
                         )
                       ],
