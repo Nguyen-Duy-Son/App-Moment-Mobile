@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/moment/camera/display_pictures_screen.dart';
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
@@ -83,7 +84,9 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: AppColors.of(context).primaryColor6),
-                    child: IconButton(icon: SvgPicture.asset(Assets.icons.union), onPressed: () {},) // TODO: Chuyển đến màn nhắn tin
+                    child: IconButton(icon: SvgPicture.asset(Assets.icons.union), onPressed: ()=>Navigator.pushNamed(
+                      context, AppRoutes.MY_CONVERSATION
+                    ),) // TODO: Chuyển đến màn nhắn tin
                   ),
                 ],
               ),

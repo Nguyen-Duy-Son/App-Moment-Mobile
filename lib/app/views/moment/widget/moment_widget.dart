@@ -63,28 +63,20 @@ class _MomentWidgetState extends State<MomentWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[
-            Color(0xffffffff),
-            Color(0xffeeeeec),
-            Color(0xffDDDDDA),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter
-        )
-      ),
+          gradient: LinearGradient(colors: <Color>[
+        Color(0xffffffff),
+        Color(0xffeeeeec),
+        Color(0xffDDDDDA),
+      ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 16.w),
+              margin: EdgeInsets.only(top: 16.w),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                border: Border.all(
-                    width: 0.1,
-                    color: AppColors.of(context).neutralColor10
-                ),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                border: Border.all(width: 0.1, color: AppColors.of(context).neutralColor10),
               ),
               child: MomentContentWidget(momentModel: widget.momentModel)
           ),

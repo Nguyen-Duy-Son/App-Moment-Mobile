@@ -31,6 +31,7 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<UserProvider>().getFriendOfUser();
       context.read<UserProvider>().getFriendRequestOfUser();
+      context.read<UserProvider>().getFriendProposals();
     });
   }
 
@@ -46,7 +47,10 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           leading: Padding(
             padding: EdgeInsets.only(top: 15.w),
             child: BackButton(
-              onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => TakePictureScreen()));},
+              // onPressed: () {
+              //   Navigator.of(context).push(MaterialPageRoute(
+              //       builder: (context) => TakePictureScreen()));
+              // },
               color: AppColors.of(context).neutralColor9,
             ),
           ),
@@ -113,7 +117,12 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                                 height: 20.w,
                                 child: Text(
                                   '${Provider.of<UserProvider>(context, listen: false).friendRequests.length}',
-                                  style: AppTextStyles.of(context).light16,
+                                  style: AppTextStyles.of(context)
+                                      .regular20
+                                      .copyWith(
+                                        color:
+                                            AppColors.of(context).neutralColor1,
+                                      ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -139,9 +148,11 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           margin: EdgeInsets.only(bottom: 32.h),
           child: Opacity(
             opacity: checkOpacity ? 0.3 : 1,
-            child: (!context.watch<UserProvider>().isLoandingFriendList)
+            child: (!context.watch<UserProvider>().isLoandingFriendList &&
+                    !context.watch<UserProvider>().isLoandingFriendSuggests)
                 ? ListMyFriendWidget(
-                    friendProposals: const [],
+                    friendProposals:
+                        context.watch<UserProvider>().friendSuggests,
                     friendsUsers: context.watch<UserProvider>().friendList)
                 : const Center(
                     child: CircularProgressIndicator(),
@@ -196,5 +207,4 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
 
     return items;
   }
-
 }

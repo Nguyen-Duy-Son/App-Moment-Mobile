@@ -55,23 +55,42 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Moment")),
-            ElevatedButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TakePictureScreen(),) );
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestedFriendsView(),));
-            },
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TakePictureScreen(),
+                      ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SuggestedFriendsView(),
+                      ));
+                },
                 child: Text("Suggested Friends")),
-            ElevatedButton(onPressed: () {
-              setEmail('');
-              setPassWord('');
-              setToken('');
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AuthView(),),
-                ModalRoute.withName(AppRoutes.AUTHENTICATION)
-              );
-            },
-                child: Text("Đăng xuất")
-            ),
+            ElevatedButton(
+                onPressed: () {
+                  setEmail('');
+                  setPassWord('');
+                  setToken('');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuthView(),
+                      ),
+                      ModalRoute.withName(AppRoutes.AUTHENTICATION));
+                },
+                child: Text("Đăng xuất")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TakePictureScreen(),
+                      ));
+                },
+                child: Text("Home")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -99,7 +118,6 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Get weather")),
-
           ],
         ),
       ),

@@ -8,4 +8,5 @@ abstract class StorageConstants {
   static const String isDarkMode = 'is_dark_mode';
   static const String email = 'email';
   static const String password = 'password';
+  static const String userId = 'user_id';
 }

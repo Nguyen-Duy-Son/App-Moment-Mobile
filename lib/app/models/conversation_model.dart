@@ -5,7 +5,7 @@ import 'message_model.dart';
 class Conversation {
   final String id;
   final User user;
-  final Message? lastMessage;
+  final String? lastMessage;
 
   Conversation({
     required this.id,
@@ -17,7 +17,8 @@ class Conversation {
     return Conversation(
       id: json['_id'] as String,
       user: User.fromJson(json['user']),
-      lastMessage: json['lastMessage'] is Map ? Message.fromJson(json['lastMessage']) : null,
+      // lastMessage: json['lastMessage'] is Map ? Message.fromJson(json['lastMessage']) : null,
+      lastMessage: json['lastMessage'] ,
     );
   }
 }

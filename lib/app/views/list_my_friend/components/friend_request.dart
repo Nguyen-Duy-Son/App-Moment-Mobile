@@ -101,7 +101,6 @@ class _FriendRequestState extends State<FriendRequest> {
                     ),
                 overflow: TextOverflow.ellipsis,
               ),
-
               !isConfirmFriendRequest
                   ? !isDeleteFriendRequest
                       ? Row(
@@ -112,6 +111,7 @@ class _FriendRequestState extends State<FriendRequest> {
                                 Assets.icons.zoomOut,
                                 width: 24.w,
                                 height: 24.w,
+                                color: AppColors.of(context).neutralColor10,
                               ),
                             ),
                             GestureDetector(
@@ -120,6 +120,7 @@ class _FriendRequestState extends State<FriendRequest> {
                                 Assets.icons.zoomIn,
                                 width: 24.w,
                                 height: 24.w,
+                                color: AppColors.of(context).neutralColor9,
                               ),
                             ),
                           ],
