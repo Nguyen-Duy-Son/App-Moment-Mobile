@@ -26,27 +26,26 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   // late IO.Socket socket;
   // final StreamController<String> _streamController = StreamController<String>();
 
-  // Stream<String> get messagesStream => _streamController.stream;
   late String senderId;
-
-  // List<Message> messages = [];
-
+  late ConversationProvider _appProvider;
   @override
   void initState() {
     super.initState();
+    _appProvider = Provider.of<ConversationProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       callApi();
       print('id: ${getUserId()}');
-      //connect();
+      if (!_appProvider.socket.connected) {
+        _appProvider.connectAndListen();
+      }
     });
   }
 
-  late ConversationProvider _appProvider;
-  @override
-  void didChangeDependencies() {
-    _appProvider = Provider.of<ConversationProvider>(context, listen: false);
-    super.didChangeDependencies();
-  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  // }
 
   @override
   void dispose() {
@@ -71,7 +70,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
           .read<ConversationProvider>()
           .getChatMessageByReceiverId(widget.receiver.id);
     }
-    context.read<ConversationProvider>().connectAndListen();
+
   }
 
   void handleOnlineUsers(dynamic data) {
