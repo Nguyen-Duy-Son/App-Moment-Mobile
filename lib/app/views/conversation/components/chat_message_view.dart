@@ -49,7 +49,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
 
   @override
   void dispose() {
-    _appProvider.disconnectSocket();
+    // _appProvider.disconnectSocket();
     super.dispose();
   }
 
