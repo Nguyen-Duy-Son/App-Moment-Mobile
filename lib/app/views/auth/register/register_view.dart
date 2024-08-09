@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../../core/config/enum.dart';
 import '../../../core/constants/assets.dart';
 import '../../../providers/auth_provider.dart';
-import '../login/login_widget.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

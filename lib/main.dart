@@ -31,11 +31,14 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         designSize: const Size(360, 800),
         builder: (context, child) {
+          //List<SingleChildWidget> providers = listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)).toList();
           return MultiProvider(
             providers: [
-              ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
+              //...providers,
+              //   ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
               //không hiểu sao thêm MomentProvider vào cái là nó bị lỗi k tìm thấy
               //ThemeProvider nên e khai báo nó thẳng vào đây luôn ạ
+              ChangeNotifierProvider(create: (context) => MomentProvider()),
               ChangeNotifierProvider(create: (context) => ThemeProvider()),
               ChangeNotifierProvider(create: (context) => AuthProvider()),
               ChangeNotifierProvider(create: (context) => MomentProvider()),
