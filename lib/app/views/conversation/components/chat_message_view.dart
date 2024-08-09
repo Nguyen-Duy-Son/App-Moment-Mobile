@@ -11,7 +11,8 @@ import '../../../l10n/l10n.dart';
 import '../../../models/user_model.dart';
 
 class ChatMessageView extends StatefulWidget {
-  const ChatMessageView({super.key, required this.conversationId, required this.receiver});
+  const ChatMessageView(
+      {super.key, required this.conversationId, required this.receiver});
   final String conversationId;
   final User receiver;
 
@@ -53,17 +54,22 @@ class _ChatMessageViewState extends State<ChatMessageView> {
     super.dispose();
   }
 
-  @override
-  void deactivate() {
-    // TODO: implement deactivate
-    super.deactivate();
-  }
+  // @override
+  // void deactivate() {
+  //   // TODO: implement deactivate
+  //
+  //   super.deactivate();
+  // }
 
   void callApi() async {
     if (widget.conversationId.isNotEmpty) {
-      context.read<ConversationProvider>().getChatMessage(widget.conversationId);
+      context
+          .read<ConversationProvider>()
+          .getChatMessage(widget.conversationId);
     } else {
-      context.read<ConversationProvider>().getChatMessageByReceiverId(widget.receiver.id);
+      context
+          .read<ConversationProvider>()
+          .getChatMessageByReceiverId(widget.receiver.id);
     }
     context.read<ConversationProvider>().connectAndListen();
   }
@@ -98,7 +104,9 @@ class _ChatMessageViewState extends State<ChatMessageView> {
         body: Column(
           children: [
             Expanded(
-                child: !context.watch<ConversationProvider>().isLoadingChatMessage
+                child: !context
+                        .watch<ConversationProvider>()
+                        .isLoadingChatMessage
                     ? SingleChildScrollView(
                         reverse: true,
                         child: ListView.builder(
@@ -106,12 +114,20 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           scrollDirection: Axis.vertical,
-                          itemCount: context.watch<ConversationProvider>().messages.length,
+                          itemCount: context
+                              .watch<ConversationProvider>()
+                              .messages
+                              .length,
                           itemBuilder: (context, index) {
-                            final message = context.watch<ConversationProvider>().messages[index];
-                            final bool isMe = message.senderId != widget.receiver.id;
+                            final message = context
+                                .watch<ConversationProvider>()
+                                .messages[index];
+                            final bool isMe =
+                                message.senderId != widget.receiver.id;
                             return Container(
-                              alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                              alignment: isMe
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
@@ -125,13 +141,18 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                                       horizontal: 12.w,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: isMe ? AppColors.of(context).primaryColor3 : AppColors.of(context).neutralColor4,
+                                      color: isMe
+                                          ? AppColors.of(context).primaryColor3
+                                          : AppColors.of(context).neutralColor4,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Text(
                                       message.text ?? '',
-                                      style: AppTextStyles.of(context).regular20.copyWith(
-                                            color: AppColors.of(context).neutralColor12,
+                                      style: AppTextStyles.of(context)
+                                          .regular20
+                                          .copyWith(
+                                            color: AppColors.of(context)
+                                                .neutralColor12,
                                           ),
                                     ),
                                   ),
@@ -153,7 +174,9 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                   controller: _controller,
                   decoration: InputDecoration(
                     hintText: S.of(context).titleSendMessage,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(50), borderSide: BorderSide.none),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        borderSide: BorderSide.none),
                     suffixIcon: GestureDetector(
                       onTap: _sendMessage,
                       child: Container(
@@ -181,11 +204,15 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
       final conversationProvider = context.read<ConversationProvider>();
-      conversationProvider.sendMessage(widget.conversationId, widget.receiver.id, _controller.text);
-      // if (conversationProvider.isSending != true) {
-      //   context.read<ConversationProvider>().getChatMessage(widget.conversationId);
-      //   context.read<ConversationProvider>().getConversations();
-      // }
+      conversationProvider.sendMessage(widget.receiver.id, _controller.text);
+      if (conversationProvider.isSending != true) {
+        // if (widget.conversationId.isNotEmpty) {
+        //   conversationProvider.getChatMessage(widget.conversationId);
+        // } else {
+        //   conversationProvider.getChatMessageByReceiverId(widget.receiver.id);
+        // }
+      }
+      conversationProvider.getConversations();
       _controller.clear();
     }
   }

@@ -47,25 +47,20 @@ class ConversationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sendMessage(String conversationId, String userId, String message) async {
+  void sendMessage(String userId, String message) async {
     isSending = true;
     int status = await ConversationService().sendMessage(userId, message);
     if (status == 200) {
       socket.emit('newMessage', {
         'text': message,
       });
-      messages = await ConversationService().getConversationById(conversationId);
+      messages = await ConversationService().getConversationByReceiverId(userId);
       isSending = false;
     }
     notifyListeners();
   }
 
   void connectAndListen() async {
-    socket.on(
-        'connection',
-        (data) => {
-              print('Connected to the server'),
-            });
     socket.onConnect((_) {
       print('Connected to the server'); // Debug print
     });
@@ -75,12 +70,11 @@ class ConversationProvider extends ChangeNotifier {
       messages.add(Message.fromJson(data as Map<String, dynamic>));
 
       notifyListeners();
-      //_streamController.add(data);
     });
 
-    socket.onDisconnect((_) {
-      print('Disconnected from the server'); // Debug print
-    });
+    // socket.onDisconnect((_) {
+    //   print('Disconnected from the server'); // Debug print
+    // });
     socket.on('fromServer', (_) {
       print('fromServer event triggered'); // Debug print
     });
@@ -89,6 +83,7 @@ class ConversationProvider extends ChangeNotifier {
 
   void disconnectSocket() {
     if (socket.connected) {
+      print('Disconnected from the server');
       socket.close();
     }
   }
