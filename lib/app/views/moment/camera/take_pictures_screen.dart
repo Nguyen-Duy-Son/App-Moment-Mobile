@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 import '../../profile/personalPageWidget.dart';
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({super.key});
+  const TakePictureScreen({super.key, required this.pageParentController});
+  final PageController pageParentController;
   @override
   State<TakePictureScreen> createState() => _TakePictureScreenState();
 }
@@ -68,16 +69,16 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: AppColors.of(context).primaryColor6),
                     child: IconButton(icon: SvgPicture.asset(Assets.icons.user), onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => PersonalPageWidget()),
-                      // );
+
+                      Navigator.pushNamed(
+                          context, AppRoutes.MY_PROFILE
+                      );
                     },) 
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const SuggestedFriendsView())
+                      Navigator.pushNamed(
+                          context, AppRoutes.LIST_MY_FRIEND
                       );
                     },
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.of(context).primaryColor6, ),
@@ -86,9 +87,9 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          SvgPicture.asset(Assets.icons.adduser),
+                          SvgPicture.asset(Assets.icons.usersSVG, height: 24, width: 24,),
                           Text(AppLocalizations.of(context)!.addfriend,
-                            style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor12,),
+                            style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor11,),
                           )
                         ],
                       )
@@ -97,14 +98,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: AppColors.of(context).primaryColor6),
-//                     child: IconButton(icon: SvgPicture.asset(Assets.icons.union), onPressed: () {
-//                       Navigator.of(context).push(
-//                         MaterialPageRoute(builder: (context) => const ListMyFriendView())
-//                       );
-//                     },) // TODO: Chuyển đến màn nhắn tin
+//
                     child: IconButton(icon: SvgPicture.asset(Assets.icons.union), onPressed: ()=>Navigator.pushNamed(
                       context, AppRoutes.MY_CONVERSATION
-                    ),) // TODO: Chuyển đến màn nhắn tin
+                    ),)
                   ),
                 ],
               ),
@@ -160,7 +157,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                 ],
               ),
               // const SizedBox(height: 15,),
-              IconButton(onPressed: () {}, icon: SvgPicture.asset(Assets.icons.downSVG, height: 10,), ),
+              IconButton(onPressed: () {
+                widget.pageParentController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+
+              }, icon: SvgPicture.asset(Assets.icons.downSVG, height: 10,), ),
             ],
           ),
         ),

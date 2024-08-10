@@ -21,7 +21,6 @@ class PersonalPageScreenState extends State<PersonalPageScreen>{
   @override
   void initState() {
     super.initState();
-    context.read<UserProvider>().getMe();
   }
 
   void check() {

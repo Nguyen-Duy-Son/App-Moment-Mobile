@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
@@ -16,8 +17,8 @@ import '../../l10n/l10n.dart';
 import '../../models/moment_model.dart';
 
 class MomentView extends StatefulWidget {
-  const MomentView({super.key});
-
+  const MomentView({super.key, required this.pageParentController});
+  final PageController pageParentController;
   @override
   State<MomentView> createState() => _MomentViewState();
 }
@@ -39,6 +40,11 @@ class _MomentViewState extends State<MomentView> {
         bool isBottom = pageViewController.position.pixels != 0;
         if (isBottom && context.read<ListMomentProvider>().loadMoreStatus != ModuleStatus.fail) {
           context.read<ListMomentProvider>().loadMoreListMoment();
+        }
+        bool isTop = pageViewController.position.pixels == pageViewController.position.minScrollExtent;
+        if (isTop) {
+          print('User is scrolling down at the top');
+          widget.pageParentController.previousPage(duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
         }
       }
     });
@@ -69,7 +75,6 @@ class _MomentViewState extends State<MomentView> {
   @override
   Widget build(BuildContext context) {
     final listMomentProvider = context.watch<ListMomentProvider>();
-    print("Status khi load là ${listMomentProvider.loadMoreStatus}");
     if (listMomentProvider.getListMomentStatus == ModuleStatus.success) {
       listMoment = context.read<ListMomentProvider>().momentList;
       _list = listMoment.map((e) => MomentWidget(momentModel: e, pageViewController: pageViewController)).toList();
@@ -86,7 +91,9 @@ class _MomentViewState extends State<MomentView> {
               icon1Color: AppColors.of(context).neutralColor10,
               iconHeight: 15.w,
               iconWidth: 15.w,
-              onPress: () {},
+              onPress: () {
+                widget.pageParentController.previousPage(duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+              },
             ),
           ),
           backgroundColor: Colors.white,
@@ -122,12 +129,7 @@ class _MomentViewState extends State<MomentView> {
           children: [
             _list.isEmpty
                 ? Center(
-              child: Text(
-                S.of(context).noPosts,
-                style: AppTextStyles.of(context).regular20.copyWith(
-                  color: AppColors.of(context).neutralColor11,
-                ),
-              ),
+              child: CircularProgressIndicator(),
             )
                 : Column(
               children: [

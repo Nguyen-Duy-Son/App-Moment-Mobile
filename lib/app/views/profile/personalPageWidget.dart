@@ -11,6 +11,10 @@ import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/views/auth/login/login_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../datasource/local/storage.dart';
+import '../../routes/app_routes.dart';
+import '../auth/auth_view.dart';
+
 class PersonalPageWidget extends StatefulWidget {
   const PersonalPageWidget({super.key});
 
@@ -139,9 +143,15 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             const SizedBox(height: 40,),
             InkWell(
               onTap: () {
-                Navigator.of(context).pop(
-                  MaterialPageRoute(builder: (context) => LoginView())
-                );
+                setEmail('');
+                setPassWord('');
+                setToken('');
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AuthView(),
+                    ),
+                    ModalRoute.withName(AppRoutes.AUTHENTICATION));
               },
               child: Row(
                 children: [
@@ -153,7 +163,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             ),
             Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
             InkWell(
-              onTap: () {}, //TODO: Delete Account
+              onTap: () {},
               child: Row(
                 children: [
                   SvgPicture.asset(Assets.icons.trash),

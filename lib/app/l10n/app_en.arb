@@ -1,6 +1,6 @@
 {
     "hello": "Hello",
-    "addfriend": " Add friend",
+    "addfriend": " Friends",
     "friends": "friends",
     "sendto": "Send to...",
     "feel": "feelings...",
@@ -113,5 +113,14 @@
       "daysAgo": "days ago",
         "hoursAgo": "hours ago",
         "minutesAgo": "minutes ago",
-        "titleNofriend": "Please enter the email you want to search"
+        "titleNofriend": "Please enter the email you want to search",
+        "onboardingTitle1": "Multilingual Connection",
+          "onboardingDescription1": "Explore the ability to connect globally with friends and family through an app that supports multiple languages. Share life's moments easily and effectively, regardless of the language you use.",
+          "onboardingTitle2": "Capture Moments",
+          "onboardingDescription2": "Preserve valuable moments in your life by capturing and sharing your best photos. With our app, every moment becomes special and memorable.",
+
+          "onboardingTitle3": "Strengthen Friendships",
+          "onboardingDescription3": "Create deep connections with friends by sharing photos and experiences together. Our app helps you maintain close relationships and create more joyful memories.",
+          "continueString": "Continue",
+            "next": "Next"
 }

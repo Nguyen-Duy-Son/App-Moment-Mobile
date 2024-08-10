@@ -55,6 +55,7 @@ class _AssetsIcons {
   final settings = 'assets/icons/Settings.svg';
   final addFriendSVG = 'assets/icons/add-friend.svg';
   final play = 'assets/icons/Play.svg';
+  final logoSplashSVG = 'assets/icons/LogoSplash.svg';
 }
 
 class _AssetsImages {
@@ -62,6 +63,11 @@ class _AssetsImages {
   final authPNG = 'assets/images/auth.png';
   final verifyEmailPNG = 'assets/images/verify_email.png';
   final suggestedFriendsPNG = 'assets/images/suggested-friends.png';
+  final logoPNG = 'assets/images/logo.png';
+  final logoSplashPNG = 'assets/images/logo_splash.png';
+  final onboarding1PNG = 'assets/images/onboarding1.png';
+  final onboarding2PNG = 'assets/images/onboarding2.png';
+  final onboarding3PNG = 'assets/images/onboarding3.png';
 
   //final viDuPNG = 'assets/images/viDu.png';
 }

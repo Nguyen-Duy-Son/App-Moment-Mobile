@@ -7,6 +7,7 @@ import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/views/auth/login/login_view.dart';
 import 'package:hit_moments/app/views/auth/register/register_view.dart';
+import 'package:hit_moments/app/views/example/home_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/config/enum.dart';
@@ -35,8 +36,8 @@ class _AuthViewState extends State<AuthView> {
     if (context.read<AuthProvider>().loginStatus == ModuleStatus.success) {
       Navigator.pushAndRemoveUntil<void>(
         context,
-        MaterialPageRoute(builder: (context) => const ExampleView()),
-        ModalRoute.withName(AppRoutes.EXAMPLE),
+        MaterialPageRoute(builder: (context) => const HomeView()),
+        ModalRoute.withName(AppRoutes.MY_HOME),
       );
     }
   }
