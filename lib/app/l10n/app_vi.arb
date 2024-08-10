@@ -53,6 +53,6 @@
     "yes":"Có",
     "cancelAddFriend":"Hủy kết bạn",
     "titleFriendEmpty":"Bạn chưa kết bạn với ai. Hãy thêm một số bạn để trò chuyện!",
-
+    "titleNofriend":"Vui lòng nhập email cần tìm kiếm",
     "message":"Tin nhắn"
 }

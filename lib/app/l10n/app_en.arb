@@ -53,6 +53,6 @@
         "yes":"Yes",
         "cancelAddFriend":"Cancel add friend",
         "titleFriendEmpty":"You haven't made any friends yet. Add some friends to chat with!",
-
+"titleNofriend": "Please enter the email you want to search",
         "message":"Message"
 }

@@ -82,77 +82,77 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
             ),
           ),
           centerTitle: true,
-          actions: [
-            PopupMenuButton(
-              offset: const Offset(
-                -16,
-                64,
-              ),
-              shape: const TooltipShape(),
-              constraints: BoxConstraints.expand(width: 0.8.sw, height: 0.4.sh),
-              padding: EdgeInsets.only(
-                top: 15.w,
-                right: 15.w,
-              ),
-              onOpened: () {
-                setState(() {
-                  checkOpacity = true;
-                });
-              },
-              onCanceled: () {
-                setState(() {
-                  checkOpacity = false;
-                });
-              },
-              icon: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.of(context).neutralColor7,
-                      ),
-                      padding: EdgeInsets.all(8.w),
-                      child: SvgPicture.asset(
-                        Assets.icons.bell,
-                        width: 20.w,
-                        height: 20.w,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 1.w,
-                    top: -3.w,
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: ColorConstants.accentRed,
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      width: 20.w,
-                      height: 20.w,
-                      child: Text(
-                        '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
-                        style: AppTextStyles.of(context).light16,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              itemBuilder: (_) =>
-                  !Provider.of<UserProvider>(context, listen: false)
-                          .isLoandingFriendRequests
-                      ? _buildFriendRequestMenu(
-                          Provider.of<UserProvider>(context, listen: false)
-                              .friendRequests)
-                      : [
-                          const PopupMenuItem(
-                              child: Center(child: CircularProgressIndicator()))
-                        ],
-            ),
-          ],
+          // actions: [
+          //   PopupMenuButton(
+          //     offset: const Offset(
+          //       -16,
+          //       64,
+          //     ),
+          //     shape: const TooltipShape(),
+          //     constraints: BoxConstraints.expand(width: 0.8.sw, height: 0.4.sh),
+          //     padding: EdgeInsets.only(
+          //       top: 15.w,
+          //       right: 15.w,
+          //     ),
+          //     onOpened: () {
+          //       setState(() {
+          //         checkOpacity = true;
+          //       });
+          //     },
+          //     onCanceled: () {
+          //       setState(() {
+          //         checkOpacity = false;
+          //       });
+          //     },
+          //     icon: Stack(
+          //       clipBehavior: Clip.none,
+          //       children: [
+          //         ClipRRect(
+          //           borderRadius: BorderRadius.circular(50),
+          //           child: Container(
+          //             decoration: BoxDecoration(
+          //               color: AppColors.of(context).neutralColor7,
+          //             ),
+          //             padding: EdgeInsets.all(8.w),
+          //             child: SvgPicture.asset(
+          //               Assets.icons.bell,
+          //               width: 20.w,
+          //               height: 20.w,
+          //             ),
+          //           ),
+          //         ),
+          //         Positioned(
+          //           right: 1.w,
+          //           top: -3.w,
+          //           child: Container(
+          //             alignment: Alignment.center,
+          //             decoration: BoxDecoration(
+          //               color: ColorConstants.accentRed,
+          //               borderRadius: BorderRadius.circular(50),
+          //             ),
+          //             width: 20.w,
+          //             height: 20.w,
+          //             child: Text(
+          //               '${Provider.of<UserProvider>(context, listen: false).friendRequests.length ?? 0}',
+          //               style: AppTextStyles.of(context).light16,
+          //               overflow: TextOverflow.ellipsis,
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //     itemBuilder: (_) =>
+          //         !Provider.of<UserProvider>(context, listen: false)
+          //                 .isLoandingFriendRequests
+          //             ? _buildFriendRequestMenu(
+          //                 Provider.of<UserProvider>(context, listen: false)
+          //                     .friendRequests)
+          //             : [
+          //                 const PopupMenuItem(
+          //                     child: Center(child: CircularProgressIndicator()))
+          //               ],
+          //   ),
+          // ],
         ),
         body: SingleChildScrollView(
           child: Padding(

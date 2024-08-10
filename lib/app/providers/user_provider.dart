@@ -6,6 +6,7 @@ import '../models/user_model.dart';
 class UserProvider extends ChangeNotifier {
   late List<User> users;
   List<User> friendList = [];
+  List<User> friendListTmp = [];
   List<User> friendRequests = [];
   List<User> friendSuggests = [];
   bool isLoandingFriendList = false,
@@ -13,12 +14,14 @@ class UserProvider extends ChangeNotifier {
       isLoandingFriendSuggests = false,
       isLoandingFriend = false,
       isLoandingUser = false;
+
   bool isSearchFriend = false;
   void getFriendOfUser() async {
     isLoandingFriendList = true;
     notifyListeners();
     var response = await UserService.getFriends();
     friendList = response.map<User>((item) => User.fromJson(item)).toList();
+    friendListTmp = friendList;
     isLoandingFriendList = false;
     notifyListeners();
   }
@@ -36,15 +39,13 @@ class UserProvider extends ChangeNotifier {
     isSearchFriend = true;
     notifyListeners();
     var response = await UserService.searchFriendUserByEmail(emailOfFriend);
-    friendList = [];
+    //
     if (response != 200) {
+      friendList = response.map<User>((item) => User.fromJson(item)).toList();
       isSearchFriend = false;
       notifyListeners();
       return;
     }
-    friendList.add(User.fromJson(response));
-    isSearchFriend = false;
-    notifyListeners();
   }
 
   void getFriendProposals() async {
@@ -54,5 +55,12 @@ class UserProvider extends ChangeNotifier {
     friendSuggests = response.map<User>((item) => User.fromJson(item)).toList();
     isLoandingFriendSuggests = false;
     notifyListeners();
+  }
+  void refeshData() {
+    friendList = friendListTmp;
+    friendList.map((user) {
+      print('User: ${user.fullName}, Email: ${user.email}');
+    });
+    // notifyListeners();
   }
 }

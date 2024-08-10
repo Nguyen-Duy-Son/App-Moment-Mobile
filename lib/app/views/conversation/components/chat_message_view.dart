@@ -84,17 +84,28 @@ class _ChatMessageViewState extends State<ChatMessageView> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
+            toolbarHeight: 52.w,
           title: Container(
             margin: EdgeInsets.only(top: 12.h),
             child: Column(
               children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.network(
+                    widget.receiver.avatar ?? '',
+                    width: 28.w,
+                    height: 28.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 Text(
                   widget.receiver.fullName,
                   style: AppTextStyles.of(context).light20.copyWith(
                         color: AppColors.of(context).neutralColor12,
-                        height: 0.9,
+                        height: 1,
                       ),
                 ),
+                SizedBox(height: 4.h),
               ],
             ),
           ),
