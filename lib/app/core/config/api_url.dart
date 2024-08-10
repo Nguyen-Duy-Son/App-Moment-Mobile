@@ -17,12 +17,12 @@ mixin class ApiUrl {
   static const sentFriendRequestOfUser = "$_urlBase/friends/invite";
   static const getCurrentWeather = "http://api.weatherapi.com/v1/current.json";
   static const cancelRequestByUserId = "$_urlBase/friends/cancel-request";
-  static const getConversation = "$_urlBase/conversations/my-conversation";
+  static const getConversation = "$_urlBase/conversations/me";
   static const createReport = "$_urlBase/reports";
   static const reacts = "$_urlBase/reacts";
   static const getConversationById = "$_urlBase/conversations";
   static const getListSuggestFriend = "$_urlBase/friends/suggestions";
   static const getChatMessage = "$_urlBase/messages/";
   static const sendMessage = "$_urlBase/messages";
-  static const getChatMessageByReceiverId  = "$_urlBase/messages";
+  static const getChatMessageByReceiverId = "$_urlBase/messages";
 }

@@ -42,6 +42,11 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
   }
 
   String formatPhone(String phone) {
+    if (phone.length < 4) {
+      // Handle the case where the phone number is too short
+      return phone; // or return a default formatted string
+    }
+
     final String firstPart = phone.substring(0, 4);
     final String remaining = phone.substring(4);
     final tmp =
@@ -115,13 +120,13 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                           style: AppTextStyles.of(context).bold20,
                         ),
                         SizedBox(height: 20.h),
-                        widget.user.phoneNumber != null
+                        widget.user.phoneNumber != ""
                             ? Information(
                                 iconUrl: Assets.icons.call,
                                 title: formatPhone(widget.user.phoneNumber!),
                               )
                             : SizedBox(),
-                        widget.user.dob != null
+                        widget.user.dob != ""
                             ? Information(
                                 iconUrl: Assets.icons.calendar,
                                 title: formatDate(widget.user.dob!),
@@ -332,6 +337,29 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
     );
   }
 
+  List<PopupMenuItem> _buildFriendRequestMenu(List<User> users) {
+    List<PopupMenuItem> items = users
+        .map(
+          (e) => PopupMenuItem(
+            child: FriendRequest(
+              user: e,
+            ),
+          ),
+        )
+        .toList();
+    items.insert(
+      0,
+      PopupMenuItem(
+        enabled: false,
+        child: Text(
+          overflow: TextOverflow.ellipsis,
+          S.of(context).friendRequest,
+          style: AppTextStyles.of(context).bold20,
+        ), // Disable the item so it can't be selected
+      ),
+    );
+    return items;
+  }
 
   void deleteFriend(BuildContext ct) async {
     int statusCode = await UserService.deleteFriendOfUserById(widget.user.id);

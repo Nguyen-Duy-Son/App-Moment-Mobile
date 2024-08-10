@@ -53,5 +53,22 @@
     "yes": "Có",
     "cancelAddFriend": "Hủy kết bạn",
     "titleFriendEmpty": "Bạn chưa kết bạn với ai. Hãy thêm một số bạn để trò chuyện!",
-    "message": "Tin nhắn"
+    "message": "Tin nhắn",
+      "searchByEmailPhone": "Tìm kiếm theo email, số điện thoại...",
+      "userNotFound": "Không tìm thấy người dùng",
+      "mutualFriends": "bạn chung",
+    "titleSendMessage":"Gửi tin nhắn...",
+    "noNotification":"Không có thông báo",
+    "delete":"Xóa",
+    "deleteFriend":"Xóa bạn",
+    "sendMessage":"Nhắn tin",
+    "accept":"Đồng ý",
+    "reject":"Từ chối",
+    "addFriend":"Kết bạn",
+    "no":"Không",
+    "yes":"Có",
+    "cancelAddFriend":"Hủy kết bạn",
+    "titleFriendEmpty":"Bạn chưa kết bạn với ai. Hãy thêm một số bạn để trò chuyện!",
+    "titleNofriend":"Vui lòng nhập email cần tìm kiếm",
+    "message":"Tin nhắn"
 }

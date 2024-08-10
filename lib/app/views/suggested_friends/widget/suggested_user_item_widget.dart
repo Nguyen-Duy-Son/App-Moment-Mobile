@@ -13,14 +13,18 @@ import '../../../l10n/l10n.dart';
 import '../../../models/user_model.dart';
 
 class SuggestedUserItemWidget extends StatefulWidget {
-  const SuggestedUserItemWidget({super.key, required this.index, required this.listLength, required this.user});
+  const SuggestedUserItemWidget(
+      {super.key,
+      required this.index,
+      required this.listLength,
+      required this.user});
   final int index;
   final User user;
   final int listLength;
 
-
   @override
-  State<SuggestedUserItemWidget> createState() => _SuggestedUserItemWidgetState();
+  State<SuggestedUserItemWidget> createState() =>
+      _SuggestedUserItemWidgetState();
 }
 
 class _SuggestedUserItemWidgetState extends State<SuggestedUserItemWidget> {
@@ -35,63 +39,70 @@ class _SuggestedUserItemWidgetState extends State<SuggestedUserItemWidget> {
               padding: const EdgeInsets.all(1),
               decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(100))
-              ),
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(40.w),
                 child: CachedNetworkImage(
-                  imageUrl: widget.user.avatar??"",
+                  imageUrl: widget.user.avatar ?? "",
                   width: 40.w,
                   height: 40.w,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            SizedBox(width: 8.w,),
+            SizedBox(
+              width: 8.w,
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.user.fullName??"",
+                    widget.user.fullName ?? "",
                     style: AppTextStyles.of(context).light20.copyWith(
                         color: AppColors.of(context).neutralColor12,
-                        height: 0.8.h
-                    ),
+                        height: 0.8.h),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    widget.user.email??"",
+                    widget.user.email ?? "",
                     style: AppTextStyles.of(context).light14.copyWith(
-                      color: AppColors.of(context).neutralColor11,
-                      height: 1.h,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                          color: AppColors.of(context).neutralColor11,
+                          height: 1.h,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                   ),
                 ],
               ),
             ),
             ScaleOnTapWidget(
-                child: isSelectAdd?SvgPicture.asset(Assets.icons.zoomOut)
-                    :SvgPicture.asset(Assets.icons.zoomIn),
-                onTap: (isSelect) {
-                  sendRequest();
-                },),
+              child: isSelectAdd
+                  ? SvgPicture.asset(Assets.icons.zoomOut)
+                  : SvgPicture.asset(Assets.icons.zoomIn),
+              onTap: (isSelect) {
+                sendRequest();
+              },
+            ),
           ],
         ),
-        if(widget.index<widget.listLength-1)...[
-          SizedBox(height: 4.h,),
+        if (widget.index < widget.listLength - 1) ...[
+          SizedBox(
+            height: 4.h,
+          ),
           Divider(
             color: Colors.grey,
             height: ScreenUtil().setHeight(1.0),
           ),
-          SizedBox(height: 4.h,),
+          SizedBox(
+            height: 4.h,
+          ),
         ]
       ],
     );
   }
-  Future<void> sendRequest() async{
-    if(!isSelectAdd){
+
+  Future<void> sendRequest() async {
+    if (!isSelectAdd) {
       setState(() {
         isSelectAdd = true;
       });

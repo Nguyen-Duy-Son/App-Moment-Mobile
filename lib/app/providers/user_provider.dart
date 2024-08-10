@@ -7,6 +7,7 @@ import '../models/user_model.dart';
 class UserProvider extends ChangeNotifier {
   late List<User> users;
   List<User> friendList = [];
+  List<User> friendListTmp = [];
   List<User> friendRequests = [];
   List<User> friendSuggests = [];
   ModuleStatus friendSuggestStatus = ModuleStatus.initial;
@@ -17,12 +18,14 @@ class UserProvider extends ChangeNotifier {
       isLoandingFriendSuggests = false,
       isLoandingFriend = false,
       isLoandingUser = false;
+
   bool isSearchFriend = false;
   void getFriendOfUser() async {
     isLoandingFriendList = true;
     notifyListeners();
     var response = await UserService.getFriends();
     friendList = response.map<User>((item) => User.fromJson(item)).toList();
+    friendListTmp = friendList;
     isLoandingFriendList = false;
     notifyListeners();
   }
@@ -40,15 +43,13 @@ class UserProvider extends ChangeNotifier {
     isSearchFriend = true;
     notifyListeners();
     var response = await UserService.searchFriendUserByEmail(emailOfFriend);
-    friendList = [];
+    //
     if (response != 200) {
+      friendList = response.map<User>((item) => User.fromJson(item)).toList();
       isSearchFriend = false;
       notifyListeners();
       return;
     }
-    friendList.add(User.fromJson(response));
-    isSearchFriend = false;
-    notifyListeners();
   }
 
   void getFriendProposals() async {
@@ -59,6 +60,7 @@ class UserProvider extends ChangeNotifier {
     isLoandingFriendSuggests = false;
     notifyListeners();
   }
+
   void getFriendSuggest() async {
     friendSuggestStatus = ModuleStatus.loading;
     notifyListeners();
@@ -67,22 +69,33 @@ class UserProvider extends ChangeNotifier {
     friendSuggestStatus = ModuleStatus.success;
     notifyListeners();
   }
+
   void sentFriendRequest(String uid) async {
     final response = await UserService.sentRequestById(uid, false);
-    messageFSuggest =response;
+    messageFSuggest = response;
     notifyListeners();
   }
+
   void searchFriendRequest(String nameOrEmail, String errorString) async {
     friendSuggestStatus = ModuleStatus.loading;
     notifyListeners();
     final response = await UserService.searchFriendRequest(nameOrEmail);
-    if(response==0){
+    if (response == 0) {
       messageSearchFriend = errorString;
       friendSuggestStatus = ModuleStatus.fail;
-    }else{
-      friendSuggests = response.map<User>((item) => User.fromJson(item)).toList();
+    } else {
+      friendSuggests =
+          response.map<User>((item) => User.fromJson(item)).toList();
       friendSuggestStatus = ModuleStatus.success;
     }
     notifyListeners();
+  }
+
+  void refeshData() {
+    friendList = friendListTmp;
+    friendList.map((user) {
+      print('User: ${user.fullName}, Email: ${user.email}');
+    });
+    // notifyListeners();
   }
 }

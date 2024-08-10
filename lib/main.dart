@@ -51,7 +51,8 @@ class MyApp extends StatelessWidget {
                 create: (context) => locale,
               ),
               ChangeNotifierProvider(create: (context) => UserProvider()),
-              ChangeNotifierProvider(create: (context) => ConversationProvider()),
+              ChangeNotifierProvider(
+                  create: (context) => ConversationProvider()),
             ],
             child: Consumer<LocaleProvider>(
               builder: (context, provider, child) {

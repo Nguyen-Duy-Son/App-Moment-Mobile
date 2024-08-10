@@ -120,7 +120,7 @@ class _FriendRequestState extends State<FriendRequest> {
                                 Assets.icons.zoomIn,
                                 width: 24.w,
                                 height: 24.w,
-                                color: AppColors.of(context).neutralColor9,
+                                color: AppColors.of(context).primaryColor9,
                               ),
                             ),
                           ],
