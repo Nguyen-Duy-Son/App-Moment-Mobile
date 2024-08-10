@@ -28,7 +28,6 @@ class _AssetsIcons {
   final download2SVG = 'assets/icons/Download 2.svg';
   final leftSVG = 'assets/icons/Left.svg';
   final sunSVG = 'assets/icons/Sun.svg';
-  final leftSVG = 'assets/icons/Left.svg';
   final bell = 'assets/icons/Bell.svg';
   final search = 'assets/icons/Search.svg';
   final searchNotFound = 'assets/icons/SearchNotFound.svg';
@@ -46,7 +45,13 @@ class _AssetsIcons {
   final usersSVG = 'assets/icons/Users.svg';
   final userSVG = 'assets/icons/User.svg';
   final fogSVG = 'assets/icons/Fog.svg';
-  final sunSVG = 'assets/icons/Sun.svg';
+  final trash = 'assets/icons/Trash can.svg';
+  final logout = 'assets/icons/Logout.svg';
+  final shield = 'assets/icons/Shield.svg';
+  final star = 'assets/icons/Star.svg';
+  final document2 = 'assets/icons/Document 2.svg';
+  final danger = 'assets/icons/Danger.svg';
+  final settings = 'assets/icons/Settings.svg';
 }
 
 class _AssetsImages {

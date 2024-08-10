@@ -1,10 +1,15 @@
+// app/providers/user_provider.dart
+import 'dart:convert';import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/datasource/network_services/user_service.dart';
+import 'package:hit_moments/app/models/base_response.dart';
 import '../models/friend.model.dart';
 import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   late List<User> users;
+  late User user;
   List<User> friendList=[];
   List<User> friendRequests = [];
   List<User> friendProposals = [];
@@ -12,6 +17,7 @@ class UserProvider extends ChangeNotifier {
       isLoandingFriendRequests = false,
       isLoandingFriendProposals = false,
       isLoandingFriend = false,
+      isLoandingProfiles = false,
       isLoandingUser = false;
   bool isSearchFriend = false;
   void getUser() {
@@ -73,6 +79,13 @@ class UserProvider extends ChangeNotifier {
 
     isSearchFriend = false;
     notifyListeners();
+  }
+  void getMe() async {
+    isLoandingProfiles = true;
+    // notifyListeners();
+    user = await UserService.getMe() as User ;
+    isLoandingProfiles = false;
+    // notifyListeners();
   }
   //
   // void getFriendProposals() async {

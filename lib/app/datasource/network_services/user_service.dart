@@ -1,4 +1,6 @@
-import 'package:hit_moments/app/datasource/local/storage.dart';
+// app/datasource/network_services/user_service.dart
+import 'package:hit_moments/app/datasource/local/storage.dart';import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/models/user_model.dart';
 
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
@@ -127,6 +129,46 @@ class UserService{
       );
       print("message: ${response['message']}");
       return response['statusCode'];
+    }catch(e){
+      print("Lỗi: ${e}");
+      return 0;
+    }
+  }
+  static Future<dynamic>getMe() async{
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.getMe,
+          RequestMethod.GET,
+      );
+      int statusCode = response['statusCode'];
+      print(response['data']["user"]);
+      if(statusCode == 200){
+        print(response['data']["user"]);
+        return User.fromJson(response['data']["user"]);
+      }else{
+        print("Lỗi: ${response['message']} ");
+      }
+      return statusCode;
+    }catch(e){
+      print("Lỗi: ${e}");
+      return 0;
+    }
+  }
+  static Future<dynamic>updateUser() async{
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.getMe,
+          RequestMethod.POST,
+      );
+      int statusCode = response['statusCode'];
+      print(response['data']["user"]);
+      if(statusCode == 200){
+        print(response['data']["user"]);
+        return User.fromJson(response['data']["user"]);
+      }else{
+        print("Lỗi: ${response['message']} ");
+      }
+      return statusCode;
     }catch(e){
       print("Lỗi: ${e}");
       return 0;

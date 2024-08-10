@@ -9,8 +9,6 @@
     "proposal":"Đề xuất",
     "searchListMyFriend":"Tìm kiếm theo email, tên, số điện thoại ...",
     "friendRequest":"Lời mời kết bạn",
-    "userNotFound": "Không tìm thấy người dùng"
-    "userNotFound":"Không tìm thấy người dùng",
     "loginNow":"Đăng nhập ngay!",
     "invalidEmail":"Không phải email",
     "password":"Mật khẩu",
@@ -43,7 +41,6 @@
       "searchByEmailPhone": "Tìm kiếm theo email, số điện thoại...",
       "userNotFound": "Không tìm thấy người dùng",
       "mutualFriends": "bạn chung",
-    "sendMessage":"Gửi tin nhắn...",
     "noNotification":"Không có thông báo",
     "delete":"Xóa",
     "deleteFriend":"Xóa bạn",
@@ -53,5 +50,17 @@
     "addFriend":"Kết bạn",
     "no":"Không",
     "yes":"Có",
-    "cancelAddFriend":"Hủy kết bạn"
+    "cancelAddFriend":"Hủy kết bạn",
+    "personal": "Trang cá nhân",
+    "viewPersonal" : "Xem thông tin cá nhân",
+    "modeLightDark": "Cài đặt chế độ sáng/tối",
+    "language": "Cài đặt ngôn ngữ",
+    "report" : "Báo cáo sự cố",
+    "blockList" : "Danh sách chặn",
+    "review": "Đánh giá",
+    "tos": "Điều khoản sử dụng",
+    "privacy": "Chính sách bảo mật",
+    "logout": "Đăng xuất",
+    "deleteAcc": "Xóa tài khoản",
+    "editInfor": "Sửa thông tin cá nhân"
 }
