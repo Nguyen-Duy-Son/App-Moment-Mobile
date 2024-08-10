@@ -8,10 +8,10 @@ import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/models/user_model.dart';
+import 'package:hit_moments/app/providers/list_moment_provider.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/providers/weather_provider.dart';
-import 'package:hit_moments/app/providers/moment_provider.dart'
 import 'package:provider/provider.dart';
 
 // A widget that displays the picture taken by the user.
@@ -42,7 +42,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   void initState() {
     super.initState();
     context.read<WeatherProvider>().getCurrentPosition();
-    context.read<MomentProvider>().getListMoment();
+    context.read<ListMomentProvider>().getListMoment();
   }
 
   @override
@@ -69,91 +69,91 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             Form(
               key: _globalKey,
               child: Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 3/4,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.file(File(widget.imagePath), fit: BoxFit.fill),       
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        reverse: true,
-                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom/2.3),
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(50, 0, 50, 25),
-                          padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-                          decoration: BoxDecoration(
-                            color: AppColors.of(context).neutralColor6,
-                            borderRadius: BorderRadius.circular(50),
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 5,
-                                spreadRadius: 1,
-                                offset: Offset(1, 1),
-                                color: Colors.black45
-                              )
-                            ]
+                  alignment: Alignment.topRight,
+                  children: [
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 3/4,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.file(File(widget.imagePath), fit: BoxFit.fill),
                           ),
-                          child: TextField(
-                            controller: feelingController,
-                            style: const TextStyle( fontSize: 24),
-                            decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.feel, hintStyle: AppTextStyles.of(context).light24.copyWith(color: AppColors.of(context).neutralColor10))
-                          ), //TODO: Cảm nghĩ...
-                        ), 
-                      ),
-                    ],
-                  ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: _showWeather, 
-                    builder: (context, value, child) {
-                      return value ? Positioned(
-                          top: 30.w,
-                          right: 0,
-                          width: 150.w,
-                          height: 54.h,
-                          child: Consumer<WeatherProvider>(
-                            builder: (context, weatherProvider, child) {
-                              if (weatherProvider.weatherStatus != ModuleStatus.initial) {
-                                return Row(
-                                  children: [
-                                    CachedNetworkImage(imageUrl: "https:${weatherProvider.weather?.icon}"),
-                                    SizedBox(width: 8.w,),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight
-                                          )
-                                        ),
-                                        padding: EdgeInsets.only(right: 16.w),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text("${weatherProvider.weather?.city}", style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 16)),
-                                            Text("${weatherProvider.weather?.tempC}℃", style: AppTextStyles.of(context).regular20.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 20)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10)
-                                  ],
-                                );
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }
-                          )
-                      ): const SizedBox();
-                    }
-                  ),
-                ]
+                        ),
+                        SingleChildScrollView(
+                          reverse: true,
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom/2.3),
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(50, 0, 50, 25),
+                            padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+                            decoration: BoxDecoration(
+                                color: AppColors.of(context).neutralColor6,
+                                borderRadius: BorderRadius.circular(50),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                      offset: Offset(1, 1),
+                                      color: Colors.black45
+                                  )
+                                ]
+                            ),
+                            child: TextField(
+                                controller: feelingController,
+                                style: const TextStyle( fontSize: 24),
+                                decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.feel, hintStyle: AppTextStyles.of(context).light24.copyWith(color: AppColors.of(context).neutralColor10))
+                            ), //TODO: Cảm nghĩ...
+                          ),
+                        ),
+                      ],
+                    ),
+                    // ValueListenableBuilder<bool>(
+                    //     valueListenable: _showWeather,
+                    //     builder: (context, value, child) {
+                    //       return value ? Positioned(
+                    //           top: 30.w,
+                    //           right: 0,
+                    //           width: 150.w,
+                    //           height: 54.h,
+                    //           child: Consumer<WeatherProvider>(
+                    //               builder: (context, weatherProvider, child) {
+                    //                 if (weatherProvider.weatherStatus != ModuleStatus.initial) {
+                    //                   return Row(
+                    //                     children: [
+                    //                       CachedNetworkImage(imageUrl: "https:${weatherProvider.weather?.icon}"),
+                    //                       SizedBox(width: 8.w,),
+                    //                       Expanded(
+                    //                         child: Container(
+                    //                           decoration: BoxDecoration(
+                    //                               gradient: LinearGradient(
+                    //                                   colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                    //                                   begin: Alignment.centerLeft,
+                    //                                   end: Alignment.centerRight
+                    //                               )
+                    //                           ),
+                    //                           padding: EdgeInsets.only(right: 16.w),
+                    //                           child: Column(
+                    //                             mainAxisAlignment: MainAxisAlignment.start,
+                    //                             children: [
+                    //                               Text("${weatherProvider.weather?.city}", style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 16)),
+                    //                               Text("${weatherProvider.weather?.tempC}℃", style: AppTextStyles.of(context).regular20.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 20)),
+                    //                             ],
+                    //                           ),
+                    //                         ),
+                    //                       ),
+                    //                       const SizedBox(height: 10)
+                    //                     ],
+                    //                   );
+                    //                 } else {
+                    //                   return const CircularProgressIndicator();
+                    //                 }
+                    //               }
+                    //           )
+                    //       ): const SizedBox();
+                    //     }
+                    // ),
+                  ]
               ),
             ),
             const SizedBox(height: 10,),
@@ -165,7 +165,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Image.file(
-                        File(imagePath),
+                        File(widget.imagePath),
                         width: 400.w,
                         height: 470.h,
                         fit: BoxFit.fill,
@@ -210,16 +210,16 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 OutlinedButton(
-                    onPressed: () async {},
-                    style: OutlinedButton.styleFrom(
+                  onPressed: () async {},
+                  style: OutlinedButton.styleFrom(
                       fixedSize: const Size(65, 65),
                       backgroundColor: AppColors.of(context).neutralColor6,
                       shape: const CircleBorder(),
                       side: BorderSide(color: AppColors.of(context).primaryColor10, width: 4),
                       padding: const EdgeInsets.fromLTRB(4, 6, 12, 2)
-                    ),
-                    child: SvgPicture.asset(Assets.icons.sendSVG, height: 60.w, width: 60.w, color: AppColors.of(context).neutralColor12,),
-                  ), //TODO: Gửi đến...
+                  ),
+                  child: SvgPicture.asset(Assets.icons.sendSVG, height: 60.w, width: 60.w, color: AppColors.of(context).neutralColor12,),
+                ), //TODO: Gửi đến...
 //                   onPressed: () async {},
 //                   style: OutlinedButton.styleFrom(
 //                     fixedSize: const Size(70, 70),
@@ -240,7 +240,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   onPressed: () {
                     print('Đã ấn');
                     context.read<MomentProvider>().createMoment(
-                        'Đang thử lần đầu', 'Nắng lắm', File(imagePath));
+                        'Đang thử lần đầu', 'Nắng lắm', File(widget.imagePath));
                   },
                   icon: SvgPicture.asset(Assets.icons.download2SVG),
                 ) // TODO: Lưu vào máy

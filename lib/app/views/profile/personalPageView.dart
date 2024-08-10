@@ -68,7 +68,7 @@ class PersonalPageScreenState extends State<PersonalPageScreen>{
                     ),
                     child: Column(
                       children: [
-                        Text(context.watch<UserProvider>().user.fullName, style: AppTextStyles.of(context).bold20,),
+                        Text(context.watch<UserProvider>().user.fullName??"", style: AppTextStyles.of(context).bold20,),
                         const SizedBox(height: 20,),
                         !valueCheck ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -81,7 +81,7 @@ class PersonalPageScreenState extends State<PersonalPageScreen>{
                               ),
                               child: Text(S.of(context).viewPersonal, style: AppTextStyles.of(context).regular20.copyWith(color: AppColors.of(context).neutralColor11),)
                             ),
-                            const personalPageWidget(),
+                            const PersonalPageWidget(),
                           ],
                         ) : informationPersonalWidget(userInfor: context.watch<UserProvider>().user), 
                       ],

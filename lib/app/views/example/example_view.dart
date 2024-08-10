@@ -10,6 +10,7 @@ import 'package:hit_moments/app/l10n/l10n.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
+import 'package:hit_moments/app/views/example/home_view.dart';
 import 'package:hit_moments/app/views/moment/camera/take_pictures_screen.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/auth/auth_view.dart';
@@ -134,6 +135,15 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Trang cá nhân")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeView(),
+                      ));
+                },
+                child: Text("Home App")),
           ],
         ),
       ),

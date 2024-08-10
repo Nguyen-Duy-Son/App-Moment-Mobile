@@ -8,11 +8,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
-import 'package:hit_moments/app/views/list_my_friend/list_my_friend_view.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/moment/camera/display_pictures_screen.dart';
 import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
 import 'package:provider/provider.dart';
+
+import '../../profile/personalPageWidget.dart';
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({super.key});
@@ -66,7 +67,12 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: AppColors.of(context).primaryColor6),
-                    child: IconButton(icon: SvgPicture.asset(Assets.icons.user), onPressed: () {},) // TOTO: Chuyển đến màn trang cá nhân
+                    child: IconButton(icon: SvgPicture.asset(Assets.icons.user), onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => PersonalPageWidget()),
+                      // );
+                    },) 
                   ),
                   ElevatedButton(
                     onPressed: () {
