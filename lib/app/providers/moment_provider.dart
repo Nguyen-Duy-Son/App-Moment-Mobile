@@ -12,10 +12,12 @@ import '../models/message_model.dart';
 class MomentProvider extends ChangeNotifier{
   String sendReactResult = "";
   String createReportResult = "";
+  String createMomentResult = "";
   List<ReactModel> listReact=[];
   ModuleStatus sendReactStatus = ModuleStatus.initial;
   ModuleStatus sendMessStatus = ModuleStatus.initial;
   ModuleStatus createReportStatus = ModuleStatus.initial;
+  ModuleStatus createMomentStatus = ModuleStatus.initial;
   ModuleStatus getReactStatus = ModuleStatus.initial;
   ModuleStatus deleteMomentStatus = ModuleStatus.initial;
 
@@ -99,6 +101,18 @@ class MomentProvider extends ChangeNotifier{
   }
 
   Future<void> createMoment(String content, String weather, File image) async{
-    await MomentService().createMoment(content, weather, image);
+    createMomentStatus = ModuleStatus.loading;
+    notifyListeners();
+    final response =  await MomentService().createMoment(content, weather, image);
+    if(response == 200){
+      createMomentResult = "Thành công";
+      createMomentStatus = ModuleStatus.success;
+
+    }else{
+      createMomentResult = "Thất bại do $response";
+      createMomentStatus = ModuleStatus.fail;
+
+    }
+    notifyListeners();
   }
 }
