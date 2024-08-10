@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   await GetStorage.init('hit_moment');
+
   runApp(MyApp());
 }
 
@@ -49,7 +50,14 @@ class MyApp extends StatelessWidget {
                 create: (context) => locale,
               ),
               ChangeNotifierProvider(create: (context) => UserProvider()),
-              ChangeNotifierProvider(create: (context) => ConversationProvider()),
+              ChangeNotifierProvider(
+                  create: (context) {
+                    var conversationProvider = ConversationProvider();
+                    conversationProvider.connectAndListen();
+                    return conversationProvider;
+                  }),
+              // ChangeNotifierProvider(
+              //     create: (context) => ConversationProvider()),
             ],
             child: Consumer<LocaleProvider>(
               builder: (context, provider, child) {
