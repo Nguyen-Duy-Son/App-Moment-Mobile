@@ -43,8 +43,8 @@ class _ExampleViewState extends State<ExampleView> {
             Text(
               AppLocalizations.of(context)!.hello,
               style: AppTextStyles.of(context).regular32.copyWith(
-                    color: AppColors.of(context).neutralColor12,
-                  ),
+                color: AppColors.of(context).neutralColor12,
+              ),
             ),
             ElevatedButton(
                 onPressed: () {
@@ -57,11 +57,6 @@ class _ExampleViewState extends State<ExampleView> {
                 child: Text("Moment")),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TakePictureScreen(),
-                      ));
                   Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -8,7 +8,7 @@ import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
-import 'package:hit_moments/app/providers/moment_provider.dart';
+import 'package:hit_moments/app/providers/list_moment_provider.dart';
 import 'package:hit_moments/app/providers/providers_list.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
@@ -16,6 +16,8 @@ import 'package:hit_moments/app/providers/weather_provider.dart';
 import 'package:hit_moments/app/routes/app_pages.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:provider/provider.dart';
+
+import 'app/providers/moment_provider.dart';
 
 void main() async {
   await GetStorage.init('hit_moment');
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (context) => MomentProvider()),
               ChangeNotifierProvider(create: (context) => ThemeProvider()),
               ChangeNotifierProvider(create: (context) => AuthProvider()),
-              ChangeNotifierProvider(create: (context) => MomentProvider()),
+              ChangeNotifierProvider(create: (context) => ListMomentProvider()),
               ChangeNotifierProvider(create: (context) => WeatherProvider()),
 
               //provider ngôn ngữ làm riêng

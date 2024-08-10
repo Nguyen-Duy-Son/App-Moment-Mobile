@@ -2,7 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/models/moment_model.dart';
+import 'package:hit_moments/app/providers/moment_provider.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/format_time_extension.dart';
@@ -16,9 +20,50 @@ class MomentContentWidget extends StatefulWidget {
   State<MomentContentWidget> createState() => _MomentContentWidgetState();
 }
 
-class _MomentContentWidgetState extends State<MomentContentWidget> {
+class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTickerProviderStateMixin{
+  late AnimationController _controller;
+  bool _isAnimationVisible = false;
+  @override
+  void initState() {
+    super.initState();
+    parseString(widget.momentModel.weather??"");
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 3),
+    )..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          _isAnimationVisible = false;
+        });
+      }
+    });
+  }
+  String? address;
+  String? temperature;
+  String? urlIcon;
+
+  void parseString(String input) {
+    final regex = RegExp(r'^(.*?)\|(.*?)\|(.*?)$');
+
+    if (regex.hasMatch(input)) {
+      final match = regex.firstMatch(input);
+
+      if (match != null) {
+        address = match.group(1);
+        temperature = match.group(2);
+        urlIcon = match.group(3);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    if(context.watch<MomentProvider>().sendReactStatus==ModuleStatus.loading){
+      setState(() {
+        _isAnimationVisible = true;
+      });
+      _controller.forward(from: 0);
+    }
+
     return Stack(
       children: [
         AspectRatio(
@@ -89,10 +134,11 @@ class _MomentContentWidgetState extends State<MomentContentWidget> {
         Positioned(
           top: 16.w,
           right: 0,
-          width: MediaQuery.of(context).size.width/3.5,
+          width: urlIcon==null?MediaQuery.of(context).size.width/3.5:MediaQuery.of(context).size.width/2.7,
           child: Row(
             children: [
-              SvgPicture.asset(Assets.icons.sunSVG),
+              urlIcon==null?SvgPicture.asset(Assets.icons.sunSVG)
+                  :CachedNetworkImage(imageUrl: "https:$urlIcon", fit: BoxFit.cover,),
               SizedBox(width: 8.w,),
               Expanded(
                 child: Container(
@@ -108,7 +154,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.momentModel.uploadLocation??"",
+                        address??(widget.momentModel.uploadLocation??""),
                         maxLines: 1,
                         style: AppTextStyles.of(context).light14.copyWith(
                           overflow: TextOverflow.ellipsis,
@@ -121,7 +167,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget> {
                           ],
                         ),
                       ),
-                      Text("29 độ C",
+                      Text("${temperature??29}℃",
                         style: AppTextStyles.of(context).regular20.copyWith(
                           color: AppColors.of(context).neutralColor3,
                           shadows: [
@@ -167,8 +213,15 @@ class _MomentContentWidgetState extends State<MomentContentWidget> {
                 ),
               ),
             ),
-          )
-
+          ),
+        if(_isAnimationVisible)
+          Positioned.fill(
+            child: Lottie.asset(
+              'assets/animations/react_heart1.json',
+              fit: BoxFit.cover,
+              controller: _controller
+            ),
+          ),
       ],
     );
   }

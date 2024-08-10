@@ -87,16 +87,25 @@ class UserService {
     }
   }
 
-  static Future<int> sentRequestById(String id) async {
+  static Future<dynamic> sentRequestById(String id, bool isResult) async {
     try {
       var response = await BaseConnect.onRequest(
           ApiUrl.sentFriendRequestOfUser, RequestMethod.POST,
           body: {"receiverId": id});
-
-      return response['statusCode'];
+      if(isResult){
+        int statusCode = response['statusCode'];
+        return statusCode;
+      }else{
+        return response['statusCode']['message'];
+      }
     } catch (e) {
-      print("Lỗi: ${e}");
-      return 0;
+      if(isResult){
+        print("Lỗi: ${e}");
+        return 0;
+      }else{
+        return e.toString();
+      }
+
     }
   }
 
@@ -118,7 +127,20 @@ class UserService {
         ApiUrl.getListSuggestFriend,
         RequestMethod.GET,
       );
-      return response['data']["suggestedUsers"];
+      return response['data']["suggestedUsers"].take(5);
+    } catch (e) {
+      print("Lỗi: ${e}");
+      return 0;
+    }
+  }
+  static Future<dynamic> searchFriendRequest(String nameOrEmail) async {
+    try {
+      var response = await BaseConnect.onRequest(
+        ApiUrl.searchFriendOfUser,
+        RequestMethod.GET,
+        queryParam: {"search": nameOrEmail}
+      );
+      return response['data']["users"].take(5);
     } catch (e) {
       print("Lỗi: ${e}");
       return 0;

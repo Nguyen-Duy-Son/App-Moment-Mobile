@@ -16,13 +16,12 @@ class AuthService{
         RequestMethod.POST,
         body: body
       );
-      print('token sau login là ${response}');
       int statusCode = response['statusCode'];
-      print(response);
       if(statusCode == 200){
         String token = response['data']['accessToken'];
-        setUserId(response['data']['user']['_id']);
+        String userID = response['data']['user']['_id'];
         setToken(token);
+        setUserID(userID);
       }else{
         print("looxi ${response['message']} vaf ${statusCode}");
       }

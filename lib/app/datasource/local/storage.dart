@@ -21,6 +21,13 @@ setEmail(String value) {
 String getEmail() {
   return box.read(StorageConstants.email) ?? '';
 }
+setUserID(String value) {
+  box.write(StorageConstants.userID, value);
+}
+
+String getUserID() {
+  return box.read(StorageConstants.userID) ?? '';
+}
 setPassWord(String value) {
   box.write(StorageConstants.password, value);
 }
