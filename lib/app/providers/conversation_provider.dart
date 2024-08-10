@@ -48,7 +48,7 @@ class ConversationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sendMessage(String userId, String message) async {
+  Future<void> sendMessage(String userId, String message) async {
     isSending = true;
     int status = await ConversationService().sendMessage(userId, message);
     if (status == 200) {

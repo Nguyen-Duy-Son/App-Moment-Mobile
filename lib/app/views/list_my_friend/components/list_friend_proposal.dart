@@ -38,7 +38,7 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
   }
 
   void sentRequestFriend(int index) async {
-    int statusCode = await UserService.sentRequestById(widget.users[index].id);
+    int statusCode = await UserService.sentRequestById(widget.users[index].id, true);
     if (statusCode == 200) {
       setState(() {
         sentRequestList[index] = true;
