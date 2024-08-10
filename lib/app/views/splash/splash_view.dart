@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 
 class SplashView extends StatefulWidget {
@@ -19,9 +21,13 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Image.asset(
+          Assets.images.logoSplashPNG,
+          height: 110,
+          width: 110,
+        ),
       ),
     );
   }

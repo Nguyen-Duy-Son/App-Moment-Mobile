@@ -5,6 +5,9 @@ import 'package:hit_moments/app/views/auth/login/login_view.dart';
 import 'package:hit_moments/app/views/auth/register/register_view.dart';
 import 'package:hit_moments/app/views/auth/register/verify_email_view.dart';
 import 'package:hit_moments/app/views/example/example_view.dart';
+import 'package:hit_moments/app/views/example/home_view.dart';
+import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
+import 'package:hit_moments/app/views/profile/personalPageView.dart';
 import 'package:hit_moments/app/views/splash/splash_view.dart';
 
 import '../views/conversation/conversation_view.dart';
@@ -21,5 +24,8 @@ abstract class AppPages {
     AppRoutes.VERIFYEMAIL: (context) => const VerifyEmailView(),
     AppRoutes.LIST_MY_FRIEND: (context) => const ListMyFriendView(),
     AppRoutes.MY_CONVERSATION : (context) => const ConversationView(),
+    AppRoutes.MY_PROFILE : (context) => const PersonalPageScreen(),
+    AppRoutes.MY_HOME : (context) => const HomeView(),
+    AppRoutes.ONBOARDING : (context) => const Onbording(),
   };
 }

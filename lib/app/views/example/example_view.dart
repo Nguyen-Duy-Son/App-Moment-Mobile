@@ -18,6 +18,7 @@ import 'package:hit_moments/app/views/conversation/conversation_view.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_view.dart';
 import 'package:hit_moments/app/views/moment/moment_view.dart';
 import 'package:hit_moments/app/views/moment/widget/get_weather_widget.dart';
+import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
 import 'package:hit_moments/app/views/profile/personalPageWidget.dart';
 import 'package:hit_moments/app/views/profile/personalPageview.dart';
 import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
@@ -50,15 +51,15 @@ class _ExampleViewState extends State<ExampleView> {
                 color: AppColors.of(context).neutralColor12,
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MomentView(),
-                      ));
-                },
-                child: Text("Moment")),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => MomentView(),
+            //           ));
+            //     },
+            //     child: Text("Moment")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -70,26 +71,18 @@ class _ExampleViewState extends State<ExampleView> {
                 child: Text("Suggested Friends")),
             ElevatedButton(
                 onPressed: () {
-                  setEmail('');
-                  setPassWord('');
-                  setToken('');
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AuthView(),
-                      ),
-                      ModalRoute.withName(AppRoutes.AUTHENTICATION));
+
                 },
                 child: Text("Đăng xuất")),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TakePictureScreen(),
-                      ));
-                },
-                child: Text("Home")),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => const TakePictureScreen(),
+            //           ));
+            //     },
+            //     child: Text("Home")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -117,15 +110,15 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Get weather")),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TakePictureScreen(),
-                      ));
-                },
-                child: Text("Camera")),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => TakePictureScreen(),
+            //           ));
+            //     },
+            //     child: Text("Camera")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -135,6 +128,15 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Trang cá nhân")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Onbording(),
+                      ));
+                },
+                child: Text("Onboarding")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(

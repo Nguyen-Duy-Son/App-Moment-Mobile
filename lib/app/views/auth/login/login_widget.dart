@@ -4,6 +4,7 @@ import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
+import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/config/enum.dart';
@@ -57,8 +58,8 @@ class _LoginWidgetState extends State<LoginWidget> {
       form.validate();
       await context.read<AuthProvider>().login(_emailController.text, _passwordController.text, context);
       if(context.read<AuthProvider>().loginStatus == ModuleStatus.success){
-        Navigator.pushAndRemoveUntil<void>(context, MaterialPageRoute(builder: (context) => ExampleView()),
-              ModalRoute.withName(AppRoutes.EXAMPLE),);
+        Navigator.pushAndRemoveUntil<void>(context, MaterialPageRoute(builder: (context) => Onbording()),
+              ModalRoute.withName(AppRoutes.ONBOARDING),);
       }else{
         print("lỗi");
       }

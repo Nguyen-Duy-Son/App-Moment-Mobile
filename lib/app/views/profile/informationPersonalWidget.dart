@@ -23,7 +23,6 @@ class informationPersonalWidgetState extends State<informationPersonalWidget> {
   @override
   void initState() {
     super.initState();
-    context.read<UserProvider>().getMe();
   }
 
   String formatPhone(String phone) {

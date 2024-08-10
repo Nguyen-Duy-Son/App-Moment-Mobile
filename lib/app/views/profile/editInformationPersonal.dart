@@ -22,7 +22,6 @@ class editInformationPersonalState extends State<editInformationPersonal> {
   @override
   void initState() {
     super.initState();
-    context.read<UserProvider>().getMe();
   }
 
   String formatPhone(String phone) {

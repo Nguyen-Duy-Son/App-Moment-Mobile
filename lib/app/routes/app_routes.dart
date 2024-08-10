@@ -12,4 +12,7 @@ abstract class AppRoutes {
   static String VERIFYEMAIL = '/verify-email';
   static String LIST_MY_FRIEND = '/list-my-friend';
   static String MY_CONVERSATION = '/my-conversation';
+  static String MY_PROFILE = '/my-profile';
+  static String MY_HOME = '/my-home';
+  static String ONBOARDING = '/on-boarding';
 }

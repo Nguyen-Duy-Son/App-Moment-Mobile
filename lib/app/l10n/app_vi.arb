@@ -1,6 +1,6 @@
 {
     "hello": "Xin chào",
-    "addfriend": " Thêm bạn",
+    "addfriend": " Bạn bè",
     "friends": "bạn bè",
     "sendto": "Gửi đến...",
     "feel": "Cảm nghĩ...",
@@ -120,5 +120,15 @@
       "daysAgo": "ngày trước",
         "hoursAgo": "giờ trước",
         "minutesAgo": "phút trước",
-    "titleNofriend":"Vui lòng nhập email cần tìm kiếm"
+    "titleNofriend":"Vui lòng nhập email cần tìm kiếm",
+    "onboardingTitle1": "Kết nối đa phương",
+      "onboardingDescription1": "Khám phá khả năng kết nối toàn cầu với bạn bè và gia đình qua ứng dụng hỗ trợ nhiều ngôn ngữ. Chia sẻ khoảnh khắc cuộc sống một cách dễ dàng và hiệu quả, bất kể ngôn ngữ nào bạn sử dụng.",
+
+      "onboardingTitle2": "Bắt chọn khoảnh khắc",
+      "onboardingDescription2": "Lưu giữ những khoảnh khắc quý giá trong cuộc sống của bạn bằng cách chụp và chia sẻ những bức ảnh đẹp nhất. Với ứng dụng của chúng tôi, mọi khoảnh khắc đều trở nên đặc biệt và đáng nhớ.",
+
+      "onboardingTitle3": "Gắn kết tình bạn",
+      "onboardingDescription3": "Tạo ra sự gắn kết sâu sắc với bạn bè bằng cách chia sẻ những bức ảnh và trải nghiệm chung. Ứng dụng của chúng tôi giúp bạn duy trì mối quan hệ thân thiết và tạo thêm những kỷ niệm vui vẻ.",
+      "continueString": "Tiếp tục",
+        "next": "Tiếp theo"
 }
