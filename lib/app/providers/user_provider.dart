@@ -1,11 +1,18 @@
+// app/providers/user_provider.dart
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/datasource/network_services/user_service.dart';
+import 'package:hit_moments/app/models/base_response.dart';
+import '../models/friend.model.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   late List<User> users;
+  late User user;
+  List<User> friendList=[];
   List<User> friendList = [];
   List<User> friendListTmp = [];
   List<User> friendRequests = [];
@@ -17,6 +24,7 @@ class UserProvider extends ChangeNotifier {
       isLoandingFriendRequests = false,
       isLoandingFriendSuggests = false,
       isLoandingFriend = false,
+      isLoandingProfiles = false,
       isLoandingUser = false;
 
   bool isSearchFriend = false;
@@ -51,6 +59,22 @@ class UserProvider extends ChangeNotifier {
       return;
     }
   }
+  void getMe() async {
+    isLoandingProfiles = true;
+    // notifyListeners();
+    user = await UserService.getMe() as User ;
+    isLoandingProfiles = false;
+    // notifyListeners();
+  }
+  //
+  // void getFriendProposals() async {
+  //   isLoandingFriendProposals = true;
+  //   notifyListeners(); // Notify Flutter to rebuild the widgets
+  //   friendProposals = userTest;
+  //   isLoandingFriendProposals = false;
+  //   notifyListeners(); // Notify Flutter to rebuild the widgets
+  // }
+}
 
   void getFriendProposals() async {
     isLoandingFriendSuggests = true;

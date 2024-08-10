@@ -46,7 +46,13 @@ class _AssetsIcons {
   final usersSVG = 'assets/icons/Users.svg';
   final userSVG = 'assets/icons/User.svg';
   final fogSVG = 'assets/icons/Fog.svg';
-
+  final trash = 'assets/icons/Trash can.svg';
+  final logout = 'assets/icons/Logout.svg';
+  final shield = 'assets/icons/Shield.svg';
+  final star = 'assets/icons/Star.svg';
+  final document2 = 'assets/icons/Document 2.svg';
+  final danger = 'assets/icons/Danger.svg';
+  final settings = 'assets/icons/Settings.svg';
   final addFriendSVG = 'assets/icons/add-friend.svg';
   final play = 'assets/icons/Play.svg';
 }
