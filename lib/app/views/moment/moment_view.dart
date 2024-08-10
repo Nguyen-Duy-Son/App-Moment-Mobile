@@ -9,12 +9,12 @@ import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
 import 'package:hit_moments/app/providers/list_moment_provider.dart';
 import 'package:hit_moments/app/views/moment/widget/grid_view_moment.dart';
-import 'package:hit_moments/app/views/moment/widget/moment_page.dart';
 import 'package:hit_moments/app/views/moment/widget/moment_widget.dart';
 import 'package:hit_moments/app/views/moment/widget/select_friend_widget.dart';
 import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/moment_model.dart';
 
 class MomentView extends StatefulWidget {
@@ -44,7 +44,6 @@ class _MomentViewState extends State<MomentView> {
         }
       }
     });
-    // Initialize the moments list
     setPageView();
   }
 
@@ -126,7 +125,7 @@ class _MomentViewState extends State<MomentView> {
             _list.isEmpty
                 ? Center(
               child: Text(
-                "Không có bài đăng nào!",
+                S.of(context).noPosts,
                 style: AppTextStyles.of(context).regular20.copyWith(
                   color: AppColors.of(context).neutralColor11,
                 ),

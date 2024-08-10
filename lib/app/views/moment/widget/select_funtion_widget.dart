@@ -43,7 +43,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
       final params = SaveFileDialogParams(sourceFilePath: file.path);
       final finalPath = await FlutterFileDialog.saveFile(params: params);
       if (finalPath != null) {
-        message = 'Lưu ảnh thành công';
+        message = S.of(context).saveImageSuccess;
       }
     } catch (e) {
       message = e.toString();
@@ -82,7 +82,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
         return AlertDialog(
           backgroundColor: AppColors.of(context).neutralColor1,
           title: Text(
-            "Bạn có chắc chắn muốn xoá khoảnh khắc đẹp này?",
+            S.of(context).confirmDeleteMoment,
             textAlign: TextAlign.center,
             style: AppTextStyles.of(context).regular24.copyWith(
               color: AppColors.of(context).neutralColor12,
@@ -110,7 +110,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                           if (momentProvider.deleteMomentStatus == ModuleStatus.success) {
                             listMomentProvider.deleteMomentLocal(widget.momentModel.momentID??"");
                             Fluttertoast.showToast(
-                              msg: "Đã xoá thành công!",
+                              msg: S.of(context).deleteSuccess,
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               timeInSecForIosWeb: 1,
@@ -131,7 +131,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                             ),
                           ),
                           child: Text(
-                            "Có",
+                            S.of(context).yes,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.of(context).light24.copyWith(
                               color: AppColors.of(context).primaryColor9,
@@ -153,7 +153,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                             borderRadius: const BorderRadius.all(Radius.circular(50)),
                           ),
                           child: Text(
-                            "Không",
+                            S.of(context).no,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.of(context).light24.copyWith(
                               color: AppColors.of(context).neutralColor1,
@@ -179,7 +179,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
         return AlertDialog(
           backgroundColor: AppColors.of(context).neutralColor1,
           title: Text(
-            "Bạn có chắc chắn muốn báo cáo khoảnh khắc này?",
+            S.of(context).confirmReportMoment,
             textAlign: TextAlign.center,
             style: AppTextStyles.of(context).regular24.copyWith(
               color: AppColors.of(context).neutralColor12,
@@ -196,7 +196,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                 TextFormField(
                   controller: controller,
                   decoration: InputDecoration(
-                    hintText: "Lý do bạn muốn báo cáo",
+                    hintText: S.of(context).reasonForReport,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -210,11 +210,11 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                             final momentProvider = context.read<MomentProvider>();
                             await momentProvider
                                 .createReport(widget.momentModel.momentID??"",
-                                controller.text, "Đơn báo cáo đã tổn tại");
+                                controller.text, S.of(context).reportExists);
 
                             if (momentProvider.createReportStatus == ModuleStatus.success) {
                               Fluttertoast.showToast(
-                                msg: "Đã báo cáo thành công!",
+                                msg: S.of(context).reportSuccess,
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -235,7 +235,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                             }
                           }else{
                             Fluttertoast.showToast(
-                              msg: "Không được để trống lý do!",
+                              msg: S.of(context).reasonCannotBeEmpty,
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               timeInSecForIosWeb: 1,
@@ -256,7 +256,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                             ),
                           ),
                           child: Text(
-                            "Có",
+                            S.of(context).yes,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.of(context).light24.copyWith(
                               color: AppColors.of(context).primaryColor9,
@@ -278,7 +278,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                             borderRadius: const BorderRadius.all(Radius.circular(50)),
                           ),
                           child: Text(
-                            "Không",
+                            S.of(context).no,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.of(context).light24.copyWith(
                               color: AppColors.of(context).neutralColor1,
@@ -313,26 +313,22 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
             context: context,
 
             bodyBuilder: (context) =>
-                PopoverSelectFunction(options: const [
-                  {'menu': 'Tải xuống'},
-                  {'menu': 'Xoá bài đăng'},
-                  {'menu': 'Ẩn bài đăng'},
-                  {'menu': 'Báo cáo'}],
+                PopoverSelectFunction(options: [
+                  {'menu': S.of(context).download},
+                  {'menu': S.of(context).deletePost},
+                  {'menu': S.of(context).hidePost},
+                  {'menu': S.of(context).report}],
                   opTap: (func) async{
-                    switch(func){
-                      case 'Tải xuống':
-                        _saveImage(context);
-                        break;
-                      case 'Xoá bài đăng':
-                        await Future.delayed(const Duration(milliseconds: 100));
-                        _deleteMoment(widget.momentModel.momentID??"");
-                        break;
-                      case 'Ẩn bài đăng':
-                        break;
-                      case 'Báo cáo':
-                        await Future.delayed(const Duration(milliseconds: 100));
-                        _reportMoment();
-                        break;
+                    if (func == S.of(context).download) {
+                      _saveImage(context);
+                    } else if (func == S.of(context).deletePost) {
+                      await Future.delayed(Duration(milliseconds: 100));
+                      _deleteMoment(widget.momentModel.momentID ?? "");
+                    } else if (func == S.of(context).hidePost) {
+                      // Xử lý khi chọn ẩn bài đăng
+                    } else if (func == S.of(context).report) {
+                      await Future.delayed(Duration(milliseconds: 100));
+                      _reportMoment();
                     }
                   },
                   userIDOfMoment: widget.momentModel.userID??"",

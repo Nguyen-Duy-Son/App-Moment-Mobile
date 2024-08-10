@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/scale_on_tap_widget.dart';
+import '../../../l10n/l10n.dart';
 import '../../../models/user_model.dart';
 import 'popover_select_friend.dart';
 
@@ -76,7 +77,7 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
               children: [
                 Flexible(
                   child: Text(context.watch<ListMomentProvider>().friendSort==null
-                      ?"Tất cả"
+                      ?S.of(context).all
                       :context.watch<ListMomentProvider>().friendSort!.fullName,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.of(context).regular24.copyWith(

@@ -14,6 +14,7 @@ import 'package:hit_moments/app/views/moment/widget/select_funtion_widget.dart';
 import 'package:provider/provider.dart';
 import '../../../core/config/enum.dart';
 import '../../../core/extensions/theme_extensions.dart';
+import '../../../l10n/l10n.dart';
 
 class MomentWidget extends StatefulWidget {
   const MomentWidget({
@@ -62,20 +63,24 @@ class _MomentWidgetState extends State<MomentWidget> {
         final momentProvider = context.watch<MomentProvider>();
         return AlertDialog(
           title:  Text(
-            "Các tương tác đã nhận",
+            S.of(context).receivedInteractions,
             textAlign: TextAlign.center,
             style: AppTextStyles.of(context).bold24.copyWith(
                 color: AppColors.of(context).neutralColor11
             ),
           ),
           content: momentProvider.listReact.isEmpty
-              ?  Center(
-            child: Text("Chưa có tương tác nào",
-              style: AppTextStyles.of(context).regular20.copyWith(
-                  color: AppColors.of(context).neutralColor12
-              ),
-            ),
-          )
+              ?  SizedBox(
+                width: double.maxFinite,
+                height: 200,
+                child: Center(
+                   child: Text(S.of(context).noInteractions,
+                style: AppTextStyles.of(context).regular20.copyWith(
+                    color: AppColors.of(context).neutralColor12
+                ),
+                            ),
+                          ),
+              )
               : SizedBox(
             width: double.maxFinite,
             height: 200,
@@ -149,10 +154,11 @@ class _MomentWidgetState extends State<MomentWidget> {
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(100))
                       ),
-                      child: Text("Viết bình luận...",
+                      child: Text(S.of(context).writeComment,
                         style: AppTextStyles.of(context).light20.copyWith(
                           color: AppColors.of(context).neutralColor8
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ):ScaleOnTapWidget(
@@ -170,10 +176,11 @@ class _MomentWidgetState extends State<MomentWidget> {
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(100))
                       ),
-                      child: Text("Xem tương tác",
+                      child: Text(S.of(context).viewInteractions,
                         style: AppTextStyles.of(context).light20.copyWith(
                             color: AppColors.of(context).neutralColor8
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   )

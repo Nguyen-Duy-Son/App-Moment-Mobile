@@ -4,9 +4,10 @@ import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 
 import '../../../core/extensions/theme_extensions.dart';
+import '../../../l10n/l10n.dart';
 
 class PopoverSelectFunction extends StatelessWidget {
-  const PopoverSelectFunction({
+   PopoverSelectFunction({
     super.key,
     required this.options,
     required this.opTap,
@@ -19,10 +20,9 @@ class PopoverSelectFunction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Xử lý các tùy chọn dựa trên userID
     final List<Map<String, dynamic>> filteredOptions = userIDOfMoment == getUserID()
-        ? options.where((option) => option["menu"] == "Tải xuống" || option["menu"] == "Xoá bài đăng").toList()
-        : options.where((option) => option["menu"] == "Tải xuống" || option["menu"] == "Ẩn bài đăng" || option["menu"] == "Báo cáo").toList();
+        ? options.where((option) => option["menu"] == S.of(context).download || option["menu"] == S.of(context).deletePost).toList()
+        : options.where((option) => option["menu"] == S.of(context).download || option["menu"] == S.of(context).hidePost || option["menu"] == S.of(context).report).toList();
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
