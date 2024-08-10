@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hit_moments/app/core/config/theme_config.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/l10n/l10n.dart';
 //import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
@@ -16,6 +17,8 @@ import 'package:hit_moments/app/views/conversation/conversation_view.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_view.dart';
 import 'package:hit_moments/app/views/moment/moment_view.dart';
 import 'package:hit_moments/app/views/moment/widget/get_weather_widget.dart';
+import 'package:hit_moments/app/views/profile/personalPageWidget.dart';
+import 'package:hit_moments/app/views/profile/personalPageview.dart';
 import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +44,7 @@ class _ExampleViewState extends State<ExampleView> {
         child: Column(
           children: [
             Text(
-              AppLocalizations.of(context)!.hello,
+              S.of(context)!.hello,
               style: AppTextStyles.of(context).regular32.copyWith(
                 color: AppColors.of(context).neutralColor12,
               ),
@@ -113,6 +116,24 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Get weather")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TakePictureScreen(),
+                      ));
+                },
+                child: Text("Camera")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PersonalPageScreen(),
+                      ));
+                },
+                child: Text("Trang cá nhân")),
           ],
         ),
       ),
