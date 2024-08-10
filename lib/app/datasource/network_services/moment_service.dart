@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:io';
 import 'dart:typed_data';
@@ -98,11 +99,18 @@ class MomentService{
       return e;
     }
   }
+  Future<String> convertFileToBase64(File file) async {
+    List<int> bytes = await file.readAsBytes();
+    String base64String = base64Encode(bytes);
+    return base64String;
+  }
   Future<dynamic> createMoment(String content, String weather, File image) async{
+    String base64Image = await convertFileToBase64(image);
+
     final Map<String, dynamic> body = {
-      'image': image,
+      'image': base64Image,
       'content': content,
-      'weather': "Nắng"
+      'weather': weather
     };
     try{
       final response = await BaseConnect.onRequest(
@@ -111,8 +119,11 @@ class MomentService{
           body: body
       );
       int statusCode = response['statusCode'];
+      print("két quả là ${response}");
       return statusCode;
     }catch(e){
+      print("lỗi $e");
+
       return e;
     }
   }

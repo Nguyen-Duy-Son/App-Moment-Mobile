@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
@@ -21,7 +22,6 @@ class DisplayPictureScreen extends StatefulWidget {
   const DisplayPictureScreen({super.key, required this.imagePath, required this.users});
 
   @override
-  // ignore: no_logic_in_create_state
   State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
 }
 
@@ -41,7 +41,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<WeatherProvider>().getCurrentPosition();
     context.read<ListMomentProvider>().getListMoment();
   }
 
@@ -81,6 +80,69 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                             child: Image.file(File(widget.imagePath), fit: BoxFit.fill),
                           ),
                         ),
+                        Consumer<WeatherProvider>(
+                          builder: (context, weatherProvider, child) {
+                            if (weatherProvider.weatherStatus != ModuleStatus.initial) {
+                              weatherController.text="${weatherProvider.weather?.city}|${weatherProvider.weather?.tempC}|${weatherProvider.weather?.icon}";
+                              return Positioned(
+                                top: 16.w,
+                                right: 0,
+                                width: weatherProvider.weather?.icon==null?MediaQuery.of(context).size.width/3.5:MediaQuery.of(context).size.width/2.7,
+                                child: Row(
+                                  children: [
+                                    weatherProvider.weather?.icon==null?SvgPicture.asset(Assets.icons.sunSVG)
+                                        :CachedNetworkImage(imageUrl: "https:${weatherProvider.weather?.icon}",
+                                      fit: BoxFit.cover,),
+                                    SizedBox(width: 8.w,),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.only(right: 16.w),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              weatherProvider.weather?.city??"",
+                                              maxLines: 1,
+                                              style: AppTextStyles.of(context).light14.copyWith(
+                                                overflow: TextOverflow.ellipsis,
+                                                color: AppColors.of(context).neutralColor1,
+                                                shadows: [
+                                                  Shadow(
+                                                    blurRadius: 1.0,
+                                                    color: AppColors.of(context).neutralColor12,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Text("${weatherProvider.weather?.tempC??29}℃",
+                                              style: AppTextStyles.of(context).regular20.copyWith(
+                                                color: AppColors.of(context).neutralColor3,
+                                                shadows: [
+                                                  Shadow(
+                                                    blurRadius: 1.0,
+                                                    color: AppColors.of(context).neutralColor12,
+                                                  ),
+                                                ],
+                                              ),)
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          },
+                        ),
                         SingleChildScrollView(
                           reverse: true,
                           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom/2.3),
@@ -103,114 +165,22 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                 controller: feelingController,
                                 style: const TextStyle( fontSize: 24),
                                 decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.feel, hintStyle: AppTextStyles.of(context).light24.copyWith(color: AppColors.of(context).neutralColor10))
-                            ), //TODO: Cảm nghĩ...
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    // ValueListenableBuilder<bool>(
-                    //     valueListenable: _showWeather,
-                    //     builder: (context, value, child) {
-                    //       return value ? Positioned(
-                    //           top: 30.w,
-                    //           right: 0,
-                    //           width: 150.w,
-                    //           height: 54.h,
-                    //           child: Consumer<WeatherProvider>(
-                    //               builder: (context, weatherProvider, child) {
-                    //                 if (weatherProvider.weatherStatus != ModuleStatus.initial) {
-                    //                   return Row(
-                    //                     children: [
-                    //                       CachedNetworkImage(imageUrl: "https:${weatherProvider.weather?.icon}"),
-                    //                       SizedBox(width: 8.w,),
-                    //                       Expanded(
-                    //                         child: Container(
-                    //                           decoration: BoxDecoration(
-                    //                               gradient: LinearGradient(
-                    //                                   colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
-                    //                                   begin: Alignment.centerLeft,
-                    //                                   end: Alignment.centerRight
-                    //                               )
-                    //                           ),
-                    //                           padding: EdgeInsets.only(right: 16.w),
-                    //                           child: Column(
-                    //                             mainAxisAlignment: MainAxisAlignment.start,
-                    //                             children: [
-                    //                               Text("${weatherProvider.weather?.city}", style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 16)),
-                    //                               Text("${weatherProvider.weather?.tempC}℃", style: AppTextStyles.of(context).regular20.copyWith(color: AppColors.of(context).neutralColor3, fontSize: 20)),
-                    //                             ],
-                    //                           ),
-                    //                         ),
-                    //                       ),
-                    //                       const SizedBox(height: 10)
-                    //                     ],
-                    //                   );
-                    //                 } else {
-                    //                   return const CircularProgressIndicator();
-                    //                 }
-                    //               }
-                    //           )
-                    //       ): const SizedBox();
-                    //     }
-                    // ),
                   ]
               ),
             ),
             const SizedBox(height: 10,),
-            Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.file(
-                        File(widget.imagePath),
-                        width: 400.w,
-                        height: 470.h,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                          top: 25),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 50),
-                        padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-                        decoration: BoxDecoration(
-                          color: AppColors.of(context).neutralColor6,
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: const [
-                            BoxShadow(
-                                blurRadius: 5,
-                                spreadRadius: 1,
-                                offset: Offset(1, 1),
-                                color: Colors.black45)
-                          ],
-                        ),
-                        child: TextField(
-                          style: const TextStyle(fontSize: 24),
-                          decoration: InputDecoration.collapsed(
-                              hintText: AppLocalizations.of(context)!.feel,
-                              hintStyle: AppTextStyles.of(context)
-                                  .light24
-                                  .copyWith(
-                                  color:
-                                  AppColors.of(context).neutralColor10)),
-                        ), // TODO: Cảm nghĩ...
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 OutlinedButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    createMoment();
+                  },
                   style: OutlinedButton.styleFrom(
                       fixedSize: const Size(65, 65),
                       backgroundColor: AppColors.of(context).neutralColor6,
@@ -219,74 +189,46 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       padding: const EdgeInsets.fromLTRB(4, 6, 12, 2)
                   ),
                   child: SvgPicture.asset(Assets.icons.sendSVG, height: 60.w, width: 60.w, color: AppColors.of(context).neutralColor12,),
-                ), //TODO: Gửi đến...
-//                   onPressed: () async {},
-//                   style: OutlinedButton.styleFrom(
-//                     fixedSize: const Size(70, 70),
-//                     backgroundColor: AppColors.of(context).neutralColor6,
-//                     shape: const CircleBorder(),
-//                     side: BorderSide(
-//                         color: AppColors.of(context).primaryColor10, width: 4),
-//                     padding: const EdgeInsets.fromLTRB(4, 6, 12, 2),
-//                   ),
-//                   child: SvgPicture.asset(
-//                     Assets.icons.sendSVG,
-//                     height: 60.w,
-//                     width: 60.w,
-//                     color: AppColors.of(context).neutralColor12,
-//                   ),
-//                 ), // TODO: Gửi đến...
+                ),
                 IconButton(
                   onPressed: () {
                     print('Đã ấn');
-                    context.read<MomentProvider>().createMoment(
-                        'Đang thử lần đầu', 'Nắng lắm', File(widget.imagePath));
+
                   },
                   icon: SvgPicture.asset(Assets.icons.download2SVG),
-                ) // TODO: Lưu vào máy
+                )
               ],
             ),
-//             widget.users.isNotEmpty ? SingleChildScrollView(
-//               scrollDirection: Axis.horizontal,
-//               child: ListView.builder(
-//                 shrinkWrap: true,
-//                 physics: const NeverScrollableScrollPhysics(),
-//                 itemCount: widget.users.length,
-//                 itemBuilder: (context, index) {
-//                   return Padding(
-//                     padding: const EdgeInsets.all(20),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                       children: List.generate(context.watch<UserProvider>().friendList.length, (index) {
-//                         return Container(
-//                           margin: const EdgeInsets.only(right: 5),
-//                           child: Column(
-//                             mainAxisAlignment: MainAxisAlignment.center,
-//                             children: [
-//                               ClipRRect(
-//                                 borderRadius: BorderRadius.circular(50),
-//                                 child: Image.network(
-//                                   widget.users[index].avatar!,
-//                                   height: 16.w,
-//                                   width: 16.w,
-//                                   fit: BoxFit.cover
-//                                 )
-//                               ),
-//                               Text(widget.users[index].fullName, style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11, fontSize: 16))
-//                             ],
-//                           ),
-//                         );
-//                       }),
-//                     ),
-//                   );
-//                 }
-//               ),
-//             ) : const CircularProgressIndicator()
-//           ]
-//             )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> createMoment()async{
+    final momentProvider = context.read<MomentProvider>();
+    await momentProvider.createMoment(
+        'Đang thử lần đầu', weatherController.text, File(widget.imagePath));
+    if(momentProvider.createMomentStatus == ModuleStatus.success){
+      Fluttertoast.showToast(
+        msg: "Thành công",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }else{
+      Fluttertoast.showToast(
+        msg: momentProvider.createMomentResult,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 }

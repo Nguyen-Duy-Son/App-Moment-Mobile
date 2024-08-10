@@ -1,5 +1,7 @@
 // app/views/moment/camera/take_pictures_screen.dart
 // main.dart
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,7 +14,8 @@ import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/moment/camera/display_pictures_screen.dart';
 import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
 import 'package:provider/provider.dart';
-
+import 'package:image/image.dart' as img;
+import '../../../providers/weather_provider.dart';
 import '../../profile/personalPageWidget.dart';
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
@@ -32,6 +35,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   void initState() {
     startCamera(direction);
     super.initState();
+    context.read<WeatherProvider>().getCurrentPosition();
   }
 
   Future<void> startCamera(int direction) async {
@@ -48,6 +52,35 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     }).catchError((e) {print(e);});
   }
 
+  Future<File> cropImageToAspectRatio(File imageFile) async {
+    final image = img.decodeImage(await imageFile.readAsBytes());
+    final width = image?.width;
+    final height = image?.height;
+
+    // Tính toán kích thước mới để cắt theo tỷ lệ 3:4
+    int? newWidth = width;
+    int newHeight = (width! * 4) ~/ 3;
+
+    if (newHeight > height!) {
+      newHeight = height;
+      newWidth = (height * 3) ~/ 4;
+    }
+
+    final croppedImage = img.copyCrop(
+      image!,
+      x: (width - newWidth!) ~/ 2,
+      y: (height - newHeight) ~/ 2,
+      width: newWidth,
+      height: newHeight,
+    );
+
+    // Lưu ảnh đã cắt ra file mới
+    final newPath = '${imageFile.path.substring(0, imageFile.path.length - 4)}_cropped.jpg';
+    final croppedFile = File(newPath);
+    await croppedFile.writeAsBytes(img.encodeJpg(croppedImage));
+
+    return croppedFile;
+  }
   @override
   void dispose() {
     cameraController?.dispose();
@@ -125,13 +158,17 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   OutlinedButton(
                     onPressed: () async {
                       final image = await cameraController!.takePicture();
+                      //final croppedImage = await cropImageToAspectRatio(File(image.path));
                       if(!context.mounted) return;
                       await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => DisplayPictureScreen(imagePath: image.path, users: context.watch<UserProvider>().friendList,)
+                          builder: (context) => DisplayPictureScreen(
+                            imagePath: image.path,
+                            //imagePath: croppedImage.path,
+                            users: context.watch<UserProvider>().friendList,)
                         )
                       );
-                    }, // TODO: Chụp ảnh và chuyển đến màn display pictures
+                    },
                     style: OutlinedButton.styleFrom(
                       fixedSize: const Size(65, 65),
                       shape: const CircleBorder(),
@@ -153,7 +190,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                         startCamera(direction);
                       }); 
                     },
-                  ), //TODO: Đảo camera trước sau
+                  ),
                 ],
               ),
               // const SizedBox(height: 15,),
