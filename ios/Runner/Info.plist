@@ -45,7 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Cho phép truy cập vào thư viện ảnh của bạn!.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
         <string>This app needs access to location when open.</string>
+
 </dict>
 </plist>

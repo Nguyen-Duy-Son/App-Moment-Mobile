@@ -1,4 +1,3 @@
-// app/views/moment/camera/display_pictures_screen.dart
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:hit_moments/app/models/user_model.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/providers/weather_provider.dart';
+import 'package:hit_moments/app/providers/moment_provider.dart'
 import 'package:provider/provider.dart';
 
 // A widget that displays the picture taken by the user.
@@ -47,7 +47,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<bool> _showWeather = ValueNotifier(false);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -55,13 +54,15 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(AppLocalizations.of(context)!.sendto,
-                style: AppTextStyles.of(context).regular32.copyWith(
-                color: AppColors.of(context).neutralColor12,),
+              Text(
+                AppLocalizations.of(context)!.sendto,
+                style: AppTextStyles.of(context)
+                    .regular32
+                    .copyWith(color: AppColors.of(context).neutralColor12),
               ),
-              const SizedBox(width: 35,)
+              const SizedBox(width: 35),
             ],
-          )
+          ),
         ),
         body: Column(
           children: [
@@ -156,20 +157,58 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               ),
             ),
             const SizedBox(height: 10,),
+            Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.file(
+                        File(imagePath),
+                        width: 400.w,
+                        height: 470.h,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                          top: 25),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 50),
+                        padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.of(context).neutralColor6,
+                          borderRadius: BorderRadius.circular(50),
+                          boxShadow: const [
+                            BoxShadow(
+                                blurRadius: 5,
+                                spreadRadius: 1,
+                                offset: Offset(1, 1),
+                                color: Colors.black45)
+                          ],
+                        ),
+                        child: TextField(
+                          style: const TextStyle(fontSize: 24),
+                          decoration: InputDecoration.collapsed(
+                              hintText: AppLocalizations.of(context)!.feel,
+                              hintStyle: AppTextStyles.of(context)
+                                  .light24
+                                  .copyWith(
+                                  color:
+                                  AppColors.of(context).neutralColor10)),
+                        ), // TODO: Cảm nghĩ...
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ValueListenableBuilder<bool>(
-                  valueListenable: _showWeather,
-                  builder: (context, value, child) {
-                    return IconButton(
-                      onPressed: () {
-                        _showWeather.value = !_showWeather.value;
-                      },
-                      icon: SvgPicture.asset(value ? Assets.icons.cloud2SVG : Assets.icons.cloud1SVG)
-                    );
-                  },
-                ), //TODO: Thêm thời tiết
                 OutlinedButton(
                     onPressed: () async {},
                     style: OutlinedButton.styleFrom(
@@ -181,48 +220,71 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ),
                     child: SvgPicture.asset(Assets.icons.sendSVG, height: 60.w, width: 60.w, color: AppColors.of(context).neutralColor12,),
                   ), //TODO: Gửi đến...
+//                   onPressed: () async {},
+//                   style: OutlinedButton.styleFrom(
+//                     fixedSize: const Size(70, 70),
+//                     backgroundColor: AppColors.of(context).neutralColor6,
+//                     shape: const CircleBorder(),
+//                     side: BorderSide(
+//                         color: AppColors.of(context).primaryColor10, width: 4),
+//                     padding: const EdgeInsets.fromLTRB(4, 6, 12, 2),
+//                   ),
+//                   child: SvgPicture.asset(
+//                     Assets.icons.sendSVG,
+//                     height: 60.w,
+//                     width: 60.w,
+//                     color: AppColors.of(context).neutralColor12,
+//                   ),
+//                 ), // TODO: Gửi đến...
                 IconButton(
-                  onPressed: () {}, 
-                  icon: SvgPicture.asset(Assets.icons.download2SVG)) //TODO: Lưu vào may
+                  onPressed: () {
+                    print('Đã ấn');
+                    context.read<MomentProvider>().createMoment(
+                        'Đang thử lần đầu', 'Nắng lắm', File(imagePath));
+                  },
+                  icon: SvgPicture.asset(Assets.icons.download2SVG),
+                ) // TODO: Lưu vào máy
               ],
             ),
-            widget.users.isNotEmpty ? SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.users.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(context.watch<UserProvider>().friendList.length, (index) {
-                        return Container(
-                          margin: const EdgeInsets.only(right: 5),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                  widget.users[index].avatar!,
-                                  height: 16.w,
-                                  width: 16.w,
-                                  fit: BoxFit.cover
-                                )
-                              ),
-                              Text(widget.users[index].fullName, style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11, fontSize: 16))
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                  );
-                }
-              ),
-            ) : const CircularProgressIndicator()
-          ]
+//             widget.users.isNotEmpty ? SingleChildScrollView(
+//               scrollDirection: Axis.horizontal,
+//               child: ListView.builder(
+//                 shrinkWrap: true,
+//                 physics: const NeverScrollableScrollPhysics(),
+//                 itemCount: widget.users.length,
+//                 itemBuilder: (context, index) {
+//                   return Padding(
+//                     padding: const EdgeInsets.all(20),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                       children: List.generate(context.watch<UserProvider>().friendList.length, (index) {
+//                         return Container(
+//                           margin: const EdgeInsets.only(right: 5),
+//                           child: Column(
+//                             mainAxisAlignment: MainAxisAlignment.center,
+//                             children: [
+//                               ClipRRect(
+//                                 borderRadius: BorderRadius.circular(50),
+//                                 child: Image.network(
+//                                   widget.users[index].avatar!,
+//                                   height: 16.w,
+//                                   width: 16.w,
+//                                   fit: BoxFit.cover
+//                                 )
+//                               ),
+//                               Text(widget.users[index].fullName, style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11, fontSize: 16))
+//                             ],
+//                           ),
+//                         );
+//                       }),
+//                     ),
+//                   );
+//                 }
+//               ),
+//             ) : const CircularProgressIndicator()
+//           ]
+//             )
+          ],
         ),
       ),
     );

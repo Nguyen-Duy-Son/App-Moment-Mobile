@@ -11,5 +11,5 @@ abstract class AppRoutes {
   static String SIGNUP = '/signup';
   static String VERIFYEMAIL = '/verify-email';
   static String LIST_MY_FRIEND = '/list-my-friend';
-
+  static String MY_CONVERSATION = '/my-conversation';
 }

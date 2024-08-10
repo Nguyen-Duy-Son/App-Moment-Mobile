@@ -13,6 +13,7 @@ import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/views/moment/camera/take_pictures_screen.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/auth/auth_view.dart';
+import 'package:hit_moments/app/views/conversation/conversation_view.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_view.dart';
 import 'package:hit_moments/app/views/moment/moment_view.dart';
 import 'package:hit_moments/app/views/moment/widget/get_weather_widget.dart';
@@ -57,22 +58,37 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("Moment")),
-            ElevatedButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestedFriendsView(),));
-            },
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SuggestedFriendsView(),
+                      ));
+                },
                 child: Text("Suggested Friends")),
-            ElevatedButton(onPressed: () {
-              setEmail('');
-              setPassWord('');
-              setToken('');
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AuthView(),),
-                ModalRoute.withName(AppRoutes.AUTHENTICATION)
-              );
-            },
-                child: Text("Đăng xuất")
-            ),
+            ElevatedButton(
+                onPressed: () {
+                  setEmail('');
+                  setPassWord('');
+                  setToken('');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuthView(),
+                      ),
+                      ModalRoute.withName(AppRoutes.AUTHENTICATION));
+                },
+                child: Text("Đăng xuất")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TakePictureScreen(),
+                      ));
+                },
+                child: Text("Home")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -82,6 +98,15 @@ class _ExampleViewState extends State<ExampleView> {
                       ));
                 },
                 child: Text("List My Friend")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ConversationView(),
+                      ));
+                },
+                child: Text("My Conversation")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(

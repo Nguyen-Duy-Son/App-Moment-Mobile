@@ -34,14 +34,14 @@ class ListMyFriend extends StatefulWidget {
 }
 
 class _ListMyFriendState extends State<ListMyFriend> {
-  List<int> options = [0,1,2];
+  List<int> options = [0, 1, 2];
   @override
   Widget build(BuildContext context) {
     return widget.users.isNotEmpty
         ? SingleChildScrollView(
-          child: Column(
-            children: [
-              ListView.builder(
+            child: Column(
+              children: [
+                ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.isExpanded
@@ -76,8 +76,11 @@ class _ListMyFriendState extends State<ListMyFriend> {
                             children: [
                               Text(
                                 widget.users[index].fullName,
-                                style: AppTextStyles.of(context).light20.copyWith(
-                                      color: AppColors.of(context).neutralColor12,
+                                style: AppTextStyles.of(context)
+                                    .light20
+                                    .copyWith(
+                                      color:
+                                          AppColors.of(context).neutralColor12,
                                     ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -85,6 +88,7 @@ class _ListMyFriendState extends State<ListMyFriend> {
                                 Assets.icons.rightArrow,
                                 width: 22.w,
                                 height: 22.h,
+                                color: AppColors.of(context).neutralColor10,
                               ),
                             ],
                           ),
@@ -108,9 +112,9 @@ class _ListMyFriendState extends State<ListMyFriend> {
                     );
                   },
                 ),
-            ],
-          ),
-        )
+              ],
+            ),
+          )
         : const SearchDataNotFound();
   }
 }

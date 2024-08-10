@@ -9,6 +9,7 @@ import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_view.dart';
+import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/moment/camera/display_pictures_screen.dart';
 import 'package:hit_moments/app/views/suggested_friends/suggested_friends_view.dart';
 import 'package:provider/provider.dart';
@@ -90,11 +91,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: AppColors.of(context).primaryColor6),
-                    child: IconButton(icon: SvgPicture.asset(Assets.icons.union), onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const ListMyFriendView())
-                      );
-                    },) // TODO: Chuyển đến màn nhắn tin
+//                     child: IconButton(icon: SvgPicture.asset(Assets.icons.union), onPressed: () {
+//                       Navigator.of(context).push(
+//                         MaterialPageRoute(builder: (context) => const ListMyFriendView())
+//                       );
+//                     },) // TODO: Chuyển đến màn nhắn tin
+                    child: IconButton(icon: SvgPicture.asset(Assets.icons.union), onPressed: ()=>Navigator.pushNamed(
+                      context, AppRoutes.MY_CONVERSATION
+                    ),) // TODO: Chuyển đến màn nhắn tin
                   ),
                 ],
               ),

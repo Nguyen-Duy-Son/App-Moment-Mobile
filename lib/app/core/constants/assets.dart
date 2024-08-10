@@ -25,6 +25,7 @@ class _AssetsIcons {
   final lightning = 'assets/icons/Lightning.svg';
   final cloud1SVG = 'assets/icons/Cloud1.svg';
   final cloud2SVG = 'assets/icons/Cloud2.svg';
+  final categorySVG = 'assets/icons/Category.svg';
   final download2SVG = 'assets/icons/Download 2.svg';
   final leftSVG = 'assets/icons/Left.svg';
   final sunSVG = 'assets/icons/Sun.svg';
@@ -52,6 +53,8 @@ class _AssetsIcons {
   final document2 = 'assets/icons/Document 2.svg';
   final danger = 'assets/icons/Danger.svg';
   final settings = 'assets/icons/Settings.svg';
+  final addFriendSVG = 'assets/icons/add-friend.svg';
+  final play = 'assets/icons/Play.svg';
 }
 
 class _AssetsImages {
