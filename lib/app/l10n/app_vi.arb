@@ -75,5 +75,6 @@
       "reply": "Trả lời",
       "daysAgo": "ngày trước",
         "hoursAgo": "giờ trước",
-        "minutesAgo": "phút trước"
+        "minutesAgo": "phút trước",
+    "titleNofriend":"Vui lòng nhập email cần tìm kiếm"
 }

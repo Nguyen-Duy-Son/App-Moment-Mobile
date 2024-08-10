@@ -27,20 +27,19 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   // final StreamController<String> _streamController = StreamController<String>();
 
   late String senderId;
-  late ConversationProvider _appProvider;
+  // late ConversationProvider _appProvider;
   @override
   void initState() {
     super.initState();
-    _appProvider = Provider.of<ConversationProvider>(context, listen: false);
+    // _appProvider = Provider.of<ConversationProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       callApi();
       print('id: ${getUserId()}');
-      if (!_appProvider.socket.connected) {
-        _appProvider.connectAndListen();
-      }
+      // if (!_appProvider.socket.connected) {
+      //   _appProvider.connectAndListen();
+      // }
     });
   }
-
 
   // @override
   // void didChangeDependencies() {
@@ -49,10 +48,13 @@ class _ChatMessageViewState extends State<ChatMessageView> {
 
   @override
   void dispose() {
-    _appProvider.disconnectSocket();
+    // _appProvider.disconnectSocket();
     super.dispose();
   }
 
+  bool containsImageTag(String text) {
+    return !text.contains('[@isImg123@]');
+  }
   // @override
   // void deactivate() {
   //   // TODO: implement deactivate
@@ -70,7 +72,6 @@ class _ChatMessageViewState extends State<ChatMessageView> {
           .read<ConversationProvider>()
           .getChatMessageByReceiverId(widget.receiver.id);
     }
-
   }
 
   void handleOnlineUsers(dynamic data) {
@@ -84,126 +85,161 @@ class _ChatMessageViewState extends State<ChatMessageView> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
+          toolbarHeight: 52.w,
           title: Container(
             margin: EdgeInsets.only(top: 12.h),
             child: Column(
               children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.network(
+                    widget.receiver.avatar ?? '',
+                    width: 28.w,
+                    height: 28.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 Text(
                   widget.receiver.fullName,
                   style: AppTextStyles.of(context).light20.copyWith(
                         color: AppColors.of(context).neutralColor12,
-                        height: 0.9,
+                        height: 1,
                       ),
                 ),
+                SizedBox(height: 4.h),
               ],
             ),
           ),
           centerTitle: true,
         ),
-        body: Column(
-          children: [
-            Expanded(
-                child: !context
-                        .watch<ConversationProvider>()
-                        .isLoadingChatMessage
-                    ? SingleChildScrollView(
-                        reverse: true,
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          itemCount: context
-                              .watch<ConversationProvider>()
-                              .messages
-                              .length,
-                          itemBuilder: (context, index) {
-                            final message = context
-                                .watch<ConversationProvider>()
-                                .messages[index];
-                            final bool isMe =
-                                message.senderId != widget.receiver.id;
-                            return Container(
-                              alignment: isMe
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      top: 4.h,
-                                      left: isMe ? 92.w : 8.w,
-                                      right: !isMe ? 0 : 8.w,
+        body: !context.watch<ConversationProvider>().isLoadingChatMessage
+            ? Column(
+                children: [
+                  Expanded(
+                      child: SingleChildScrollView(
+                    reverse: true,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount:
+                          context.watch<ConversationProvider>().messages.length,
+                      itemBuilder: (context, index) {
+                        final message = context
+                            .watch<ConversationProvider>()
+                            .messages[index];
+                        final bool isMe =
+                            message.senderId != widget.receiver.id;
+                        return Container(
+                          alignment: isMe
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              containsImageTag(message.text!) != false
+                                  ? Container(
+                                      margin: EdgeInsets.only(
+                                        top: 4.h,
+                                        left: isMe ? 92.w : 8.w,
+                                        right: !isMe ? 92.w : 8.w,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isMe
+                                            ? AppColors.of(context)
+                                                .primaryColor3
+                                            : AppColors.of(context)
+                                                .neutralColor4,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Text(
+                                        message.text ?? '',
+                                        style: AppTextStyles.of(context)
+                                            .regular20
+                                            .copyWith(
+                                              color: AppColors.of(context)
+                                                  .neutralColor12,
+                                            ),
+                                      ),
+                                    )
+                                  : Container(
+                                      margin: EdgeInsets.only(
+                                        top: 4.h,
+                                        // left: isMe ? 92.w : 8.w,
+                                        // right: !isMe ? 92.w : 8.w,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                          message.text!
+                                              .replaceAll('[@isImg123@]', ''),
+                                          width: 140.w,
+                                          height: 140.w,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 12.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: isMe
-                                          ? AppColors.of(context).primaryColor3
-                                          : AppColors.of(context).neutralColor4,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Text(
-                                      message.text ?? '',
-                                      style: AppTextStyles.of(context)
-                                          .regular20
-                                          .copyWith(
-                                            color: AppColors.of(context)
-                                                .neutralColor12,
-                                          ),
-                                    ),
-                                  ),
-                                ],
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  )),
+                  Container(
+                    margin: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.of(context).neutralColor7,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Form(
+                      child: TextFormField(
+                        controller: _controller,
+                        decoration: InputDecoration(
+                          hintText: S.of(context).titleSendMessage,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              borderSide: BorderSide.none),
+                          suffixIcon: GestureDetector(
+                            onTap: _sendMessage,
+                            child: Container(
+                              width: 16.w,
+                              margin: EdgeInsets.only(right: 12.w),
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                Assets.icons.sendSVG,
+                                color: AppColors.of(context).neutralColor9,
+                                width: 24.w,
+                                height: 24.h,
                               ),
-                            );
-                          },
-                        ),
-                      )
-                    : const Center(child: CircularProgressIndicator())),
-            Container(
-              margin: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: AppColors.of(context).neutralColor7,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Form(
-                child: TextFormField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).titleSendMessage,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none),
-                    suffixIcon: GestureDetector(
-                      onTap: _sendMessage,
-                      child: Container(
-                        width: 16.w,
-                        margin: EdgeInsets.only(right: 12.w),
-                        alignment: Alignment.center,
-                        child: SvgPicture.asset(
-                          Assets.icons.sendSVG,
-                          color: AppColors.of(context).neutralColor9,
-                          width: 24.w,
-                          height: 24.h,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ],
-        ),
+                ],
+              )
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }
 
+  String trimTrailingWhitespace(String text) {
+    return text.replaceAll(RegExp(r'\s+$'), '');
+  }
+
   void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
+      final trimmedText = trimTrailingWhitespace(_controller.text);
       final conversationProvider = context.read<ConversationProvider>();
-      conversationProvider.sendMessage(widget.receiver.id, _controller.text);
+      conversationProvider.sendMessage(widget.receiver.id, trimmedText);
       if (conversationProvider.isSending != true) {
         // if (widget.conversationId.isNotEmpty) {
         //   conversationProvider.getChatMessage(widget.conversationId);

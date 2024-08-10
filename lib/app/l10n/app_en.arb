@@ -74,5 +74,6 @@
       "reply": "Reply",
       "daysAgo": "days ago",
         "hoursAgo": "hours ago",
-        "minutesAgo": "minutes ago"
+        "minutesAgo": "minutes ago",
+        "titleNofriend": "Please enter the email you want to search"
 }

@@ -79,8 +79,14 @@ class UserService {
     try {
       var response = await BaseConnect.onRequest(
           ApiUrl.searchFriendOfUser, RequestMethod.GET,
-          queryParam: {"email": emailOfFriend});
-      return response["data"]["user"];
+          queryParam: {"search": emailOfFriend});
+      print("Status search friend: ${response['data']['users']}");
+      if(response["statusCode"] == 200){
+        return response["data"]["users"];
+      }
+      else{
+        return response["statusCode"];
+      }
     } catch (e) {
       print("Lỗi: ${e}");
       return 0;
