@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../custom/widgets/icon_on_tap_scale.dart';
+import '../../../l10n/l10n.dart';
 
 class BottomSheetInput extends StatelessWidget {
    BottomSheetInput({super.key, required this.controller, required this.momentModel});
@@ -55,7 +56,7 @@ class BottomSheetInput extends StatelessWidget {
                 controller: controller,
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: "Trả lời ${momentModel.userName}",
+                  hintText: "${S.of(context).reply} ${momentModel.userName}",
                   hintStyle: AppTextStyles.of(context).light20.copyWith(
                     color: AppColors.of(context).neutralColor8,
                   ),

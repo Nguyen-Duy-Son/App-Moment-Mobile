@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 
 import '../../../core/constants/assets.dart';
+import '../../../l10n/l10n.dart';
 import '../../../models/user_model.dart';
 
 class PopoverSelectFriend extends StatefulWidget {
@@ -39,7 +40,7 @@ class _PopoverSelectFriendState extends State<PopoverSelectFriend> {
                   return Column(
                     children: [
                       ListTile(
-                      title: rowUser(null, Assets.icons.usersSVG, "Tất cả"),
+                      title: rowUser(null, Assets.icons.usersSVG, S.of(context).all),
                         onTap: () {
                           widget.isBack(null);
                           Navigator.pop(context);

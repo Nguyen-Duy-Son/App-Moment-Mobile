@@ -115,7 +115,7 @@ class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
                                         context.read<UserProvider>()
                                             .searchFriendRequest(
                                             searchController.text,
-                                            "Không tìm thấy người dùng này");
+                                            S.of(context).userNotFound);
                                       }
                                     },
                                   )
@@ -129,7 +129,7 @@ class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
                                 context.read<UserProvider>()
                                     .searchFriendRequest(
                                     searchController.text,
-                                    "Không tìm thấy người dùng này");
+                                    S.of(context).userNotFound);
                               }
                             },
                           ),

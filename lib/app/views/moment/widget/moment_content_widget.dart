@@ -115,9 +115,9 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
                         ],
                       ),
                     ),
-                    Text(FormatTimeExtension().formatTimeDifference(widget.momentModel.createAt!),
+                    Text(FormatTimeExtension().formatTimeDifference(widget.momentModel.createAt!, context),
                       style: AppTextStyles.of(context).light14.copyWith(
-                        color: AppColors.of(context).neutralColor8,
+                        color: AppColors.of(context).neutralColor1,
                         shadows: [
                           Shadow(
                             blurRadius: 1.0,

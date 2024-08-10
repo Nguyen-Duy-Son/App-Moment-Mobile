@@ -11,14 +11,14 @@ import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/views/auth/login/login_view.dart';
 import 'package:provider/provider.dart';
 
-class personalPageWidget extends StatefulWidget {
-  const personalPageWidget({super.key});
+class PersonalPageWidget extends StatefulWidget {
+  const PersonalPageWidget({super.key});
 
   @override
-  State<personalPageWidget> createState() => PersonalPageScreenState();
+  State<PersonalPageWidget> createState() => PersonalPageScreenState();
 }
 
-class PersonalPageScreenState extends State<personalPageWidget> {
+class PersonalPageScreenState extends State<PersonalPageWidget> {
   bool _value1 = false;
   bool _value2 = false;
   @override
@@ -36,12 +36,14 @@ class PersonalPageScreenState extends State<personalPageWidget> {
                 children: [
                   SvgPicture.asset(Assets.icons.settings),
                   SizedBox(width: 10.w,),
-                  Container(
-                    width: 225.w,
-                    child: Text(
-                      AppLocalizations.of(context)!.modeLightDark, 
-                      style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
-                    )
+                  Expanded(
+                    child: Container(
+                      width: 225.w,
+                      child: Text(
+                        AppLocalizations.of(context)!.modeLightDark, 
+                        style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
+                      )
+                    ),
                   ),
                   Container(
                     child: Switch(
@@ -67,12 +69,14 @@ class PersonalPageScreenState extends State<personalPageWidget> {
               children: [
                 SvgPicture.asset(Assets.icons.settings),
                 SizedBox(width: 15.w,),
-                Container(
-                  width: 230.w,
-                  child: Text(
-                    AppLocalizations.of(context)!.language, 
-                    style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
-                  )
+                Expanded(
+                  child: Container(
+                    width: 230.w,
+                    child: Text(
+                      AppLocalizations.of(context)!.language, 
+                      style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
+                    )
+                  ),
                 ),
                 Container(
                   child: Switch(
