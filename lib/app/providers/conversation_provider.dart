@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart' as notif;
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart' as notif;
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/models/message_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -73,16 +73,12 @@ class ConversationProvider extends ChangeNotifier {
       print('Connected to the server'); // Debug print
     });
     socket.on('newMessage', (data) {
-      // print('newMessage event triggered $data'); // Debug print
-      _showNotification(data['text']);
+      print('newMessage event triggered $data'); // Debug print
+      // _showNotification(data['text']);
       messages.add(Message.fromJson(data as Map<String, dynamic>));
       notifyListeners();
     });
-    socket.onDisconnect((_) {
-      print('Disconnected from the server');
-    });
     socket.connect();
-
   }
 
   void disconnectSocket() {
@@ -91,46 +87,46 @@ class ConversationProvider extends ChangeNotifier {
       socket.close();
     }
   }
-  final notif.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  notif.FlutterLocalNotificationsPlugin();
-
-  ConversationProvider() {
-    _configureLocalNotifications();
-  }
-
-  Future<void> _configureLocalNotifications() async {
-    const notif.AndroidInitializationSettings initializationSettingsAndroid =
-    notif.AndroidInitializationSettings('app_icon');
-
-    final notif.InitializationSettings initializationSettings = notif.InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-
-  Future<void> _showNotification(String messageText) async {
-    print("mess:$messageText");
-    const notif.AndroidNotificationDetails androidPlatformChannelSpecifics =
-    notif.AndroidNotificationDetails(
-      'new_message_channel_id',
-      'New Message',
-      importance: notif.Importance.max,
-      priority: notif.Priority.high,
-    );
-
-    const notif.NotificationDetails platformChannelSpecifics =
-    notif.NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    // Sử dụng timestamp hoặc một giá trị ngẫu nhiên cho ID thông báo
-    final int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-
-    await flutterLocalNotificationsPlugin.show(
-      notificationId,
-      'New Message',
-      messageText,
-      platformChannelSpecifics,
-    );
-  }
+  // final notif.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  // notif.FlutterLocalNotificationsPlugin();
+  //
+  // ConversationProvider() {
+  //   _configureLocalNotifications();
+  // }
+  //
+  // Future<void> _configureLocalNotifications() async {
+  //   const notif.AndroidInitializationSettings initializationSettingsAndroid =
+  //   notif.AndroidInitializationSettings('app_icon');
+  //
+  //   final notif.InitializationSettings initializationSettings = notif.InitializationSettings(
+  //     android: initializationSettingsAndroid,
+  //   );
+  //
+  //   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  // }
+  //
+  // Future<void> _showNotification(String messageText) async {
+  //   print("mess:$messageText");
+  //   const notif.AndroidNotificationDetails androidPlatformChannelSpecifics =
+  //   notif.AndroidNotificationDetails(
+  //     'new_message_channel_id',
+  //     'New Message',
+  //     importance: notif.Importance.max,
+  //     priority: notif.Priority.high,
+  //   );
+  //
+  //   const notif.NotificationDetails platformChannelSpecifics =
+  //   notif.NotificationDetails(android: androidPlatformChannelSpecifics);
+  //
+  //   // Sử dụng timestamp hoặc một giá trị ngẫu nhiên cho ID thông báo
+  //   final int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+  //
+  //   await flutterLocalNotificationsPlugin.show(
+  //     notificationId,
+  //     'New Message',
+  //     messageText,
+  //     platformChannelSpecifics,
+  //   );
+  // }
 
 }

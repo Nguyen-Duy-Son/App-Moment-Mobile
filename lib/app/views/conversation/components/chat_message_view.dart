@@ -134,7 +134,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                                     margin: EdgeInsets.only(
                                       top: 4.h,
                                       left: isMe ? 92.w : 8.w,
-                                      right: !isMe ? 0 : 8.w,
+                                      right: !isMe ? 92.w : 8.w,
                                     ),
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 12.w,
