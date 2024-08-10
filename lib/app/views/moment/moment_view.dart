@@ -26,9 +26,10 @@ class MomentView extends StatefulWidget {
 
 class _MomentViewState extends State<MomentView> {
   List<MomentModel> listMoment = [];
-
+  int _currentIndex = 0;
   PageController pageViewController = PageController();
   List<Widget> _list = [];
+
   @override
   void initState() {
     super.initState();
@@ -37,14 +38,12 @@ class _MomentViewState extends State<MomentView> {
     context.read<ListMomentProvider>().getWeather('21.0314268', '105.7792771');
     pageViewController.addListener(() {
       if (pageViewController.position.atEdge) {
-        print('Cuối cùng');
         bool isBottom = pageViewController.position.pixels != 0;
-        if (isBottom) {
+        if (isBottom && context.read<ListMomentProvider>().loadMoreStatus != ModuleStatus.fail) {
           context.read<ListMomentProvider>().loadMoreListMoment();
         }
       }
     });
-
     // Initialize the moments list
     setPageView();
   }
@@ -54,17 +53,31 @@ class _MomentViewState extends State<MomentView> {
     if (context.read<ListMomentProvider>().getListMomentStatus == ModuleStatus.success) {
       listMoment = context.read<ListMomentProvider>().momentList;
       _list = listMoment.map((e) => MomentWidget(momentModel: e, pageViewController: pageViewController)).toList();
-      setState(() {});
+
     }
+  }
+
+  void _onLayersPressed() {
+    setState(() {
+      _currentIndex = 1;
+    });
+  }
+
+  void _onMomentPressed() {
+    setState(() {
+      _currentIndex = 0;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final listMomentProvider = context.watch<ListMomentProvider>();
-    if(listMomentProvider.loadMoreStatus==ModuleStatus.success){
+    print("Status khi load là ${listMomentProvider.loadMoreStatus}");
+    if (listMomentProvider.getListMomentStatus == ModuleStatus.success) {
       listMoment = context.read<ListMomentProvider>().momentList;
       _list = listMoment.map((e) => MomentWidget(momentModel: e, pageViewController: pageViewController)).toList();
     }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -90,61 +103,70 @@ class _MomentViewState extends State<MomentView> {
             Padding(
               padding: EdgeInsets.only(right: 16.w),
               child: IconOnTapScale(
-                icon1Path: Assets.icons.layersSVG,
+                icon1Path: _currentIndex==0?Assets.icons.layersSVG:Assets.icons.categorySVG,
                 backGroundColor: AppColors.of(context).neutralColor6,
                 icon1Color: AppColors.of(context).neutralColor10,
                 iconHeight: 20.w,
                 iconWidth: 20.w,
                 onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return GridViewMoment(
-                        listMoment: listMoment,
-                        onSelected: (moment, index) {
-                          pageViewController.animateToPage(
-                            index,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                      );
-                    },
-                  ));
+                  if (_currentIndex == 0) {
+                    context.read<ListMomentProvider>().loadMoreListMoment();
+                    _onLayersPressed();
+                  } else {
+                    _onMomentPressed();
+                  }
                 },
               ),
             ),
           ],
         ),
-        body: _list.isEmpty
-            ? Center(
-          child: Text(
-            "Không có bài đăng nào!",
-            style: AppTextStyles.of(context).regular20.copyWith(
-              color: AppColors.of(context).neutralColor11,
-            ),
-          ),
-        )
-            : Column(
+        body: IndexedStack(
+          index: _currentIndex,
           children: [
-            Expanded(
-              child: PageView(
-                children: [
-                  ..._list,
-                  if (listMomentProvider.loadMoreStatus == ModuleStatus.fail)
-                    SuggestedFriendsView(),
-                ],
-                controller: pageViewController,
-                scrollDirection: Axis.vertical,
+            _list.isEmpty
+                ? Center(
+              child: Text(
+                "Không có bài đăng nào!",
+                style: AppTextStyles.of(context).regular20.copyWith(
+                  color: AppColors.of(context).neutralColor11,
+                ),
               ),
+            )
+                : Column(
+              children: [
+                Expanded(
+                  child: PageView(
+                    controller: pageViewController,
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      ..._list,
+                      if (listMomentProvider.loadMoreStatus == ModuleStatus.fail)
+                        const SuggestedFriendsView(),
+                    ],
+                  ),
+                ),
+                if (listMomentProvider.loadMoreStatus == ModuleStatus.loading)
+                  CupertinoActivityIndicator(
+                    color: Colors.red,
+                    radius: 15,
+                  ),
+              ],
             ),
-            if (listMomentProvider.loadMoreStatus == ModuleStatus.loading)
-              CupertinoActivityIndicator(
-                color: Colors.red,
-                radius: 15,
-              ),
+            GridViewMoment(
+              listMoment: listMoment,
+              onSelected: (moment, index) {
+                _onMomentPressed();
+                pageViewController.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 100),
+                  curve: Curves.easeInOut,
+                );
+              },
+            ),
           ],
-        )
+        ),
       ),
     );
   }
 }
+

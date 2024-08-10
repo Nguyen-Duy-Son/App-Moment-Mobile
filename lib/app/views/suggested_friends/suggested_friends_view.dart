@@ -2,8 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
+import 'package:hit_moments/app/models/user_model.dart';
+import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/suggested_friends/widget/suggested_user_item_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/assets.dart';
 import '../../core/extensions/theme_extensions.dart';
@@ -17,10 +21,25 @@ class SuggestedFriendsView extends StatefulWidget {
 }
 
 class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
-  int listLength =3;
+  List<User> listUser = [];
+  late TextEditingController searchController;
+  @override
+  void initState() {
+    super.initState();
+
+    searchController = TextEditingController();
+  }
+
+  Future<void> getData() async{
+    if(context.watch<UserProvider>().friendSuggestStatus == ModuleStatus.initial) {
+      context.read<UserProvider>().getFriendSuggest();
+    }
+    listUser = context.watch<UserProvider>().friendSuggests;
+  }
 
   @override
   Widget build(BuildContext context) {
+    getData();
     return SafeArea(
         child: Scaffold(
           body: GestureDetector(
@@ -58,6 +77,7 @@ class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
                             borderRadius: BorderRadius.all(Radius.circular(100)),
                           ),
                           child: TextFormField(
+                            controller: searchController,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(100)),
@@ -85,10 +105,33 @@ class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 24.0),
-                                  child: SvgPicture.asset(Assets.icons.search)
+                                  child: ScaleOnTapWidget(
+                                    child: SvgPicture.asset(Assets.icons.search),
+                                    onTap: (isSelect) {
+                                      if(searchController.text.isEmpty){
+                                        FocusScope.of(context).unfocus();
+                                      }else{
+                                        FocusScope.of(context).unfocus();
+                                        context.read<UserProvider>()
+                                            .searchFriendRequest(
+                                            searchController.text,
+                                            "Không tìm thấy người dùng này");
+                                      }
+                                    },
+                                  )
                                 ),
                               ),
                             ),
+                            onFieldSubmitted: (value) {
+                              if(searchController.text.isEmpty){
+                                FocusScope.of(context).unfocus();
+                              }else{
+                                context.read<UserProvider>()
+                                    .searchFriendRequest(
+                                    searchController.text,
+                                    "Không tìm thấy người dùng này");
+                              }
+                            },
                           ),
                         ),
                         SizedBox(height: 16.h,),
@@ -111,29 +154,32 @@ class _SuggestedFriendsViewState extends State<SuggestedFriendsView> {
                             ),
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
-                          child: listLength==0
-                              ?Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(Assets.icons.searchNotFound),
-                                Text(
-                                  S.of(context).userNotFound,
-                                  style: AppTextStyles.of(context).regular20.copyWith(
-                                    color: AppColors.of(context).neutralColor12
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
+                          child: context.watch<UserProvider>().friendSuggestStatus == ModuleStatus.loading?
+                          Center(
+                            child: CircularProgressIndicator(),
+                          ):
+                          context.watch<UserProvider>().friendSuggestStatus == ModuleStatus.fail
+                              ?Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(Assets.icons.searchNotFound),
+                                  Text(
+                                    S.of(context).userNotFound,
+                                    style: AppTextStyles.of(context).regular20.copyWith(
+                                        color: AppColors.of(context).neutralColor12
+                                    ),
+                                  )
+                                ],
+                              )
                               :ListView.builder(
-                            itemCount: listLength,
-                              itemBuilder: (context, index) {
-                                return SuggestedUserItemWidget(
-                                  index: index,
-                                  listLength: listLength,
-                                );
-                              },
+                            itemCount: listUser.length,
+                            itemBuilder: (context, index) {
+                              return SuggestedUserItemWidget(
+                                index: index,
+                                user: listUser[index],
+                                listLength: listUser.length,
+                              );
+                            },
                           )
                         ),
                         Padding(

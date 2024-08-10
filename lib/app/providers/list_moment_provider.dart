@@ -15,7 +15,7 @@ class ListMomentProvider extends ChangeNotifier{
   bool isVisibilityGridview = false;
   List<User> friendList=[];
   List<MomentModel> momentList=[];
-  List<MomentModel> _listMomentMore=[];
+  List<MomentModel> listMomentMore=[];
   ModuleStatus getListMomentStatus = ModuleStatus.initial;
   ModuleStatus loadMoreStatus = ModuleStatus.initial;
   int _pageIndex = 1;
@@ -24,6 +24,13 @@ class ListMomentProvider extends ChangeNotifier{
   Future<void> getListFriendOfUser() async{
     var response = await UserService.getFriends();
     friendList = response.map<User>((item) => User.fromJson(item)).toList();
+  }
+  Future<void> deleteMomentLocal(String momentID) async {
+    loadMoreStatus = ModuleStatus.loading;
+    notifyListeners();
+    momentList.removeWhere((moment) => moment.momentID == momentID);
+    loadMoreStatus = ModuleStatus.success;
+    notifyListeners();
   }
 
   Future<void> getListMoment() async{
@@ -59,7 +66,7 @@ class ListMomentProvider extends ChangeNotifier{
         getListMomentStatus = ModuleStatus.fail;
       }
     }else{
-      final response = await ListMomentService().getListMomentByUserID(friend.id, _pageIndex);
+      final response = await ListMomentService().getListMomentByUserID(friend.id, _pageIndexSort);
       if(response is List<MomentModel>){
         momentList = response;
         getListMomentStatus = ModuleStatus.success;
@@ -73,23 +80,24 @@ class ListMomentProvider extends ChangeNotifier{
 
   Future<void> loadMoreListMoment() async{
 
-
     if(friendSort==null){
-      print("Load $_pageIndex");
       _pageIndex++;
       _pageIndexSort=1;
       loadMoreStatus = ModuleStatus.loading;
       notifyListeners();
       final response = await ListMomentService().getListMoment(_pageIndex);
       if(response is List<MomentModel>){
-        _listMomentMore =  response;
-        momentList.addAll(_listMomentMore);
-        loadMoreStatus = ModuleStatus.success;
+        listMomentMore =  response;
+        if(response.isEmpty){
+          loadMoreStatus = ModuleStatus.fail;
+        }else{
+          momentList.addAll(listMomentMore);
+          loadMoreStatus = ModuleStatus.success;
+        }
       }else{
-        _listMomentMore =  [];
+        _pageIndex--;
+        listMomentMore =  [];
         loadMoreStatus = ModuleStatus.fail;
-        print('Thất bại 1');
-
       }
       notifyListeners();
     }else{
@@ -99,13 +107,17 @@ class ListMomentProvider extends ChangeNotifier{
       notifyListeners();
       final response = await ListMomentService().getListMomentByUserID(friendSort!.id, _pageIndexSort);
       if(response is List<MomentModel>){
-        _listMomentMore = response;
-        momentList.addAll(_listMomentMore);
-        loadMoreStatus = ModuleStatus.success;
+        listMomentMore = response;
+        if(response.isEmpty){
+          loadMoreStatus = ModuleStatus.fail;
+        }else{
+          momentList.addAll(listMomentMore);
+          loadMoreStatus = ModuleStatus.success;
+        }
       }else{
-        _listMomentMore = [];
+        _pageIndexSort--;
+        listMomentMore = [];
         loadMoreStatus = ModuleStatus.fail;
-        print('Thất bại 2');
       }
       notifyListeners();
     }
@@ -116,14 +128,6 @@ class ListMomentProvider extends ChangeNotifier{
     await WeatherService().getCurrentWeather(latitude, longitude);
   }
 
-  Future<void> saveImage(String url) async{
-    try{
-      String path = await MomentService().saveImage(url);
-      print('Thaành công, lưu ở $path');
-    }catch(e){
-      print('Thất bại $e}');
-    }
-  }
 
 
 }

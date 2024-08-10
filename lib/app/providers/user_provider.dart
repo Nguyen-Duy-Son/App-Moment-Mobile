@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/datasource/network_services/user_service.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
@@ -8,6 +9,9 @@ class UserProvider extends ChangeNotifier {
   List<User> friendList = [];
   List<User> friendRequests = [];
   List<User> friendSuggests = [];
+  ModuleStatus friendSuggestStatus = ModuleStatus.initial;
+  String messageFSuggest = "";
+  String messageSearchFriend = "";
   bool isLoandingFriendList = false,
       isLoandingFriendRequests = false,
       isLoandingFriendSuggests = false,
@@ -53,6 +57,32 @@ class UserProvider extends ChangeNotifier {
     var response = await UserService.getListSuggestFriend();
     friendSuggests = response.map<User>((item) => User.fromJson(item)).toList();
     isLoandingFriendSuggests = false;
+    notifyListeners();
+  }
+  void getFriendSuggest() async {
+    friendSuggestStatus = ModuleStatus.loading;
+    notifyListeners();
+    var response = await UserService.getListSuggestFriend();
+    friendSuggests = response.map<User>((item) => User.fromJson(item)).toList();
+    friendSuggestStatus = ModuleStatus.success;
+    notifyListeners();
+  }
+  void sentFriendRequest(String uid) async {
+    final response = await UserService.sentRequestById(uid, false);
+    messageFSuggest =response;
+    notifyListeners();
+  }
+  void searchFriendRequest(String nameOrEmail, String errorString) async {
+    friendSuggestStatus = ModuleStatus.loading;
+    notifyListeners();
+    final response = await UserService.searchFriendRequest(nameOrEmail);
+    if(response==0){
+      messageSearchFriend = errorString;
+      friendSuggestStatus = ModuleStatus.fail;
+    }else{
+      friendSuggests = response.map<User>((item) => User.fromJson(item)).toList();
+      friendSuggestStatus = ModuleStatus.success;
+    }
     notifyListeners();
   }
 }

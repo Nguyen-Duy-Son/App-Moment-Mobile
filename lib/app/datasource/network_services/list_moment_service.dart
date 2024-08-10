@@ -56,6 +56,7 @@ class ListMomentService{
         return [];
       }
     }catch(e){
+      print("Lỗi $e");
       return e.toString();
     }
   }

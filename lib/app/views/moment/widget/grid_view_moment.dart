@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../../../models/moment_model.dart';
+import '../../../providers/list_moment_provider.dart';
 
 class GridViewMoment extends StatefulWidget {
   const GridViewMoment({super.key, required this.listMoment, required this.onSelected});
@@ -15,6 +17,20 @@ class GridViewMoment extends StatefulWidget {
 }
 
 class _GridViewMomentState extends State<GridViewMoment> {
+
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        context.read<ListMomentProvider>().loadMoreListMoment();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,6 +38,7 @@ class _GridViewMomentState extends State<GridViewMoment> {
       color: AppColors.of(context).neutralColor1,
       child: GridView.builder(
         itemCount: widget.listMoment.length,
+          controller: _scrollController,
           gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 8.w,
@@ -45,7 +62,6 @@ class _GridViewMomentState extends State<GridViewMoment> {
         ),
         onTap: (isSelect) {
           widget.onSelected(moment, index);
-          Navigator.pop(context);
         },
     );
   }

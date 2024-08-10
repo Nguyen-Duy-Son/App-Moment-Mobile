@@ -18,6 +18,27 @@ class MomentContentWidget extends StatefulWidget {
 
 class _MomentContentWidgetState extends State<MomentContentWidget> {
   @override
+  void initState() {
+    super.initState();
+    parseString(widget.momentModel.weather??"");
+  }
+  String? address;
+  String? temperature;
+  String? urlIcon;
+  void parseString(String input) {
+    final regex = RegExp(r'^(.*?)\|(.*?)\|(.*?)$');
+
+    if (regex.hasMatch(input)) {
+      final match = regex.firstMatch(input);
+
+      if (match != null) {
+        address = match.group(1);
+        temperature = match.group(2);
+        urlIcon = match.group(3);
+      }
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -89,10 +110,11 @@ class _MomentContentWidgetState extends State<MomentContentWidget> {
         Positioned(
           top: 16.w,
           right: 0,
-          width: MediaQuery.of(context).size.width/3.5,
+          width: urlIcon==null?MediaQuery.of(context).size.width/3.5:MediaQuery.of(context).size.width/2.7,
           child: Row(
             children: [
-              SvgPicture.asset(Assets.icons.sunSVG),
+              urlIcon==null?SvgPicture.asset(Assets.icons.sunSVG)
+                  :CachedNetworkImage(imageUrl: "https:$urlIcon", fit: BoxFit.cover,),
               SizedBox(width: 8.w,),
               Expanded(
                 child: Container(
@@ -108,7 +130,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.momentModel.uploadLocation??"",
+                        address??(widget.momentModel.uploadLocation??""),
                         maxLines: 1,
                         style: AppTextStyles.of(context).light14.copyWith(
                           overflow: TextOverflow.ellipsis,
@@ -121,7 +143,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget> {
                           ],
                         ),
                       ),
-                      Text("29 độ C",
+                      Text("${temperature??29}℃",
                         style: AppTextStyles.of(context).regular20.copyWith(
                           color: AppColors.of(context).neutralColor3,
                           shadows: [

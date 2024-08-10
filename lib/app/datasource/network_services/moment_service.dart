@@ -1,33 +1,18 @@
 import 'dart:io';
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
+import '../../models/react_model.dart';
+import '../local/storage.dart';
 
 class MomentService{
-  Future<String> saveImage(String url) async{
-    try {
-      // Tải ảnh từ URL
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final Uint8List bytes = response.bodyBytes;
-        // Lấy đường dẫn thư mục tạm thời
-        final Directory? tempDir = await getDownloadsDirectory();
-        final String tempPath = tempDir!.path;
-        // Tạo file mới trong thư mục tạm thời
-        final File file = File('$tempPath/image.jpg');
-        // Lưu ảnh vào file
-        await file.writeAsBytes(bytes);
-        return file.path;
-      } else {
-        throw Exception('Failed to load image');
-      }
-    } catch (e) {
-      throw Exception('Error saving image: $e');
-    }
-  }
+
   Future<dynamic> sendReact(String momentId) async{
     final Map<String, dynamic> body = {
       'momentId' : momentId,
@@ -48,29 +33,35 @@ class MomentService{
     }
   }
 
-  Future<dynamic> getReact(String momentID) async{
+  Future<List<ReactModel>> getReact(String momentID) async {
     final Map<String, dynamic> params = {
       'postId': momentID
     };
-    try{
+
+    try {
       final response = await BaseConnect.onRequest(
-          ApiUrl.reacts,
-          RequestMethod.GET,
-          queryParam: params
+        '${ApiUrl.reacts}/$momentID',
+        RequestMethod.GET,
+        queryParam: params,
       );
       int statusCode = response['statusCode'];
-      if(statusCode == 200){
-        return response['data'];
+      if (statusCode == 200) {
+        List<dynamic> data = response['data']['reactions'];
+        List<ReactModel> reactList = data.map((json) => ReactModel.fromJson(json)).toList();
+        return reactList;
+      } else {
+        return [];
       }
-    }catch(e){
-      return e;
+    } catch (e) {
+      print("Lỗi $e");
+      return [];
     }
   }
 
   Future<dynamic> createReport(String momentID, String description) async{
     final Map<String, dynamic> body = {
       'description': description,
-      'postId': momentID
+      'momentId': momentID
     };
     try{
       final response = await BaseConnect.onRequest(
@@ -79,25 +70,31 @@ class MomentService{
           body: body
       );
       int statusCode = response['statusCode'];
+      print("Báo cáo $response");
       return statusCode;
     }catch(e){
+      print("Lỗi $e");
+
       return e;
     }
   }
 
-  Future<dynamic> deleteMoment(String momentID, String description) async{
+  Future<dynamic> deleteMoment(String momentID) async{
     final Map<String, dynamic> params = {
       'momentId': momentID
     };
     try{
       final response = await BaseConnect.onRequest(
-          ApiUrl.getListMoment,
+          '${ApiUrl.getListMoment}$momentID',
           RequestMethod.DELETE,
           queryParam: params
       );
       int statusCode = response['statusCode'];
+      print('Xoá $response');
+
       return statusCode;
     }catch(e){
+      print('Lỗi ${e}');
       return e;
     }
   }

@@ -32,12 +32,12 @@ class User {
   // JSON serialization
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['_id'],
-      password: json['password'],
-      email: json['email'],
-      fullName: json['fullname'],
-      phoneNumber: json['phoneNumber'],
-      avatar: json['avatar'],
+      id: json['_id'] ??"",
+      password: json['password']??"",
+      email: json['email']??"",
+      fullName: json['fullname']??"",
+      phoneNumber: json['phoneNumber']??"",
+      avatar: json['avatar']??"",
       dob: json['dob'] != null ? DateTime.parse(json['dob']) : null,
       lastActive: json['lastActive'] != null
           ? DateTime.parse(json['lastActive'])

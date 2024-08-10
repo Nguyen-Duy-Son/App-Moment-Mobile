@@ -60,11 +60,6 @@ class _ExampleViewState extends State<ExampleView> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TakePictureScreen(),
-                      ));
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
                         builder: (context) => SuggestedFriendsView(),
                       ));
                 },

@@ -361,7 +361,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
   }
 
   void sentRequestFriend() async {
-    int statusCode = await UserService.sentRequestById(widget.user.id);
+    int statusCode = await UserService.sentRequestById(widget.user.id, true);
     if (statusCode == 200) {
       setState(() {
         isSentRequest = true;
