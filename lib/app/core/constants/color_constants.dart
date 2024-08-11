@@ -174,35 +174,60 @@ class ColorThemeExt extends ThemeExtension<ColorThemeExt> {
   }
 
   @override
-  ThemeExtension<ColorThemeExt> lerp(covariant ThemeExtension<ColorThemeExt>? other, double t) {
+  ThemeExtension<ColorThemeExt> lerp(
+      covariant ThemeExtension<ColorThemeExt>? other, double t) {
     if (other is! ColorThemeExt) {
       return this;
     }
     return ColorThemeExt(
-      primaryColor1: Color.lerp(primaryColor1, other.primaryColor1, t) ?? primaryColor1,
-      primaryColor2: Color.lerp(primaryColor2, other.primaryColor2, t) ?? primaryColor2,
-      primaryColor3: Color.lerp(primaryColor3, other.primaryColor3, t) ?? primaryColor3,
-      primaryColor4: Color.lerp(primaryColor4, other.primaryColor4, t) ?? primaryColor4,
-      primaryColor5: Color.lerp(primaryColor5, other.primaryColor5, t) ?? primaryColor5,
-      primaryColor6: Color.lerp(primaryColor6, other.primaryColor6, t) ?? primaryColor6,
-      primaryColor7: Color.lerp(primaryColor7, other.primaryColor7, t) ?? primaryColor7,
-      primaryColor8: Color.lerp(primaryColor8, other.primaryColor8, t) ?? primaryColor8,
-      primaryColor9: Color.lerp(primaryColor9, other.primaryColor9, t) ?? primaryColor9,
-      primaryColor10: Color.lerp(primaryColor10, other.primaryColor10, t) ?? primaryColor10,
-      primaryColor11: Color.lerp(primaryColor11, other.primaryColor11, t) ?? primaryColor11,
-      primaryColor12: Color.lerp(primaryColor12, other.primaryColor12, t) ?? primaryColor12,
-      neutralColor1: Color.lerp(neutralColor1, other.neutralColor1, t) ?? neutralColor1,
-      neutralColor2: Color.lerp(neutralColor2, other.neutralColor2, t) ?? neutralColor2,
-      neutralColor3: Color.lerp(neutralColor3, other.neutralColor3, t) ?? neutralColor3,
-      neutralColor4: Color.lerp(neutralColor4, other.neutralColor4, t) ?? neutralColor4,
-      neutralColor5: Color.lerp(neutralColor5, other.neutralColor5, t) ?? neutralColor5,
-      neutralColor6: Color.lerp(neutralColor6, other.neutralColor6, t) ?? neutralColor6,
-      neutralColor7: Color.lerp(neutralColor7, other.neutralColor7, t) ?? neutralColor7,
-      neutralColor8: Color.lerp(neutralColor8, other.neutralColor8, t) ?? neutralColor8,
-      neutralColor9: Color.lerp(neutralColor9, other.neutralColor9, t) ?? neutralColor9,
-      neutralColor10: Color.lerp(neutralColor10, other.neutralColor10, t) ?? neutralColor10,
-      neutralColor11: Color.lerp(neutralColor11, other.neutralColor11, t) ?? neutralColor11,
-      neutralColor12: Color.lerp(neutralColor12, other.neutralColor12, t) ?? neutralColor12,
+      primaryColor1:
+          Color.lerp(primaryColor1, other.primaryColor1, t) ?? primaryColor1,
+      primaryColor2:
+          Color.lerp(primaryColor2, other.primaryColor2, t) ?? primaryColor2,
+      primaryColor3:
+          Color.lerp(primaryColor3, other.primaryColor3, t) ?? primaryColor3,
+      primaryColor4:
+          Color.lerp(primaryColor4, other.primaryColor4, t) ?? primaryColor4,
+      primaryColor5:
+          Color.lerp(primaryColor5, other.primaryColor5, t) ?? primaryColor5,
+      primaryColor6:
+          Color.lerp(primaryColor6, other.primaryColor6, t) ?? primaryColor6,
+      primaryColor7:
+          Color.lerp(primaryColor7, other.primaryColor7, t) ?? primaryColor7,
+      primaryColor8:
+          Color.lerp(primaryColor8, other.primaryColor8, t) ?? primaryColor8,
+      primaryColor9:
+          Color.lerp(primaryColor9, other.primaryColor9, t) ?? primaryColor9,
+      primaryColor10:
+          Color.lerp(primaryColor10, other.primaryColor10, t) ?? primaryColor10,
+      primaryColor11:
+          Color.lerp(primaryColor11, other.primaryColor11, t) ?? primaryColor11,
+      primaryColor12:
+          Color.lerp(primaryColor12, other.primaryColor12, t) ?? primaryColor12,
+      neutralColor1:
+          Color.lerp(neutralColor1, other.neutralColor1, t) ?? neutralColor1,
+      neutralColor2:
+          Color.lerp(neutralColor2, other.neutralColor2, t) ?? neutralColor2,
+      neutralColor3:
+          Color.lerp(neutralColor3, other.neutralColor3, t) ?? neutralColor3,
+      neutralColor4:
+          Color.lerp(neutralColor4, other.neutralColor4, t) ?? neutralColor4,
+      neutralColor5:
+          Color.lerp(neutralColor5, other.neutralColor5, t) ?? neutralColor5,
+      neutralColor6:
+          Color.lerp(neutralColor6, other.neutralColor6, t) ?? neutralColor6,
+      neutralColor7:
+          Color.lerp(neutralColor7, other.neutralColor7, t) ?? neutralColor7,
+      neutralColor8:
+          Color.lerp(neutralColor8, other.neutralColor8, t) ?? neutralColor8,
+      neutralColor9:
+          Color.lerp(neutralColor9, other.neutralColor9, t) ?? neutralColor9,
+      neutralColor10:
+          Color.lerp(neutralColor10, other.neutralColor10, t) ?? neutralColor10,
+      neutralColor11:
+          Color.lerp(neutralColor11, other.neutralColor11, t) ?? neutralColor11,
+      neutralColor12:
+          Color.lerp(neutralColor12, other.neutralColor12, t) ?? neutralColor12,
     );
     //throw UnimplementedError();
   }
