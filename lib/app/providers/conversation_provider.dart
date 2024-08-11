@@ -20,13 +20,12 @@ class ConversationProvider extends ChangeNotifier {
     'transports': ['websocket'],
     'autoConnect': false,
     'query': {
-      'userId': getUserId(),
+      'userId': getUserID(),
     }
   });
 
   void getConversations() async {
     isLoading = true;
-    notifyListeners();
     conversations = await ConversationService().getConversations();
     isLoading = false;
     notifyListeners();

@@ -48,10 +48,11 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           leading: Padding(
             padding: EdgeInsets.only(top: 15.w),
             child: BackButton(
-              onPressed: () {Navigator.of(context).pop(MaterialPageRoute(builder: (context) => ExampleView()));},
-              color: AppColors
-                  .of(context)
-                  .neutralColor9,
+              onPressed: () {
+                Navigator.of(context).pop(
+                    MaterialPageRoute(builder: (context) => ExampleView()));
+              },
+              color: AppColors.of(context).neutralColor9,
             ),
           ),
           title: Padding(
@@ -92,7 +93,7 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
                     borderRadius: BorderRadius.circular(50),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.of(context).neutralColor7,
+                        color: AppColors.of(context).neutralColor1,
                       ),
                       padding: EdgeInsets.all(8.w),
                       child: SvgPicture.asset(
