@@ -126,7 +126,7 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
                                 title: formatPhone(widget.user.phoneNumber!),
                               )
                             : SizedBox(),
-                        widget.user.dob != ""
+                        widget.user.dob != null
                             ? Information(
                                 iconUrl: Assets.icons.calendar,
                                 title: formatDate(widget.user.dob!),

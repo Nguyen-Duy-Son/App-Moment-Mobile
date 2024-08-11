@@ -55,11 +55,11 @@ bool getIsFirstTime() {
 setDarkMode(bool value) {
   box.write(StorageConstants.isDarkMode, value);
 }
-setUserId(String value) {
-  box.write(StorageConstants.userId, value);
+void setUserId(String value) {
+  box.write(StorageConstants.userID, value);
 }
 String getUserId() {
-  return box.read(StorageConstants.userId) ?? '';
+  return box.read(StorageConstants.userID) ?? '';
 }
 bool getIsDarkMode() {
   return box.read(StorageConstants.isDarkMode) ?? false;

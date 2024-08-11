@@ -34,7 +34,7 @@ class _ChatMessageViewState extends State<ChatMessageView> {
     // _appProvider = Provider.of<ConversationProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       callApi();
-      print('id: ${getUserId()}');
+      print('id: ${getUserID()}');
       // if (!_appProvider.socket.connected) {
       //   _appProvider.connectAndListen();
       // }
