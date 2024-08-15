@@ -9,4 +9,5 @@ abstract class StorageConstants {
   static const String email = 'email';
   static const String password = 'password';
   static const String userId = 'user_id';
+  static const String avatarUser = 'avatar_user';
 }

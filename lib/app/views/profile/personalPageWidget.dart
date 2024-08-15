@@ -146,6 +146,8 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 setEmail('');
                 setPassWord('');
                 setToken('');
+                setUserID('');
+                setAvatarUser('');
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

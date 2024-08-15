@@ -42,7 +42,7 @@ class _AssetsIcons {
   final call = 'assets/icons/Call.svg';
   final mail = 'assets/icons/Mail.svg';
   final calendar = 'assets/icons/Calendar.svg';
-  final swap = 'assets/icons/Swap 3.svg';
+  // final swap = 'assets/icons/Swap 3.svg';
   final usersSVG = 'assets/icons/Users.svg';
   final userSVG = 'assets/icons/User.svg';
   final fogSVG = 'assets/icons/Fog.svg';
@@ -56,6 +56,9 @@ class _AssetsIcons {
   final addFriendSVG = 'assets/icons/add-friend.svg';
   final play = 'assets/icons/Play.svg';
   final logoSplashSVG = 'assets/icons/LogoSplash.svg';
+  final group = 'assets/icons/group.svg';
+  final swap = 'assets/icons/Swap.svg';
+  final message = 'assets/icons/Union.svg';
 }
 
 class _AssetsImages {
