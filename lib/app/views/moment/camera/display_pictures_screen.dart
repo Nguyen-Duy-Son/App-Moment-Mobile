@@ -208,7 +208,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Future<void> createMoment()async{
     final momentProvider = context.read<MomentProvider>();
     await momentProvider.createMoment(
-        'Đang thử lần đầu', weatherController.text, widget.image);
+        feelingController.text, weatherController.text, widget.image);
     if(momentProvider.createMomentStatus == ModuleStatus.success){
       Fluttertoast.showToast(
         msg: "Thành công",
