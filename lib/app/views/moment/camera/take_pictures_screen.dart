@@ -33,23 +33,40 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   void initState() {
-    startCamera(direction);
     super.initState();
+    startCamera(direction);
     context.read<WeatherProvider>().getCurrentPosition();
   }
 
   Future<void> startCamera(int direction) async {
-    cameras = await availableCameras();
+    try {
+      cameras = await availableCameras();
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return;
+    }
+
+    if (cameras == null || cameras.isEmpty) {
+      print('No camera is available');
+      return;
+    }
+
     cameraController = CameraController(
       cameras[direction],
       ResolutionPreset.max,
       enableAudio: false,
     );
 
-    await cameraController!.initialize().then((value) {
-      if(!mounted) {return;}
-      setState(() {isCameraReady = true;}); //To refresh widget
-    }).catchError((e) {print(e);});
+    cameraController!.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        isCameraReady = true;
+      });
+    }).catchError((e) {
+      print('Error: ${e.toString()}');
+    });
   }
 
   Future<File> cropImageToAspectRatio(File imageFile) async {
@@ -157,13 +174,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   ),
                   OutlinedButton(
                     onPressed: () async {
-                      final image = await cameraController!.takePicture();
+                      final XFile image = await cameraController!.takePicture();
+                      // print("Image${image.path}");
                       //final croppedImage = await cropImageToAspectRatio(File(image.path));
                       if(!context.mounted) return;
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => DisplayPictureScreen(
-                            imagePath: image.path,
+                            image: image,
                             //imagePath: croppedImage.path,
                             users: context.watch<UserProvider>().friendList,)
                         )

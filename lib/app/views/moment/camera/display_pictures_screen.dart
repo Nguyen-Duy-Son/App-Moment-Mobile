@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,9 +18,9 @@ import 'package:provider/provider.dart';
 
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatefulWidget {
-  final String imagePath;
+  final XFile image;
   final List<User> users;
-  const DisplayPictureScreen({super.key, required this.imagePath, required this.users});
+  const DisplayPictureScreen({super.key, required this.image, required this.users});
 
   @override
   State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
@@ -77,7 +78,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           aspectRatio: 3/4,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Image.file(File(widget.imagePath), fit: BoxFit.fill),
+                            child: Image.file(File(widget.image.path), fit: BoxFit.fill),
                           ),
                         ),
                         Consumer<WeatherProvider>(
@@ -193,7 +194,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 IconButton(
                   onPressed: () {
                     print('Đã ấn');
-
                   },
                   icon: SvgPicture.asset(Assets.icons.download2SVG),
                 )
@@ -208,7 +208,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Future<void> createMoment()async{
     final momentProvider = context.read<MomentProvider>();
     await momentProvider.createMoment(
-        'Đang thử lần đầu', weatherController.text, File(widget.imagePath));
+        'Đang thử lần đầu', weatherController.text, widget.image);
     if(momentProvider.createMomentStatus == ModuleStatus.success){
       Fluttertoast.showToast(
         msg: "Thành công",
