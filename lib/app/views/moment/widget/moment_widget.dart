@@ -125,14 +125,11 @@ class _MomentWidgetState extends State<MomentWidget> {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
+        // mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-              margin: EdgeInsets.only(top: 16.w),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                border: Border.all(width: 0.1, color: AppColors.of(context).neutralColor10),
-              ),
+            alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 80.w),
               child: MomentContentWidget(momentModel: widget.momentModel)
           ),
           const SizedBox(height: 48,),

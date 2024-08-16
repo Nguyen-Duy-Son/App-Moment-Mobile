@@ -20,9 +20,9 @@ class AuthService{
       if(statusCode == 200){
         String token = response['data']['accessToken'];
         String userID = response['data']['user']['_id'];
-        print("iduser: ${userID}");
         setToken(token);
         setUserID(userID);
+        setAvatarUser(response['data']['user']['avatar']);
       }else{
         print("looxi ${response['message']} vaf ${statusCode}");
       }

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,9 +18,9 @@ import 'package:provider/provider.dart';
 
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatefulWidget {
-  final String imagePath;
+  final XFile image;
   final List<User> users;
-  const DisplayPictureScreen({super.key, required this.imagePath, required this.users});
+  const DisplayPictureScreen({super.key, required this.image, required this.users});
 
   @override
   State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
@@ -63,143 +64,150 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             ],
           ),
         ),
-        body: Column(
-          children: [
-            Form(
-              key: _globalKey,
-              child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        AspectRatio(
-                          aspectRatio: 3/4,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.file(File(widget.imagePath), fit: BoxFit.fill),
+        body: Container(
+          margin: EdgeInsets.only(top: 80.w, left: 4.w, right: 4.w),
+          child: Column(
+            children: [
+              Form(
+                key: _globalKey,
+                child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          SizedBox(
+
+                            width: 1.sw-8.w,
+                            height: 1.sw-8.w,
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.file(File(widget.image.path), fit: BoxFit.cover),
+                              ),
+                            ),
                           ),
-                        ),
-                        Consumer<WeatherProvider>(
-                          builder: (context, weatherProvider, child) {
-                            if (weatherProvider.weatherStatus != ModuleStatus.initial) {
-                              weatherController.text="${weatherProvider.weather?.city}|${weatherProvider.weather?.tempC}|${weatherProvider.weather?.icon}";
-                              return Positioned(
-                                top: 16.w,
-                                right: 0,
-                                width: weatherProvider.weather?.icon==null?MediaQuery.of(context).size.width/3.5:MediaQuery.of(context).size.width/2.7,
-                                child: Row(
-                                  children: [
-                                    weatherProvider.weather?.icon==null?SvgPicture.asset(Assets.icons.sunSVG)
-                                        :CachedNetworkImage(imageUrl: "https:${weatherProvider.weather?.icon}",
-                                      fit: BoxFit.cover,),
-                                    SizedBox(width: 8.w,),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
+                          Consumer<WeatherProvider>(
+                            builder: (context, weatherProvider, child) {
+                              if (weatherProvider.weatherStatus != ModuleStatus.initial) {
+                                weatherController.text="${weatherProvider.weather?.city}|${weatherProvider.weather?.tempC}|${weatherProvider.weather?.icon}";
+                                return Positioned(
+                                  top: 16.w,
+                                  right: 0,
+                                  width: weatherProvider.weather?.icon==null?MediaQuery.of(context).size.width/3.5:MediaQuery.of(context).size.width/2.7,
+                                  child: Row(
+                                    children: [
+                                      weatherProvider.weather?.icon==null?SvgPicture.asset(Assets.icons.sunSVG)
+                                          :CachedNetworkImage(imageUrl: "https:${weatherProvider.weather?.icon}",
+                                        fit: BoxFit.cover,),
+                                      SizedBox(width: 8.w,),
+                                      Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.only(right: 16.w),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                weatherProvider.weather?.city??"",
+                                                maxLines: 1,
+                                                style: AppTextStyles.of(context).light14.copyWith(
+                                                  overflow: TextOverflow.ellipsis,
+                                                  color: AppColors.of(context).neutralColor1,
+                                                  shadows: [
+                                                    Shadow(
+                                                      blurRadius: 1.0,
+                                                      color: AppColors.of(context).neutralColor12,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Text("${weatherProvider.weather?.tempC??29}℃",
+                                                style: AppTextStyles.of(context).regular20.copyWith(
+                                                  color: AppColors.of(context).neutralColor3,
+                                                  shadows: [
+                                                    Shadow(
+                                                      blurRadius: 1.0,
+                                                      color: AppColors.of(context).neutralColor12,
+                                                    ),
+                                                  ],
+                                                ),)
+                                            ],
                                           ),
                                         ),
-                                        padding: EdgeInsets.only(right: 16.w),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              weatherProvider.weather?.city??"",
-                                              maxLines: 1,
-                                              style: AppTextStyles.of(context).light14.copyWith(
-                                                overflow: TextOverflow.ellipsis,
-                                                color: AppColors.of(context).neutralColor1,
-                                                shadows: [
-                                                  Shadow(
-                                                    blurRadius: 1.0,
-                                                    color: AppColors.of(context).neutralColor12,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Text("${weatherProvider.weather?.tempC??29}℃",
-                                              style: AppTextStyles.of(context).regular20.copyWith(
-                                                color: AppColors.of(context).neutralColor3,
-                                                shadows: [
-                                                  Shadow(
-                                                    blurRadius: 1.0,
-                                                    color: AppColors.of(context).neutralColor12,
-                                                  ),
-                                                ],
-                                              ),)
-                                          ],
-                                        ),
-                                      ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return CircularProgressIndicator();
+                              }
+                            },
+                          ),
+                          SingleChildScrollView(
+                            reverse: true,
+                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom/2.3),
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(50, 0, 50, 25),
+                              padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+                              decoration: BoxDecoration(
+                                  color: AppColors.of(context).neutralColor6,
+                                  borderRadius: BorderRadius.circular(50),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        blurRadius: 5,
+                                        spreadRadius: 1,
+                                        offset: Offset(1, 1),
+                                        color: Colors.black45
                                     )
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          },
-                        ),
-                        SingleChildScrollView(
-                          reverse: true,
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom/2.3),
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(50, 0, 50, 25),
-                            padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-                            decoration: BoxDecoration(
-                                color: AppColors.of(context).neutralColor6,
-                                borderRadius: BorderRadius.circular(50),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      blurRadius: 5,
-                                      spreadRadius: 1,
-                                      offset: Offset(1, 1),
-                                      color: Colors.black45
-                                  )
-                                ]
-                            ),
-                            child: TextField(
-                                controller: feelingController,
-                                style: const TextStyle( fontSize: 24),
-                                decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.feel, hintStyle: AppTextStyles.of(context).light24.copyWith(color: AppColors.of(context).neutralColor10))
+                                  ]
+                              ),
+                              child: TextField(
+                                  controller: feelingController,
+                                  style: const TextStyle( fontSize: 24),
+                                  decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.feel, hintStyle: AppTextStyles.of(context).light24.copyWith(color: AppColors.of(context).neutralColor10))
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ]
-              ),
-            ),
-            const SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                OutlinedButton(
-                  onPressed: () async {
-                    createMoment();
-                  },
-                  style: OutlinedButton.styleFrom(
-                      fixedSize: const Size(65, 65),
-                      backgroundColor: AppColors.of(context).neutralColor6,
-                      shape: const CircleBorder(),
-                      side: BorderSide(color: AppColors.of(context).primaryColor10, width: 4),
-                      padding: const EdgeInsets.fromLTRB(4, 6, 12, 2)
-                  ),
-                  child: SvgPicture.asset(Assets.icons.sendSVG, height: 60.w, width: 60.w, color: AppColors.of(context).neutralColor12,),
+                        ],
+                      ),
+                    ]
                 ),
-                IconButton(
-                  onPressed: () {
-                    print('Đã ấn');
-
-                  },
-                  icon: SvgPicture.asset(Assets.icons.download2SVG),
-                )
-              ],
-            ),
-          ],
+              ),
+              SizedBox(height: 50.w),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  OutlinedButton(
+                    onPressed: () async {
+                      createMoment();
+                    },
+                    style: OutlinedButton.styleFrom(
+                        fixedSize: const Size(65, 65),
+                        backgroundColor: AppColors.of(context).neutralColor6,
+                        shape: const CircleBorder(),
+                        side: BorderSide(color: AppColors.of(context).primaryColor10, width: 4),
+                        padding: const EdgeInsets.fromLTRB(4, 6, 12, 2)
+                    ),
+                    child: SvgPicture.asset(Assets.icons.sendSVG, height: 60.w, width: 60.w, color: AppColors.of(context).neutralColor12,),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      print('Đã ấn');
+                    },
+                    icon: SvgPicture.asset(Assets.icons.download2SVG),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -208,7 +216,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Future<void> createMoment()async{
     final momentProvider = context.read<MomentProvider>();
     await momentProvider.createMoment(
-        'Đang thử lần đầu', weatherController.text, File(widget.imagePath));
+        feelingController.text, weatherController.text, widget.image);
     if(momentProvider.createMomentStatus == ModuleStatus.success){
       Fluttertoast.showToast(
         msg: "Thành công",
