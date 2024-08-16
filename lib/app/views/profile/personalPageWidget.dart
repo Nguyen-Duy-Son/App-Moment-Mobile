@@ -23,10 +23,11 @@ class PersonalPageWidget extends StatefulWidget {
 }
 
 class PersonalPageScreenState extends State<PersonalPageWidget> {
-  bool _value1 = false;
-  bool _value2 = false;
+  bool _value1 = getIsDarkMode();
+  bool _value2 = getLocaleLocal().languageCode == 'en' ? true : false;
   @override
   Widget build(BuildContext context) {
+    print(getIsDarkMode());
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: SingleChildScrollView(
@@ -51,18 +52,18 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                   ),
                   Container(
                     child: Switch(
+                      value : _value1,
                       onChanged: (value) {
                         setState(() {
-                          _value1 = value;
-                          print(value);
-                          if (value) {
+                          if (_value1!=true) {
                             context.read<ThemeProvider>().setThemeData(ThemeConfig.darkTheme);
                           } else {
                             context.read<ThemeProvider>().setThemeData(ThemeConfig.lightTheme);
                           }
+                          _value1 = value;
+                          setDarkMode(_value1);
                         });
                       },
-                      value: _value1,
                     ),
                   ),
                 ],
@@ -84,18 +85,18 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 ),
                 Container(
                   child: Switch(
+                    value : _value2,
                     onChanged: (value) {
                       setState(() {
-                        _value2 = value;
-                        print(value);
-                        if (value) {
+                        if (value==true) {
                           context.read<LocaleProvider>().changeLocale(const Locale('en'));
                         } else {
                           context.read<LocaleProvider>().changeLocale(const Locale('vi'));
                         }
+                        _value2 = value;
+                        setLocaleLocal(_value2 ? 'en' : 'vi');
                       });
                     },
-                    value: _value2,
                   ),
                 ),
               ],
