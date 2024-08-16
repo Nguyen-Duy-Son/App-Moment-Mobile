@@ -17,6 +17,8 @@ import 'package:hit_moments/app/routes/app_pages.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
+import 'app/core/config/theme_config.dart';
+import 'app/datasource/local/storage.dart';
 import 'app/providers/moment_provider.dart';
 
 void main() async {
@@ -27,7 +29,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   final LocaleProvider locale = LocaleProvider();
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
                   title: AppConfig.appName,
                   locale: provider.locale,
                   debugShowCheckedModeBanner: false,
-                  theme: Provider.of<ThemeProvider>(context).themeData,
+                  theme:Provider.of<ThemeProvider>(context).themeData,
                   initialRoute: AppRoutes.SPASH,
                   routes: AppPages.routes,
                   supportedLocales: L10n.all,

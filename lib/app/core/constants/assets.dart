@@ -59,6 +59,7 @@ class _AssetsIcons {
   final group = 'assets/icons/group.svg';
   // final swap = 'assets/icons/Swap.svg';
   final message = 'assets/icons/Union.svg';
+  final lightDark = 'assets/icons/light-dark.svg';
 }
 
 class _AssetsImages {

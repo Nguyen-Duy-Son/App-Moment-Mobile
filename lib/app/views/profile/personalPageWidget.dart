@@ -27,7 +27,6 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
   bool _value2 = getLocaleLocal().languageCode == 'en' ? true : false;
   @override
   Widget build(BuildContext context) {
-    print(getIsDarkMode());
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: SingleChildScrollView(
@@ -39,10 +38,12 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SvgPicture.asset(Assets.icons.settings),
+                  SvgPicture.asset(Assets.icons.lightDark,
+                  color: AppColors.of(context).neutralColor11,
+                  ),
                   SizedBox(width: 10.w,),
                   Expanded(
-                    child: Container(
+                    child: SizedBox(
                       width: 225.w,
                       child: Text(
                         AppLocalizations.of(context)!.modeLightDark, 
@@ -72,7 +73,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             Container(margin: const EdgeInsets.only(top: 5, bottom: 5),width: 600.w, height: 1, color: Colors.black,),
             Row(
               children: [
-                SvgPicture.asset(Assets.icons.settings),
+                SvgPicture.asset(Assets.icons.settings,color: AppColors.of(context).neutralColor11,),
                 SizedBox(width: 15.w,),
                 Expanded(
                   child: Container(
@@ -104,7 +105,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             Container(margin: const EdgeInsets.only(top: 5, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
             Row(
               children: [
-                SvgPicture.asset(Assets.icons.danger),
+                SvgPicture.asset(Assets.icons.danger,color: AppColors.of(context).neutralColor11,),
                 SizedBox(width: 15.w,),
                 Text(AppLocalizations.of(context)!.report, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
@@ -112,7 +113,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
             Row(
               children: [
-                SvgPicture.asset(Assets.icons.document2),
+                SvgPicture.asset(Assets.icons.document2,color: AppColors.of(context).neutralColor11,),
                 SizedBox(width: 15.w,),
                 Text(AppLocalizations.of(context)!.blockList, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
@@ -120,7 +121,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
             Row(
               children: [
-                SvgPicture.asset(Assets.icons.star),
+                SvgPicture.asset(Assets.icons.star,color: AppColors.of(context).neutralColor11,),
                 SizedBox(width: 15.w,),
                 Text(AppLocalizations.of(context)!.review, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
@@ -128,7 +129,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
             Row(
               children: [
-                SvgPicture.asset(Assets.icons.document2),
+                SvgPicture.asset(Assets.icons.document2,color: AppColors.of(context).neutralColor11,),
                 SizedBox(width: 15.w,),
                 Text(AppLocalizations.of(context)!.tos, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
@@ -136,7 +137,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
             Row(
               children: [
-                SvgPicture.asset(Assets.icons.shield),
+                SvgPicture.asset(Assets.icons.shield,color: AppColors.of(context).neutralColor11,),
                 SizedBox(width: 15.w,),
                 Text(AppLocalizations.of(context)!.privacy, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
@@ -158,7 +159,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
               },
               child: Row(
                 children: [
-                  SvgPicture.asset(Assets.icons.logout),
+                  SvgPicture.asset(Assets.icons.logout,color: AppColors.of(context).neutralColor11,),
                   SizedBox(width: 15.w,),
                   Text(AppLocalizations.of(context)!.logout, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
                 ],
@@ -169,7 +170,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
               onTap: () {},
               child: Row(
                 children: [
-                  SvgPicture.asset(Assets.icons.trash),
+                  SvgPicture.asset(Assets.icons.trash,color: AppColors.of(context).neutralColor11,),
                   SizedBox(width: 15.w,),
                   Text(AppLocalizations.of(context)!.deleteAcc, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).primaryColor10))
                 ],
