@@ -32,23 +32,24 @@ class _MomentViewState extends State<MomentView> {
   @override
   void initState() {
     super.initState();
-
-    context.read<ListMomentProvider>().getListFriendOfUser();
-    context.read<ListMomentProvider>().getWeather('21.0314268', '105.7792771');
-    pageViewController.addListener(() {
-      if (pageViewController.position.atEdge) {
-        bool isBottom = pageViewController.position.pixels != 0;
-        if (isBottom && context.read<ListMomentProvider>().loadMoreStatus != ModuleStatus.fail) {
-          context.read<ListMomentProvider>().loadMoreListMoment();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ListMomentProvider>().getListFriendOfUser();
+      context.read<ListMomentProvider>().getWeather('21.0314268', '105.7792771');
+      pageViewController.addListener(() {
+        if (pageViewController.position.atEdge) {
+          bool isBottom = pageViewController.position.pixels != 0;
+          if (isBottom && context.read<ListMomentProvider>().loadMoreStatus != ModuleStatus.fail) {
+            context.read<ListMomentProvider>().loadMoreListMoment();
+          }
+          bool isTop = pageViewController.position.pixels == pageViewController.position.minScrollExtent;
+          if (isTop) {
+            print('User is scrolling down at the top');
+            widget.pageParentController.previousPage(duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+          }
         }
-        bool isTop = pageViewController.position.pixels == pageViewController.position.minScrollExtent;
-        if (isTop) {
-          print('User is scrolling down at the top');
-          widget.pageParentController.previousPage(duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
-        }
-      }
+      });
+      setPageView();
     });
-    setPageView();
   }
 
   Future<void> setPageView() async {

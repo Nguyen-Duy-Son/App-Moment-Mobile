@@ -64,3 +64,9 @@ String getUserId() {
 bool getIsDarkMode() {
   return box.read(StorageConstants.isDarkMode) ?? false;
 }
+setAvatarUser(String value) {
+  box.write(StorageConstants.avatarUser, value);
+}
+String getAvatarUser() {
+  return box.read(StorageConstants.avatarUser) ?? '';
+}

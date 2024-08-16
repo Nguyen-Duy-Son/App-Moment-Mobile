@@ -14,30 +14,34 @@ import '../../../core/extensions/theme_extensions.dart';
 
 class MomentContentWidget extends StatefulWidget {
   const MomentContentWidget({super.key, required this.momentModel});
+
   final MomentModel momentModel;
 
   @override
   State<MomentContentWidget> createState() => _MomentContentWidgetState();
 }
 
-class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTickerProviderStateMixin{
+class _MomentContentWidgetState extends State<MomentContentWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _isAnimationVisible = false;
+
   @override
   void initState() {
     super.initState();
-    parseString(widget.momentModel.weather??"");
+    parseString(widget.momentModel.weather ?? "");
     _controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: 3),
     )..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          _isAnimationVisible = false;
-        });
-      }
-    });
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            _isAnimationVisible = false;
+          });
+        }
+      });
   }
+
   String? address;
   String? temperature;
   String? urlIcon;
@@ -55,9 +59,11 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    if(context.watch<MomentProvider>().sendReactStatus==ModuleStatus.loading){
+    if (context.watch<MomentProvider>().sendReactStatus ==
+        ModuleStatus.loading) {
       setState(() {
         _isAnimationVisible = true;
       });
@@ -66,42 +72,45 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
 
     return Stack(
       children: [
-        AspectRatio(
-          aspectRatio: 3/4,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.w),
-            child: Image.network(widget.momentModel.image!, fit: BoxFit.fill,),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.network(
+            widget.momentModel.image!,
+            fit: BoxFit.fill,
+            width: 1.sw - 4.w,
+            height: 1.sw - 4.w,
           ),
         ),
         Positioned(
           top: 16.w,
           left: 16.w,
-          width: MediaQuery.of(context).size.width/2,
+          width: MediaQuery.of(context).size.width / 2,
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(2),
                 decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(100))
-                ),
+                    borderRadius: BorderRadius.all(Radius.circular(100))),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(40.w),
                   child: CachedNetworkImage(
-                    imageUrl: widget.momentModel.imgAvatar??"",
+                    imageUrl: widget.momentModel.imgAvatar ?? "",
                     width: 40.w,
                     height: 40.w,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              SizedBox(width: 8.w,),
+              SizedBox(
+                width: 8.w,
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.momentModel.userName??"",
+                      widget.momentModel.userName ?? "",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: AppTextStyles.of(context).regular16.copyWith(
@@ -115,7 +124,9 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
                         ],
                       ),
                     ),
-                    Text(FormatTimeExtension().formatTimeDifference(widget.momentModel.createAt!, context),
+                    Text(
+                      FormatTimeExtension().formatTimeDifference(
+                          widget.momentModel.createAt!, context),
                       style: AppTextStyles.of(context).light14.copyWith(
                         color: AppColors.of(context).neutralColor1,
                         shadows: [
@@ -124,7 +135,8 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
                             color: AppColors.of(context).neutralColor12,
                           ),
                         ],
-                      ),)
+                      ),
+                    )
                   ],
                 ),
               )
@@ -134,27 +146,43 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
         Positioned(
           top: 16.w,
           right: 0,
-          width: urlIcon==null?MediaQuery.of(context).size.width/3.5:MediaQuery.of(context).size.width/2.7,
+          width: urlIcon == null
+              ? MediaQuery.of(context).size.width / 3.5
+              : MediaQuery.of(context).size.width / 2.7,
           child: Row(
             children: [
-              urlIcon==null?SvgPicture.asset(Assets.icons.sunSVG)
-                  :CachedNetworkImage(imageUrl: "https:$urlIcon", fit: BoxFit.cover,),
-              SizedBox(width: 8.w,),
+              urlIcon == null
+                  ? SvgPicture.asset(Assets.icons.sunSVG)
+                  : CachedNetworkImage(
+                      imageUrl: "https:$urlIcon",
+                      fit: BoxFit.cover,
+                    ),
+              SizedBox(
+                width: 8.w,
+              ),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.3)
+                      ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
+                    color: AppColors.of(context).neutralColor6,
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
                   ),
-                  padding: EdgeInsets.only(right: 16.w),
+                  // padding: EdgeInsets.only(right: 16.w),
+                  margin: EdgeInsets.only(right: 16.w),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  alignment: Alignment.center,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        address??(widget.momentModel.uploadLocation??""),
+                        address ?? (widget.momentModel.uploadLocation ?? ""),
                         maxLines: 1,
                         style: AppTextStyles.of(context).light14.copyWith(
                           overflow: TextOverflow.ellipsis,
@@ -167,8 +195,9 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
                           ],
                         ),
                       ),
-                      Text("${temperature??29}℃",
-                        style: AppTextStyles.of(context).regular20.copyWith(
+                      Text(
+                        "${temperature ?? 29}℃",
+                        style: AppTextStyles.of(context).regular16.copyWith(
                           color: AppColors.of(context).neutralColor3,
                           shadows: [
                             Shadow(
@@ -176,7 +205,8 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
                               color: AppColors.of(context).neutralColor12,
                             ),
                           ],
-                        ),)
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -184,43 +214,40 @@ class _MomentContentWidgetState extends State<MomentContentWidget> with SingleTi
             ],
           ),
         ),
-        if(widget.momentModel.content!=null)
+        if (widget.momentModel.content != null)
           Positioned(
-            bottom: 16.w,
+            bottom: 4.w,
             left: 0,
             right: 0,
             child: Align(
               alignment: Alignment.center,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 4.w, horizontal: 12.w),
                 decoration: BoxDecoration(
                     color: AppColors.of(context).neutralColor6,
-                    borderRadius: const BorderRadius.all(Radius.circular(100)),
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(100)),
                     boxShadow: [
                       BoxShadow(
                           color: AppColors.of(context).neutralColor11,
                           blurRadius: 5.h,
-                          offset: Offset(0, 3.h)
-                      )
-                    ]
-                ),
-                child: Text(widget.momentModel.content!,
+                          offset: Offset(0, 3.h))
+                    ]),
+                child: Text(
+                  widget.momentModel.content!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.of(context).light24.copyWith(
-                      color: AppColors.of(context).neutralColor12
-                  ),
+                  style: AppTextStyles.of(context)
+                      .light24
+                      .copyWith(color: AppColors.of(context).neutralColor12),
                 ),
               ),
             ),
           ),
-        if(_isAnimationVisible)
+        if (_isAnimationVisible)
           Positioned.fill(
-            child: Lottie.asset(
-              'assets/animations/react_heart1.json',
-              fit: BoxFit.cover,
-              controller: _controller
-            ),
+            child: Lottie.asset('assets/animations/react_heart1.json',
+                fit: BoxFit.cover, controller: _controller),
           ),
       ],
     );

@@ -56,6 +56,9 @@ class _AssetsIcons {
   final addFriendSVG = 'assets/icons/add-friend.svg';
   final play = 'assets/icons/Play.svg';
   final logoSplashSVG = 'assets/icons/LogoSplash.svg';
+  final group = 'assets/icons/group.svg';
+  // final swap = 'assets/icons/Swap.svg';
+  final message = 'assets/icons/Union.svg';
 }
 
 class _AssetsImages {
