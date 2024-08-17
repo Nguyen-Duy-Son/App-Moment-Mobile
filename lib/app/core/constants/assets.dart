@@ -60,6 +60,11 @@ class _AssetsIcons {
   // final swap = 'assets/icons/Swap.svg';
   final message = 'assets/icons/Union.svg';
   final lightDark = 'assets/icons/light-dark.svg';
+  final userProfile = 'assets/icons/User-Profile.svg';
+  final phoneLight = 'assets/icons/phone-light.svg';
+  final calendarOutline = 'assets/icons/calendar-outline.svg';
+  final mail2 = 'assets/icons/mail2.svg';
+  final add = 'assets/icons/add.svg';
 }
 
 class _AssetsImages {

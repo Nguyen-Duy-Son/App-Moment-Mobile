@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/config/theme_config.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
+import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
@@ -34,75 +35,80 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SvgPicture.asset(Assets.icons.lightDark,
-                  color: AppColors.of(context).neutralColor11,
-                  ),
-                  SizedBox(width: 10.w,),
-                  Expanded(
-                    child: SizedBox(
-                      width: 225.w,
-                      child: Text(
-                        AppLocalizations.of(context)!.modeLightDark, 
-                        style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
-                      )
-                    ),
-                  ),
-                  Container(
-                    child: Switch(
-                      value : _value1,
-                      onChanged: (value) {
-                        setState(() {
-                          if (_value1!=true) {
-                            context.read<ThemeProvider>().setThemeData(ThemeConfig.darkTheme);
-                          } else {
-                            context.read<ThemeProvider>().setThemeData(ThemeConfig.lightTheme);
-                          }
-                          _value1 = value;
-                          setDarkMode(_value1);
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(margin: const EdgeInsets.only(top: 5, bottom: 5),width: 600.w, height: 1, color: Colors.black,),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SvgPicture.asset(Assets.icons.settings,color: AppColors.of(context).neutralColor11,),
-                SizedBox(width: 15.w,),
-                Expanded(
-                  child: Container(
-                    width: 230.w,
-                    child: Text(
-                      AppLocalizations.of(context)!.language, 
-                      style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
-                    )
-                  ),
+                Row(
+                  children: [
+                    SvgPicture.asset(Assets.icons.lightDark,
+                      color: AppColors.of(context).neutralColor11,
+                    ),
+                    SizedBox(width: 10.w,),
+                    Text(
+                        AppLocalizations.of(context)!.modeLightDark,
+                        style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
+                    ),
+                  ],
                 ),
-                Container(
-                  child: Switch(
-                    value : _value2,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value==true) {
-                          context.read<LocaleProvider>().changeLocale(const Locale('en'));
-                        } else {
-                          context.read<LocaleProvider>().changeLocale(const Locale('vi'));
-                        }
-                        _value2 = value;
-                        setLocaleLocal(_value2 ? 'en' : 'vi');
-                      });
-                    },
-                  ),
+                Switch(
+                  value : _value1,
+                  onChanged: (value) {
+                    setState(() {
+                      if (_value1!=true) {
+                        context.read<ThemeProvider>().setThemeData(ThemeConfig.darkTheme);
+                      } else {
+                        context.read<ThemeProvider>().setThemeData(ThemeConfig.lightTheme);
+                      }
+                      _value1 = value;
+                      setDarkMode(_value1);
+                    });
+                  },
                 ),
               ],
             ),
-            Container(margin: const EdgeInsets.only(top: 5, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
+            Container(
+              margin:  EdgeInsets.symmetric(vertical: 6.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset(Assets.icons.settings,color: AppColors.of(context).neutralColor11,),
+                    SizedBox(width: 15.w,),
+                    Text(
+                        AppLocalizations.of(context)!.language,
+                        style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12)
+                    ),
+                  ],
+                ),
+                Switch(
+                  value : _value2,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value==true) {
+                        context.read<LocaleProvider>().changeLocale(const Locale('en'));
+                      } else {
+                        context.read<LocaleProvider>().changeLocale(const Locale('vi'));
+                      }
+                      _value2 = value;
+                      setLocaleLocal(_value2 ? 'en' : 'vi');
+                    });
+                  },
+                ),
+              ],
+            ),
+            Container(
+              margin:  EdgeInsets.only(top: 6.w, bottom: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             Row(
               children: [
                 SvgPicture.asset(Assets.icons.danger,color: AppColors.of(context).neutralColor11,),
@@ -110,7 +116,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 Text(AppLocalizations.of(context)!.report, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
             ),
-            Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
+            Container(
+              margin:  EdgeInsets.symmetric(vertical: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             Row(
               children: [
                 SvgPicture.asset(Assets.icons.document2,color: AppColors.of(context).neutralColor11,),
@@ -118,7 +130,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 Text(AppLocalizations.of(context)!.blockList, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
             ),
-            Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
+            Container(
+              margin:  EdgeInsets.symmetric(vertical: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             Row(
               children: [
                 SvgPicture.asset(Assets.icons.star,color: AppColors.of(context).neutralColor11,),
@@ -126,7 +144,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 Text(AppLocalizations.of(context)!.review, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
             ),
-            Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
+            Container(
+              margin:  EdgeInsets.symmetric(vertical: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             Row(
               children: [
                 SvgPicture.asset(Assets.icons.document2,color: AppColors.of(context).neutralColor11,),
@@ -134,7 +158,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 Text(AppLocalizations.of(context)!.tos, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
             ),
-            Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
+            Container(
+              margin:  EdgeInsets.symmetric(vertical: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             Row(
               children: [
                 SvgPicture.asset(Assets.icons.shield,color: AppColors.of(context).neutralColor11,),
@@ -142,7 +172,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 Text(AppLocalizations.of(context)!.privacy, style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12))
               ],
             ),
-            const SizedBox(height: 40,),
+            Container(
+              margin:  EdgeInsets.symmetric(vertical: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             InkWell(
               onTap: () {
                 setEmail('');
@@ -165,7 +201,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 ],
               ),
             ),
-            Container(margin: const EdgeInsets.only(top: 15, bottom: 15),width: 600.w, height: 1, color: Colors.black,),
+            Container(
+              margin:  EdgeInsets.symmetric(vertical: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             InkWell(
               onTap: () {},
               child: Row(

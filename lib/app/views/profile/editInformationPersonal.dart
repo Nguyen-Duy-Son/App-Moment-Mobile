@@ -1,34 +1,104 @@
-// app/views/profile/editInformationPersonal.dart
+import 'dart:io';
+// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/models/user_model.dart';
-import 'package:hit_moments/app/providers/user_provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 
 class editInformationPersonal extends StatefulWidget {
   final User userInfor;
+
   const editInformationPersonal({super.key, required this.userInfor});
-  
+
   @override
-  State<editInformationPersonal> createState() => editInformationPersonalState();
-} 
+  State<editInformationPersonal> createState() =>
+      editInformationPersonalState();
+}
 
 class editInformationPersonalState extends State<editInformationPersonal> {
+  bool isEditing = false; // Add this line
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController imageController = TextEditingController();
+  String? _imageFile;
+
   @override
   void initState() {
     super.initState();
+    imageController.text = widget.userInfor.avatar!;
+    fullNameController.text = widget.userInfor.fullName;
+    phoneNumberController.text = widget.userInfor.phoneNumber ?? '';
+    dobController.text = formatDate(widget.userInfor.dob!) ?? '';
+    emailController.text = widget.userInfor.email! ?? '';
+  }
+
+  Future<void> _pickImage() async {
+    // final ImagePicker _picker = ImagePicker();
+    final action = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an action'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: Text(
+                    'Take a Picture',
+                    style: TextStyle(color: Colors.blue, fontSize: 20.sp),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context, ImageSource.camera);
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(8.w)),
+                GestureDetector(
+                  child: Text(
+                    'Select from Gallery',
+                    style: TextStyle(color: Colors.blue, fontSize: 20.sp),
+                  ),
+                  onTap: () async {
+                    final picker = ImagePicker();
+                    final pickedFile = await picker.pickImage(
+                      source: ImageSource.gallery,
+                    ); // Mở thư viện ảnh
+                    if (pickedFile != null) {
+                      setState(() {
+                        imageController.text = pickedFile.path;
+                        _imageFile =
+                            pickedFile.path;
+                      });
+                      // imageController.text =
+                      //     path.basename(imageController.text);
+
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   String formatPhone(String phone) {
     final String firstPart = phone.substring(0, 4);
     final String remaining = phone.substring(4);
-    final tmp = remaining.replaceRange(0, remaining.length, 'X' * remaining.length);
-    final String formattedRemaining = tmp.replaceAllMapped(RegExp(r".{3}"), (match) {
+    final tmp =
+        remaining.replaceRange(0, remaining.length, 'X' * remaining.length);
+    final String formattedRemaining =
+        tmp.replaceAllMapped(RegExp(r".{3}"), (match) {
       return '${match.group(0)} ';
     });
 
@@ -42,7 +112,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
     final String formatted = formatter.format(date);
     return formatted;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,7 +122,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
             padding: EdgeInsets.only(top: 15.w),
             child: Text(
               overflow: TextOverflow.ellipsis,
-              S.of(context).personal,
+              S.of(context).personalInformation,
               style: AppTextStyles.of(context).bold32,
             ),
           ),
@@ -68,6 +138,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                   child: Container(
                     margin: EdgeInsets.only(top: 60.h),
                     padding: EdgeInsets.only(top: 80.h),
+                    height: 500.h,
                     decoration: BoxDecoration(
                       color: AppColors.of(context).primaryColor2,
                       borderRadius: BorderRadius.circular(50),
@@ -79,92 +150,171 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                         ),
                       ],
                     ),
-                    child: Column(
-                      children: [
-                        Text(context.watch<UserProvider>().user.fullName, style: AppTextStyles.of(context).bold20,),
-                        const SizedBox(height: 20,),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.h),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: (context.watch<UserProvider>().isLoandingProfiles) ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(Assets.icons.call),
-                                      TextFormField(
-                                        decoration: InputDecoration.collapsed(
-                                          hintText: formatPhone(widget.userInfor.phoneNumber!), 
-                                          hintStyle: AppTextStyles.of(context).light20
-                                        ),
-                                        style: AppTextStyles.of(context).light20,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20.h,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(Assets.icons.calendar),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 20.w),
-                                        width: 150.w,
-                                        child: Text(formatDate(widget.userInfor.dob!), style: AppTextStyles.of(context).light20,)
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20.h,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(Assets.icons.mail),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 20.w),
-                                        width: 150.w,
-                                        child: Text(widget.userInfor.email!, style: AppTextStyles.of(context).light20,)
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 70.h,),
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.of(context).neutralColor7,
-                                      padding: const EdgeInsets.fromLTRB(30, 5, 30, 5)
-                                    ),
-                                    child: Text(S.of(context).editInfor, style: AppTextStyles.of(context).regular20.copyWith(color: AppColors.of(context).neutralColor11),)
-                                  ),
-                                  const SizedBox(height: 40,),
-                                ],
-                              ) : const SizedBox(),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 12.w),
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Information(
+                              iconUrl: Assets.icons.userProfile,
+                              title: widget.userInfor.fullName,
+                              isEditing: isEditing,
+                              controller: fullNameController,
                             ),
-                          ),
-                        ) 
-                      ],
+                            Information(
+                              iconUrl: Assets.icons.phoneLight,
+                              title: formatPhone(widget.userInfor.phoneNumber!),
+                              isEditing: isEditing,
+                              controller: phoneNumberController,
+                            ),
+                            Information(
+                              iconUrl: Assets.icons.calendarOutline,
+                              title: formatDate(widget.userInfor.dob!),
+                              isEditing: isEditing,
+                              controller: dobController,
+                            ),
+                            Information(
+                              iconUrl: Assets.icons.mail2,
+                              title: widget.userInfor.email!,
+                              isEditing: isEditing,
+                              controller: emailController,
+                            ),
+                            SizedBox(
+                              height: 20.w,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isEditing = !isEditing;
+                                });
+                              },
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 20.h),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.of(context).neutralColor7,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.w, vertical: 8.w),
+                                  child: Text(
+                                    isEditing
+                                        ? S.of(context).complete
+                                        : S.of(context).editProfile,
+                                    style: AppTextStyles.of(context)
+                                        .regular20
+                                        .copyWith(
+                                            color: AppColors.of(context)
+                                                .neutralColor11),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 Align(
                   alignment: Alignment.topCenter,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.network(
-                      context.watch<UserProvider>().user.avatar!,
-                      height: 120.w,
-                      width: 130.h,
-                      fit: BoxFit.fill,
-                    ),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: _imageFile != null
+                            ? Image.file(
+                                File(_imageFile!),
+                                height: 120.w,
+                                width: 120.h,
+                                fit: BoxFit.fill,
+                              )
+                            : Image.network(
+                                widget.userInfor.avatar!,
+                                height: 120.w,
+                                width: 120.h,
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+                      isEditing == true
+                          ? Positioned(
+                              right: 10,
+                              bottom: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _pickImage();
+                                },
+                                child: SvgPicture.asset(
+                                  Assets.icons.add,
+                                  width: 30.w,
+                                  height: 30.w,
+                                  // color: AppColors.of(context).primaryColor10,
+                                  // color: Colors.lightBlueAccent,
+                                ),
+                              ))
+                          : const SizedBox(),
+                    ],
                   ),
-                )
+                ),
               ],
             ),
           ),
         ),
-      )
+      ),
+    );
+  }
+}
+
+class Information extends StatelessWidget {
+  const Information({
+    super.key,
+    required this.iconUrl,
+    required this.title,
+    required this.isEditing,
+    this.controller,
+  });
+
+  final String iconUrl;
+  final String title;
+  final bool isEditing;
+  final TextEditingController? controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            iconUrl,
+            width: 20.w,
+            height: 20.w,
+            color: AppColors.of(context).primaryColor10,
+          ),
+          SizedBox(
+            width: 16.w,
+          ),
+          SizedBox(
+            width: 160.w,
+            child: isEditing
+                ? TextFormField(
+                    controller: controller,
+                    style: AppTextStyles.of(context).light20,
+                  )
+                : Text(
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    title,
+                    style: AppTextStyles.of(context).light20,
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }

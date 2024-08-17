@@ -7,6 +7,8 @@ import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/profile/personalPageWidget.dart';
 import 'package:provider/provider.dart';
 
+import 'editInformationPersonal.dart';
+
 class PersonalPageScreen extends StatefulWidget {
   const PersonalPageScreen({super.key});
 
@@ -72,9 +74,9 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              setState(() {
-                                valueCheck = !valueCheck;
-                              });
+                                Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => editInformationPersonal(userInfor: context.watch<UserProvider>().user))
+                                );
                             },
                             child: Container(
                               decoration: BoxDecoration(

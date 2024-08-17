@@ -3,12 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
+import 'package:hit_moments/app/datasource/network_services/auth_service.dart';
 import 'package:hit_moments/app/datasource/network_services/user_service.dart';
 import 'package:hit_moments/app/models/base_response.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
+  final AuthService authService = AuthService();
   late List<User> users;
   late User user;
   List<User> friendList=[];
@@ -59,10 +61,9 @@ class UserProvider extends ChangeNotifier {
   }
   void getMe() async {
     isLoandingProfiles = true;
-    // notifyListeners();
-    user = await UserService.getMe() as User ;
+    user = await authService.getMe() as User;
     isLoandingProfiles = false;
-    // notifyListeners();
+    notifyListeners();
   }
 
 
