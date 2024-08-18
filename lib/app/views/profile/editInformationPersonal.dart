@@ -1,4 +1,5 @@
 import 'dart:io';
+
 // import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 
 import 'package:flutter/material.dart';
@@ -10,12 +11,14 @@ import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class editInformationPersonal extends StatefulWidget {
-  final User userInfor;
+  // final User userInfor;
 
-  const editInformationPersonal({super.key, required this.userInfor});
+  const editInformationPersonal({super.key});
 
   @override
   State<editInformationPersonal> createState() =>
@@ -24,6 +27,7 @@ class editInformationPersonal extends StatefulWidget {
 
 class editInformationPersonalState extends State<editInformationPersonal> {
   bool isEditing = false; // Add this line
+  late User userInfor;
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController dobController = TextEditingController();
@@ -31,18 +35,34 @@ class editInformationPersonalState extends State<editInformationPersonal> {
   TextEditingController imageController = TextEditingController();
   String? _imageFile;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   userInfor = context.watch<UserProvider>().user;
+  //   imageController.text = userInfor.avatar!;
+  //   fullNameController.text = userInfor.fullName;
+  //   phoneNumberController.text = userInfor.phoneNumber ?? '';
+  //   dobController.text = formatDate(userInfor.dob!) ?? '';
+  //   emailController.text = userInfor.email! ?? '';
+  // }
   @override
   void initState() {
     super.initState();
-    imageController.text = widget.userInfor.avatar!;
-    fullNameController.text = widget.userInfor.fullName;
-    phoneNumberController.text = widget.userInfor.phoneNumber ?? '';
-    dobController.text = formatDate(widget.userInfor.dob!) ?? '';
-    emailController.text = widget.userInfor.email! ?? '';
+    context.read<UserProvider>().getMe();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userInfor = context.watch<UserProvider>().user;
+    imageController.text = userInfor.avatar!;
+    fullNameController.text = userInfor.fullName;
+    phoneNumberController.text = userInfor.phoneNumber ?? '';
+    dobController.text = formatDate(userInfor.dob!) ?? '';
+    emailController.text = userInfor.email! ?? '';
   }
 
   Future<void> _pickImage() async {
-    // final ImagePicker _picker = ImagePicker();
     final action = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -74,9 +94,9 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                     if (pickedFile != null) {
                       setState(() {
                         imageController.text = pickedFile.path;
-                        _imageFile =
-                            pickedFile.path;
+                        _imageFile = pickedFile.path;
                       });
+
                       // imageController.text =
                       //     path.basename(imageController.text);
 
@@ -159,25 +179,25 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                           children: [
                             Information(
                               iconUrl: Assets.icons.userProfile,
-                              title: widget.userInfor.fullName,
+                              title: userInfor.fullName,
                               isEditing: isEditing,
                               controller: fullNameController,
                             ),
                             Information(
                               iconUrl: Assets.icons.phoneLight,
-                              title: formatPhone(widget.userInfor.phoneNumber!),
+                              title: userInfor.phoneNumber!,
                               isEditing: isEditing,
                               controller: phoneNumberController,
-                            ),
+                            ),git
                             Information(
                               iconUrl: Assets.icons.calendarOutline,
-                              title: formatDate(widget.userInfor.dob!),
+                              title: formatDate(userInfor.dob!),
                               isEditing: isEditing,
                               controller: dobController,
                             ),
                             Information(
                               iconUrl: Assets.icons.mail2,
-                              title: widget.userInfor.email!,
+                              title: userInfor.email!,
                               isEditing: isEditing,
                               controller: emailController,
                             ),
@@ -185,10 +205,43 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                               height: 20.w,
                             ),
                             GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isEditing = !isEditing;
-                                });
+                              onTap: () async{
+                                if (isEditing) {
+                                  await Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .updateUser(
+                                    fullNameController.text,
+                                    emailController.text,
+                                    phoneNumberController.text,
+                                    dobController.text,
+                                    _imageFile != null
+                                        ? File(_imageFile!)
+                                        : null,
+                                  );
+                                  print(Provider.of<UserProvider>(context,
+                                      listen: false)
+                                      .isLoadingProfile);
+                                  if (Provider.of<UserProvider>(context,
+                                              listen: false)
+                                          .isLoadingProfile ==
+                                      false) {
+                                    // print("alo");
+                                    setState(() {
+                                      isEditing = !isEditing;
+                                    });
+                                    context.read<UserProvider>().getMe();
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Loading...'),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  setState(() {
+                                    isEditing = !isEditing;
+                                  });
+                                }
                               },
                               child: Align(
                                 alignment: Alignment.bottomCenter,
@@ -233,7 +286,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                                 fit: BoxFit.fill,
                               )
                             : Image.network(
-                                widget.userInfor.avatar!,
+                                userInfor.avatar!,
                                 height: 120.w,
                                 width: 120.h,
                                 fit: BoxFit.fill,

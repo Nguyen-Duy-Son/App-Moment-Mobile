@@ -75,7 +75,7 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                           GestureDetector(
                             onTap: () {
                                 Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => editInformationPersonal(userInfor: context.watch<UserProvider>().user))
+                                  MaterialPageRoute(builder: (context) => editInformationPersonal())
                                 );
                             },
                             child: Container(
