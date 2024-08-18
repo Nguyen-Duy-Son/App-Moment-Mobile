@@ -130,5 +130,7 @@
       "onboardingTitle3": "Gắn kết tình bạn",
       "onboardingDescription3": "Tạo ra sự gắn kết sâu sắc với bạn bè bằng cách chia sẻ những bức ảnh và trải nghiệm chung. Ứng dụng của chúng tôi giúp bạn duy trì mối quan hệ thân thiết và tạo thêm những kỷ niệm vui vẻ.",
       "continueString": "Tiếp tục",
-        "next": "Tiếp theo"
+        "next": "Tiếp theo",
+  "editProfile": "Sửa thông tin cá nhân",
+  "personalInformation":"Thông tin cá nhân"
 }

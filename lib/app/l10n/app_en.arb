@@ -122,5 +122,7 @@
           "onboardingTitle3": "Strengthen Friendships",
           "onboardingDescription3": "Create deep connections with friends by sharing photos and experiences together. Our app helps you maintain close relationships and create more joyful memories.",
           "continueString": "Continue",
-            "next": "Next"
+            "next": "Next",
+  "editProfile": "Edit Profile",
+  "personalInformation": "Personal Information"
 }
