@@ -188,7 +188,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                               title: userInfor.phoneNumber!,
                               isEditing: isEditing,
                               controller: phoneNumberController,
-                            ),git
+                            ),
                             Information(
                               iconUrl: Assets.icons.calendarOutline,
                               title: formatDate(userInfor.dob!),
