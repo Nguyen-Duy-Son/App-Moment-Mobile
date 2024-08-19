@@ -228,8 +228,8 @@ class UserService {
       if(statusCode == 200) {
         var jsonResponse = jsonDecode(body);
         var user = jsonResponse['data']['user'];
+        setAvatarUser(user['avatar']);
         return user;
-        return body;
       }
       else{
         return statusCode;

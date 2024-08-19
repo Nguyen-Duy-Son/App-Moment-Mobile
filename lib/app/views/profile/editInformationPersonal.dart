@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/auth_provider.dart';
 import '../../providers/user_provider.dart';
 
 class editInformationPersonal extends StatefulWidget {
@@ -129,6 +131,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
         context.read<UserProvider>().getMe();
         setState(() {
           isEditing = !isEditing;
+         context.read<AuthProvider>().updateAvatar(Provider.of<UserProvider>(context, listen: false).user.avatar!);
         });
         showSimpleNotification(
           Text(
@@ -143,10 +146,17 @@ class editInformationPersonalState extends State<editInformationPersonal> {
           position: NotificationPosition.top,
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Loading...'),
+        showSimpleNotification(
+          Text(
+            S.of(context).updateProfileSuccess,
+            style: AppTextStyles.of(context).light24.copyWith(
+              color: AppColors.of(context).primaryColor1,
+            ),
+            textAlign: TextAlign.center,
           ),
+          background: ColorConstants.accentRed,
+          duration: const Duration(seconds: 2),
+          position: NotificationPosition.top,
         );
       }
     } else {
