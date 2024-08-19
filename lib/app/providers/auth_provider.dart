@@ -19,7 +19,7 @@ class AuthProvider extends ChangeNotifier {
   String? registerSuccess;
   String? emailExist;
   bool isRemember = false;
-
+  String?avatar;
   void fullFieldRegister(bool isFull) {
     isFullFieldRegister = isFull;
     notifyListeners();
@@ -59,24 +59,28 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
+  void updateAvatar(String img){
+    avatar = img;
+    notifyListeners();
+  }
   Future<void> login(String email, String password, BuildContext context) async {
     loginStatus = ModuleStatus.loading;
     notifyListeners();
     try {
-      int result = await authService.login(email, password);
-      if (result == 200) {
+      var response = await authService.login(email, password);
+      User user = User.fromJson(response);
+      if (response != 200) {
         loginSuccess = S.of(context).loginSuccess;
         loginStatus = ModuleStatus.success;
-
+        avatar = user.avatar;
         if(isRemember){
           setPassWord(password);
           setEmail(email);
         }
-      } else if (result == 401) {
+      } else if (response == 401) {
         loginSuccess = S.of(context).loginError;
         loginStatus = ModuleStatus.fail;
-      } else if(result == 400){
+      } else if(response == 400){
         loginSuccess =
         S.of(context).emailInvalid;
         loginStatus = ModuleStatus.fail;

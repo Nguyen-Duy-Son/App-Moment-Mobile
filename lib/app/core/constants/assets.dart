@@ -65,6 +65,10 @@ class _AssetsIcons {
   final calendarOutline = 'assets/icons/calendar-outline.svg';
   final mail2 = 'assets/icons/mail2.svg';
   final add = 'assets/icons/add.svg';
+  final sun = 'assets/icons/Sun.svg';
+  final dark = 'assets/icons/Dark.svg';
+  final vietNam = 'assets/icons/Vietnam.svg';
+  final my = 'assets/icons/My.svg';
 }
 
 class _AssetsImages {

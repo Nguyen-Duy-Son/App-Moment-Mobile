@@ -217,6 +217,9 @@ class UserService {
       if(phoneNumber != null) {
         request.fields['phoneNumber'] = phoneNumber;
       }
+      if(dob != "" && dob != null) {
+        request.fields['dob'] = dob;
+      }
       var response = await request.send();
       var responseStream = response.stream.transform(utf8.decoder);
       var body = await responseStream.join();
@@ -225,8 +228,8 @@ class UserService {
       if(statusCode == 200) {
         var jsonResponse = jsonDecode(body);
         var user = jsonResponse['data']['user'];
+        setAvatarUser(user['avatar']);
         return user;
-        return body;
       }
       else{
         return statusCode;

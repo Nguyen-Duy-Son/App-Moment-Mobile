@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/l10n.dart';
 import '../../models/moment_model.dart';
+import '../../providers/weather_provider.dart';
 
 class MomentView extends StatefulWidget {
   const MomentView({super.key, required this.pageParentController});
@@ -34,6 +35,7 @@ class _MomentViewState extends State<MomentView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ListMomentProvider>().getListFriendOfUser();
+      context.read<WeatherProvider>().getCurrentPosition();
       context.read<ListMomentProvider>().getWeather('21.0314268', '105.7792771');
       pageViewController.addListener(() {
         if (pageViewController.position.atEdge) {

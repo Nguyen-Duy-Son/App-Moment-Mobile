@@ -124,5 +124,6 @@
           "continueString": "Continue",
             "next": "Next",
   "editProfile": "Edit Profile",
-  "personalInformation": "Personal Information"
+  "personalInformation": "Personal Information",
+  "updateProfileSuccess": "Information has been updated successfully"
 }

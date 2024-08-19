@@ -23,6 +23,7 @@ class AuthService{
         setToken(token);
         setUserID(userID);
         setAvatarUser(response['data']['user']['avatar']);
+        return response['data']['user'];
       }else{
         print("looxi ${response['message']} vaf ${statusCode}");
       }

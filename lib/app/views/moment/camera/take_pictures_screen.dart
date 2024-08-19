@@ -10,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:image/image.dart' as img;
 import 'package:provider/provider.dart';
@@ -37,9 +38,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       startCamera(direction);
-      context.read<WeatherProvider>().getCurrentPosition();
+      context.read<AuthProvider>().updateAvatar(getAvatarUser());
+
     });
 
   }
@@ -153,7 +155,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image.network(
-                        getAvatarUser(),
+                       context.watch<AuthProvider>().avatar!,
                         width: 28.w,
                         height: 28.w,
                         fit: BoxFit.cover,
