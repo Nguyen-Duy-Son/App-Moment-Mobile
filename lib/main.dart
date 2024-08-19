@@ -15,15 +15,14 @@ import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/providers/weather_provider.dart';
 import 'package:hit_moments/app/routes/app_pages.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
-import 'app/core/config/theme_config.dart';
-import 'app/datasource/local/storage.dart';
 import 'app/providers/moment_provider.dart';
 
 void main() async {
   await GetStorage.init('hit_moment');
-  runApp(MyApp());
+  runApp(OverlaySupport(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

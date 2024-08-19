@@ -66,8 +66,8 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                         context.watch<UserProvider>().user.fullName ?? "",
                         style: AppTextStyles.of(context).bold20,
                       ),
-                      const SizedBox(
-                        height: 20,
+                      SizedBox(
+                        height: 12.w,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,6 +94,9 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                                             .neutralColor11),
                               ),
                             ),
+                          ),
+                          SizedBox(
+                            height: 12.w,
                           ),
                           const PersonalPageWidget(),
                         ],

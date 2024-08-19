@@ -1,16 +1,16 @@
 import 'dart:io';
 
-// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
+import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/user_provider.dart';
@@ -45,6 +45,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
     dobController.text = formatDate(widget.userInfor.dob!) ?? '';
     emailController.text = widget.userInfor.email! ?? '';
   }
+
   // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
@@ -115,7 +116,6 @@ class editInformationPersonalState extends State<editInformationPersonal> {
   void selectedEdit(BuildContext context) async {
     if (isEditing) {
       DateTime dob = DateFormat('dd/MM/yyyy').parse(dobController.text);
-      // Format the date in the format the server expects
       String formattedDob = DateFormat('MM/dd/yyyy').format(dob);
       await Provider.of<UserProvider>(context, listen: false).updateUser(
         fullNameController.text,
@@ -130,7 +130,18 @@ class editInformationPersonalState extends State<editInformationPersonal> {
         setState(() {
           isEditing = !isEditing;
         });
-        // context.read<UserProvider>().getMe();
+        showSimpleNotification(
+          Text(
+            S.of(context).updateProfileSuccess,
+            style: AppTextStyles.of(context).light24.copyWith(
+                  color: AppColors.of(context).primaryColor1,
+                ),
+            textAlign: TextAlign.center,
+          ),
+          background: ColorConstants.accentGreen,
+          duration: const Duration(seconds: 2),
+          position: NotificationPosition.top,
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -147,7 +158,8 @@ class editInformationPersonalState extends State<editInformationPersonal> {
 
   @override
   Widget build(BuildContext context) {
-    print('User: ${widget.userInfor.fullName}, Email: ${widget.userInfor.email}');
+    print(
+        'User: ${widget.userInfor.fullName}, Email: ${widget.userInfor.email}');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -266,7 +278,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                                 fit: BoxFit.fill,
                               )
                             : Image.network(
-                          widget.userInfor.avatar!,
+                                widget.userInfor.avatar!,
                                 height: 120.w,
                                 width: 120.h,
                                 fit: BoxFit.fill,
@@ -341,13 +353,12 @@ class Information extends StatelessWidget {
                     ? TextFormField(
                         controller: controller,
                         style: AppTextStyles.of(context).light20,
-
                       )
                     : TextFormField(
                         controller: controller,
                         style: AppTextStyles.of(context).light20,
                         readOnly: true,
-                        onTap: ()=>selectedDob(context),
+                        onTap: () => selectedDob(context),
                       ))
                 : Text(
                     textAlign: TextAlign.left,
@@ -360,6 +371,7 @@ class Information extends StatelessWidget {
       ),
     );
   }
+
   void selectedDob(BuildContext context) async {
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     final DateTime? picked = await showDatePicker(
@@ -373,3 +385,35 @@ class Information extends StatelessWidget {
     }
   }
 }
+// void selectedEdit(BuildContext context) async {
+//   if (isEditing) {
+//     DateTime dob = DateFormat('dd/MM/yyyy').parse(dobController.text);
+//     // Format the date in the format the server expects
+//     String formattedDob = DateFormat('MM/dd/yyyy').format(dob);
+//     await Provider.of<UserProvider>(context, listen: false).updateUser(
+//       fullNameController.text,
+//       emailController.text,
+//       phoneNumberController.text,
+//       formattedDob,
+//       _imageFile != null ? File(_imageFile!) : null,
+//     );
+//     if (Provider.of<UserProvider>(context, listen: false).isLoadingProfile ==
+//         false) {
+//       context.read<UserProvider>().getMe();
+//       setState(() {
+//         isEditing = !isEditing;
+//       });
+//       // context.read<UserProvider>().getMe();
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text('Loading...'),
+//         ),
+//       );
+//     }
+//   } else {
+//     setState(() {
+//       isEditing = !isEditing;
+//     });
+//   }
+// }

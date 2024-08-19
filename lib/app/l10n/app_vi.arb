@@ -132,5 +132,6 @@
       "continueString": "Tiếp tục",
         "next": "Tiếp theo",
   "editProfile": "Sửa thông tin cá nhân",
-  "personalInformation":"Thông tin cá nhân"
+  "personalInformation":"Thông tin cá nhân",
+  "updateProfileSuccess": "Thông tin đã được cập nhật thành công"
 }
