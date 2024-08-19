@@ -16,9 +16,9 @@ import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 
 class editInformationPersonal extends StatefulWidget {
-  // final User userInfor;
+  final User userInfor;
 
-  const editInformationPersonal({super.key});
+  const editInformationPersonal({super.key, required this.userInfor});
 
   @override
   State<editInformationPersonal> createState() =>
@@ -27,7 +27,7 @@ class editInformationPersonal extends StatefulWidget {
 
 class editInformationPersonalState extends State<editInformationPersonal> {
   bool isEditing = false; // Add this line
-  late User userInfor;
+  // late User userInfor;
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController dobController = TextEditingController();
@@ -35,9 +35,19 @@ class editInformationPersonalState extends State<editInformationPersonal> {
   TextEditingController imageController = TextEditingController();
   String? _imageFile;
 
+  @override
+  void initState() {
+    super.initState();
+    // context.read<UserProvider>().getMe();
+    imageController.text = widget.userInfor.avatar!;
+    fullNameController.text = widget.userInfor.fullName;
+    phoneNumberController.text = widget.userInfor.phoneNumber ?? '';
+    dobController.text = formatDate(widget.userInfor.dob!) ?? '';
+    emailController.text = widget.userInfor.email! ?? '';
+  }
   // @override
-  // void initState() {
-  //   super.initState();
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
   //   userInfor = context.watch<UserProvider>().user;
   //   imageController.text = userInfor.avatar!;
   //   fullNameController.text = userInfor.fullName;
@@ -45,22 +55,6 @@ class editInformationPersonalState extends State<editInformationPersonal> {
   //   dobController.text = formatDate(userInfor.dob!) ?? '';
   //   emailController.text = userInfor.email! ?? '';
   // }
-  @override
-  void initState() {
-    super.initState();
-    context.read<UserProvider>().getMe();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    userInfor = context.watch<UserProvider>().user;
-    imageController.text = userInfor.avatar!;
-    fullNameController.text = userInfor.fullName;
-    phoneNumberController.text = userInfor.phoneNumber ?? '';
-    dobController.text = formatDate(userInfor.dob!) ?? '';
-    emailController.text = userInfor.email! ?? '';
-  }
 
   Future<void> _pickImage() async {
     final action = await showDialog(
@@ -112,29 +106,48 @@ class editInformationPersonalState extends State<editInformationPersonal> {
     );
   }
 
-  String formatPhone(String phone) {
-    final String firstPart = phone.substring(0, 4);
-    final String remaining = phone.substring(4);
-    final tmp =
-        remaining.replaceRange(0, remaining.length, 'X' * remaining.length);
-    final String formattedRemaining =
-        tmp.replaceAllMapped(RegExp(r".{3}"), (match) {
-      return '${match.group(0)} ';
-    });
-
-    final String formatted = '$firstPart $formattedRemaining';
-
-    return formatted.trim(); // Use trim to remove the trailing space
-  }
-
   String formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     final String formatted = formatter.format(date);
     return formatted;
   }
 
+  void selectedEdit(BuildContext context) async {
+    if (isEditing) {
+      DateTime dob = DateFormat('dd/MM/yyyy').parse(dobController.text);
+      // Format the date in the format the server expects
+      String formattedDob = DateFormat('MM/dd/yyyy').format(dob);
+      await Provider.of<UserProvider>(context, listen: false).updateUser(
+        fullNameController.text,
+        emailController.text,
+        phoneNumberController.text,
+        formattedDob,
+        _imageFile != null ? File(_imageFile!) : null,
+      );
+      if (Provider.of<UserProvider>(context, listen: false).isLoadingProfile ==
+          false) {
+        context.read<UserProvider>().getMe();
+        setState(() {
+          isEditing = !isEditing;
+        });
+        // context.read<UserProvider>().getMe();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Loading...'),
+          ),
+        );
+      }
+    } else {
+      setState(() {
+        isEditing = !isEditing;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('User: ${widget.userInfor.fullName}, Email: ${widget.userInfor.email}');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -179,70 +192,37 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                           children: [
                             Information(
                               iconUrl: Assets.icons.userProfile,
-                              title: userInfor.fullName,
+                              title: widget.userInfor.fullName,
                               isEditing: isEditing,
                               controller: fullNameController,
+                              option: false,
                             ),
                             Information(
                               iconUrl: Assets.icons.phoneLight,
-                              title: userInfor.phoneNumber!,
+                              title: widget.userInfor.phoneNumber!,
                               isEditing: isEditing,
                               controller: phoneNumberController,
+                              option: false,
                             ),
                             Information(
                               iconUrl: Assets.icons.calendarOutline,
-                              title: formatDate(userInfor.dob!),
+                              title: formatDate(widget.userInfor.dob!),
                               isEditing: isEditing,
                               controller: dobController,
+                              option: true,
                             ),
                             Information(
                               iconUrl: Assets.icons.mail2,
-                              title: userInfor.email!,
+                              title: widget.userInfor.email!,
                               isEditing: isEditing,
                               controller: emailController,
+                              option: false,
                             ),
                             SizedBox(
                               height: 20.w,
                             ),
                             GestureDetector(
-                              onTap: () async{
-                                if (isEditing) {
-                                  await Provider.of<UserProvider>(context,
-                                          listen: false)
-                                      .updateUser(
-                                    fullNameController.text,
-                                    emailController.text,
-                                    phoneNumberController.text,
-                                    dobController.text,
-                                    _imageFile != null
-                                        ? File(_imageFile!)
-                                        : null,
-                                  );
-                                  print(Provider.of<UserProvider>(context,
-                                      listen: false)
-                                      .isLoadingProfile);
-                                  if (Provider.of<UserProvider>(context,
-                                              listen: false)
-                                          .isLoadingProfile ==
-                                      false) {
-                                    // print("alo");
-                                    setState(() {
-                                      isEditing = !isEditing;
-                                    });
-                                    context.read<UserProvider>().getMe();
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Loading...'),
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  setState(() {
-                                    isEditing = !isEditing;
-                                  });
-                                }
-                              },
+                              onTap: () => selectedEdit(context),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
@@ -286,7 +266,7 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                                 fit: BoxFit.fill,
                               )
                             : Image.network(
-                                userInfor.avatar!,
+                          widget.userInfor.avatar!,
                                 height: 120.w,
                                 width: 120.h,
                                 fit: BoxFit.fill,
@@ -328,12 +308,14 @@ class Information extends StatelessWidget {
     required this.title,
     required this.isEditing,
     this.controller,
+    required this.option,
   });
 
   final String iconUrl;
   final String title;
   final bool isEditing;
   final TextEditingController? controller;
+  final bool option;
 
   @override
   Widget build(BuildContext context) {
@@ -355,10 +337,18 @@ class Information extends StatelessWidget {
           SizedBox(
             width: 160.w,
             child: isEditing
-                ? TextFormField(
-                    controller: controller,
-                    style: AppTextStyles.of(context).light20,
-                  )
+                ? (option == false
+                    ? TextFormField(
+                        controller: controller,
+                        style: AppTextStyles.of(context).light20,
+
+                      )
+                    : TextFormField(
+                        controller: controller,
+                        style: AppTextStyles.of(context).light20,
+                        readOnly: true,
+                        onTap: ()=>selectedDob(context),
+                      ))
                 : Text(
                     textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
@@ -369,5 +359,17 @@ class Information extends StatelessWidget {
         ],
       ),
     );
+  }
+  void selectedDob(BuildContext context) async {
+    final DateFormat formatter = DateFormat('dd/MM/yyyy');
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: formatter.parse(controller!.text),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      controller!.text = DateFormat('dd/MM/yyyy').format(picked);
+    }
   }
 }

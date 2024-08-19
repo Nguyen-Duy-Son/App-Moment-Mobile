@@ -62,7 +62,7 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  void getMe() async {
+ void getMe() async {
     isLoandingProfiles = true;
     user = await authService.getMe() as User;
     isLoandingProfiles = false;
