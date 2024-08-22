@@ -133,5 +133,7 @@
         "next": "Tiếp theo",
   "editProfile": "Sửa thông tin cá nhân",
   "personalInformation":"Thông tin cá nhân",
-  "updateProfileSuccess": "Thông tin đã được cập nhật thành công"
+  "updateProfileSuccess": "Thông tin đã được cập nhật thành công",
+  "searchNameMusic": "Tìm kiếm tên bài hát",
+  "addMusic":"Thêm bài hát"
 }

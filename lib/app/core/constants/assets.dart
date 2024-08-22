@@ -69,6 +69,10 @@ class _AssetsIcons {
   final dark = 'assets/icons/Dark.svg';
   final vietNam = 'assets/icons/Vietnam.svg';
   final my = 'assets/icons/My.svg';
+  final music = 'assets/icons/Music.svg';
+  final pause = 'assets/icons/Pause.svg';
+  final playMusic = 'assets/icons/play-music.svg';
+  final musicGif = 'assets/icons/music.gif';
 }
 
 class _AssetsImages {

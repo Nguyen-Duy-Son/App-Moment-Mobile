@@ -9,7 +9,7 @@ import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/list_moment_provider.dart';
-import 'package:hit_moments/app/providers/providers_list.dart';
+import 'package:hit_moments/app/providers/music_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/providers/weather_provider.dart';
@@ -27,7 +27,9 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
+
   final LocaleProvider locale = LocaleProvider();
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -40,19 +42,35 @@ class MyApp extends StatelessWidget {
               //   ...listProviders.map((e) => ChangeNotifierProvider(create: (context) => e)),
               //không hiểu sao thêm MomentProvider vào cái là nó bị lỗi k tìm thấy
               //ThemeProvider nên e khai báo nó thẳng vào đây luôn ạ
-              ChangeNotifierProvider(create: (context) => MomentProvider()),
-              ChangeNotifierProvider(create: (context) => ThemeProvider()),
-              ChangeNotifierProvider(create: (context) => AuthProvider()),
-              ChangeNotifierProvider(create: (context) => ListMomentProvider()),
-              ChangeNotifierProvider(create: (context) => WeatherProvider()),
+              ChangeNotifierProvider(
+                create: (context) => MomentProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => ThemeProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => AuthProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => ListMomentProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => WeatherProvider(),
+              ),
 
               //provider ngôn ngữ làm riêng
               ChangeNotifierProvider(
                 create: (context) => locale,
               ),
-              ChangeNotifierProvider(create: (context) => UserProvider()),
               ChangeNotifierProvider(
-                  create: (context) => ConversationProvider()),
+                create: (context) => UserProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => ConversationProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => MusicProvider(),
+              ),
             ],
             child: Consumer<LocaleProvider>(
               builder: (context, provider, child) {
@@ -60,7 +78,7 @@ class MyApp extends StatelessWidget {
                   title: AppConfig.appName,
                   locale: provider.locale,
                   debugShowCheckedModeBanner: false,
-                  theme:Provider.of<ThemeProvider>(context).themeData,
+                  theme: Provider.of<ThemeProvider>(context).themeData,
                   initialRoute: AppRoutes.SPASH,
                   routes: AppPages.routes,
                   supportedLocales: L10n.all,

@@ -15,8 +15,8 @@ import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:image/image.dart' as img;
 import 'package:provider/provider.dart';
 
+import '../../../providers/music_provider.dart';
 import '../../../providers/user_provider.dart';
-import '../../../providers/weather_provider.dart';
 import 'display_pictures_screen.dart';
 
 // A screen that allows users to take a picture using a given camera.
@@ -41,6 +41,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startCamera(direction);
       context.read<AuthProvider>().updateAvatar(getAvatarUser());
+      context.read<MusicProvider>().getListMusic();
     });
   }
 
@@ -153,7 +154,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image.network(
-                       context.watch<AuthProvider>().avatar!,
+                        context.watch<AuthProvider>().avatar!,
                         width: 28.w,
                         height: 28.w,
                         fit: BoxFit.cover,
@@ -213,13 +214,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
           toolbarHeight: 52.w, // Set the height of the AppBar here
         ),
         body: Container(
-          margin: EdgeInsets.only(top: 30.w, left: 4.w, right: 4.w,bottom: 12.w),
+          margin:
+              EdgeInsets.only(top: 30.w, left: 4.w, right: 4.w, bottom: 12.w),
           alignment: Alignment.center,
           child: Column(
             children: [
               Center(
                 child: AspectRatio(
-                  aspectRatio: 3/4,
+                  aspectRatio: 3 / 4,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: CameraPreview(cameraController!),
@@ -240,6 +242,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                     child: IconButton(
                       icon: SvgPicture.asset(
                         Assets.icons.lightning,
+                        color: AppColors.of(context).neutralColor12,
                       ),
                       onPressed: () {},
                     ), // TODO: Bật đèn Flash
@@ -275,6 +278,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                       Assets.icons.swap,
                       width: 67.w,
                       height: 56.w,
+                      color: AppColors.of(context).neutralColor12,
                     ),
                     onPressed: () {
                       setState(() {

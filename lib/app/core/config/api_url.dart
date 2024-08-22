@@ -25,4 +25,5 @@ mixin class ApiUrl {
   static const getChatMessage = "$_urlBase/messages/";
   static const sendMessage = "$_urlBase/messages";
   static const getChatMessageByReceiverId = "$_urlBase/messages";
+  static const getListMusic = "$_urlBase/musics";
 }

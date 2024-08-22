@@ -125,5 +125,7 @@
             "next": "Next",
   "editProfile": "Edit Profile",
   "personalInformation": "Personal Information",
-  "updateProfileSuccess": "Information has been updated successfully"
+  "updateProfileSuccess": "Information has been updated successfully",
+  "searchNameMusic": "Search name of music",
+  "addMusic": "Add music"
 }

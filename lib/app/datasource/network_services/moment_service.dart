@@ -133,7 +133,7 @@ class MomentService{
   //     return e;
   //   }
   // }
-  Future<dynamic> createMoment(String? content, String? weather, XFile image) async {
+  Future<dynamic> createMoment(String? content, String? weather, XFile image,String musicId) async {
     try {
       // Kiểm tra xem tệp có tồn tại hay không
       File file = File(image.path);
@@ -163,9 +163,9 @@ class MomentService{
       if (weather != null){
         request.fields['weather'] = weather;
       }
-      request.fields['music'] = "669e96c181821615578432e7";
-      request.fields['music'] = "669e96c181821615578432e7";
-
+      if (musicId != null){
+        request.fields['music'] = musicId;
+      }
       // Thêm tệp vào yêu cầu
       request.files.add(await http.MultipartFile.fromPath(
         'image',
