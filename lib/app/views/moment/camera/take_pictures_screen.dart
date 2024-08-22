@@ -41,9 +41,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startCamera(direction);
       context.read<AuthProvider>().updateAvatar(getAvatarUser());
-
     });
-
   }
 
   Future<void> startCamera(int direction) async {
@@ -215,25 +213,21 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
           toolbarHeight: 52.w, // Set the height of the AppBar here
         ),
         body: Container(
-          margin: EdgeInsets.only(top: 80.w, left: 4.w, right: 4.w,bottom: 12.w),
+          margin: EdgeInsets.only(top: 30.w, left: 4.w, right: 4.w,bottom: 12.w),
           alignment: Alignment.center,
           child: Column(
             children: [
-              SizedBox(
-                width: 1.sw-8.w,
-                height: 1.sw-8.w,
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: CameraPreview(cameraController!),
-                    ),
+              Center(
+                child: AspectRatio(
+                  aspectRatio: 3/4,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: CameraPreview(cameraController!),
                   ),
                 ),
               ),
               SizedBox(
-                height: 40.w,
+                height: 30.w,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

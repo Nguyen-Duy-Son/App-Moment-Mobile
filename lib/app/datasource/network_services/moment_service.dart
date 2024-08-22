@@ -133,7 +133,7 @@ class MomentService{
   //     return e;
   //   }
   // }
-  Future<dynamic> createMoment(String content, String weather, XFile image) async {
+  Future<dynamic> createMoment(String? content, String? weather, XFile image) async {
     try {
       // Kiểm tra xem tệp có tồn tại hay không
       File file = File(image.path);
@@ -149,9 +149,6 @@ class MomentService{
         return "MIME type could not be determined";
       }
 
-      print('Image MIME type: $mimeType');
-      print("File extension: ${file.path.split('.').last}");
-
       // Tạo yêu cầu MultipartRequest
       var request = http.MultipartRequest(
         'POST',
@@ -160,8 +157,13 @@ class MomentService{
 
       // Thêm các trường vào yêu cầu
       request.headers['Authorization'] = 'Bearer ${getToken()}';
-      request.fields['content'] = content;
-      request.fields['weather'] = weather;
+      if (content != null){
+        request.fields['content'] = content;
+      }
+      if (weather != null){
+        request.fields['weather'] = weather;
+      }
+      request.fields['music'] = "669e96c181821615578432e7";
       request.fields['music'] = "669e96c181821615578432e7";
 
       // Thêm tệp vào yêu cầu

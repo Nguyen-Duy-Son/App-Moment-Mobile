@@ -101,7 +101,7 @@ class MomentProvider extends ChangeNotifier{
 
   }
 
-  Future<void> createMoment(String content, String weather, XFile image) async{
+  Future<void> createMoment(String? content, String? weather, XFile image) async{
     createMomentStatus = ModuleStatus.loading;
     notifyListeners();
     final response =  await MomentService().createMoment(content, weather, image);
