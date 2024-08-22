@@ -129,7 +129,7 @@ class _MomentWidgetState extends State<MomentWidget> {
         children: [
           Container(
             alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 80.w),
+              margin: EdgeInsets.only(top: 30.w,left: 4.w,right: 4.w),
               child: MomentContentWidget(momentModel: widget.momentModel)
           ),
           const SizedBox(height: 48,),

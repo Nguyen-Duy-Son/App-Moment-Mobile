@@ -47,6 +47,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
   String? urlIcon;
 
   void parseString(String input) {
+    print("alo$input");
     final regex = RegExp(r'^(.*?)\|(.*?)\|(.*?)$');
 
     if (regex.hasMatch(input)) {
@@ -74,11 +75,14 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
-          child: Image.network(
-            widget.momentModel.image!,
-            fit: BoxFit.fill,
-            width: 1.sw - 4.w,
-            height: 1.sw - 4.w,
+          child: AspectRatio(
+            aspectRatio: 3/4,
+            child: Image.network(
+              widget.momentModel.image!,
+              fit: BoxFit.fill,
+              // width: 1.sw - 4.w,
+              // height: 1.sw - 4.w,
+            ),
           ),
         ),
         Positioned(
@@ -174,17 +178,17 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                     color: AppColors.of(context).neutralColor6,
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                   ),
-                  // padding: EdgeInsets.only(right: 16.w),
+                  padding: EdgeInsets.only(left: 4.w, right: 4.w,top: 2.w, bottom: 2.w),
                   margin: EdgeInsets.only(right: 16.w),
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
                   alignment: Alignment.center,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         address ?? (widget.momentModel.uploadLocation ?? ""),
                         maxLines: 1,
                         style: AppTextStyles.of(context).light14.copyWith(
+                          height: 1,
                           overflow: TextOverflow.ellipsis,
                           color: AppColors.of(context).neutralColor1,
                           shadows: [
@@ -198,6 +202,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                       Text(
                         "${temperature ?? 29}℃",
                         style: AppTextStyles.of(context).regular16.copyWith(
+                          height: 1,
                           color: AppColors.of(context).neutralColor3,
                           shadows: [
                             Shadow(
