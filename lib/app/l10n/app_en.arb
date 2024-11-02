@@ -127,5 +127,14 @@
   "personalInformation": "Personal Information",
   "updateProfileSuccess": "Information has been updated successfully",
   "searchNameMusic": "Search name of music",
-  "addMusic": "Add music"
+  "addMusic": "Add music",
+  "changeYourProfilePicture": "Change your profile picture",
+  "takePicture": "Take a picture",
+  "titleChangeAvatar": "Your profile picture will be visible to everyone.",
+  "cancel": "Cancel",
+  "selectFromGallery": "Select from gallery",
+  "error": "Error",
+  "loginFail": "Login failed",
+  "ok": "OK",
+  "noAccount": "Don't have an account? "
 }

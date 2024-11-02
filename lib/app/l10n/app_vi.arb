@@ -135,5 +135,14 @@
   "personalInformation":"Thông tin cá nhân",
   "updateProfileSuccess": "Thông tin đã được cập nhật thành công",
   "searchNameMusic": "Tìm kiếm tên bài hát",
-  "addMusic":"Thêm bài hát"
+  "addMusic":"Thêm bài hát",
+  "changeYourProfilePicture": "Thay đổi ảnh hồ sơ của bạn",
+  "takePicture": "Chụp ảnh",
+  "titleChangeAvatar": "Ảnh hồ sơ của bạn sẽ được hiển thị cho tất cả mọi người.",
+  "selectFromGallery": "Chọn từ thư viện",
+  "cancel": "Hủy",
+  "error": "Lỗi",
+  "loginFail": "Đăng nhập thất bại",
+  "ok": "OK",
+  "noAccount":"Bạn chưa có tài khoản? "
 }

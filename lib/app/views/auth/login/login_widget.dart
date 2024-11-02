@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
@@ -52,21 +53,48 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 
-  Future<void> _submit() async{
+  Future<void> _submit() async {
     final form = _formKey.currentState!;
     if (form.validate()) {
       form.save();
       form.validate();
+
+      // Use 'listen: false' here to avoid rebuilding the widget
       await context.read<AuthProvider>().login(_emailController.text, _passwordController.text, context);
-      if(context.read<AuthProvider>().loginStatus == ModuleStatus.success){
-        Navigator.pushAndRemoveUntil<void>(context, MaterialPageRoute(builder: (context) => Onbording()),
-              ModalRoute.withName(AppRoutes.ONBOARDING),);
-      }else{
-        print("lỗi");
+
+      // Also use 'listen: false' here
+      if (context.read<AuthProvider>().loginStatus == ModuleStatus.success) {
+        Navigator.pushAndRemoveUntil<void>(
+          context,
+          MaterialPageRoute(builder: (context) => Onbording()),
+          ModalRoute.withName(AppRoutes.ONBOARDING),
+        );
+      } else if (context.read<AuthProvider>().loginStatus == ModuleStatus.fail) {
+        _showError();
       }
     }
   }
 
+  void _showError() {
+    showCustomDialog(
+      context,
+      title: S.of(context).error,
+      content: Text(
+        S.of(context).loginError,
+        style: AppTextStyles.of(context)
+            .regular24
+            .copyWith(color: AppColors.of(context).neutralColor12),
+        textAlign: TextAlign.center,
+      ),
+      backgroundPositiveButton: AppColors.of(context).primaryColor10,
+      textPositive: S.of(context).ok,
+      onPressPositive: () {
+        Navigator.of(context).pop();
+      },
+      colorTextPositive: AppColors.of(context).neutralColor12,
+      hideNegativeButton: true,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -199,6 +227,21 @@ class _LoginWidgetState extends State<LoginWidget> {
                         style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor11),
                       ),
                     )),
+          SizedBox(
+            height: 32.h,
+          ),
+          RichText(
+            text: TextSpan(
+              text: S.of(context).noAccount,
+              style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
+              children: <TextSpan>[
+                TextSpan(
+                  text: S.of(context).registerNow,
+                  style: AppTextStyles.of(context).bold16.copyWith(color: AppColors.of(context).primaryColor10),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

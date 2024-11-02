@@ -15,8 +15,9 @@ class ConversationProvider extends ChangeNotifier {
   List<ChatMessage> chatMessages = [];
   List<Message> messages = [];
   bool isSending = false;
-
-  IO.Socket socket = IO.io('https://api.hitmoments.com', <String, dynamic>{
+  bool isTyping = false;
+  // https://api.hitmoments.com
+  IO.Socket socket = IO.io('http://192.168.0.104:3000', <String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': false,
     'query': {
@@ -66,23 +67,53 @@ class ConversationProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+  void onTyping(String userId) {
+    isTyping = true; // Đặt trạng thái gõ là true
+    socket.emit('onTyping', {
+      'userId': userId, // Gửi ID người dùng
+    });
+    notifyListeners();
+  }
+
+  void disOnTyping(String userId) {
+    isTyping = false; // Đặt trạng thái gõ là false
+    socket.emit('disOnTyping', {
+      'userId': userId, // Gửi ID người dùng
+    });
+    notifyListeners();
+  }
 
   void connectAndListen() async {
     socket.onConnect((_) {
       print('Connected to the server'); // Debug print
     });
     socket.on('newMessage', (data) {
-      print('newMessage event triggered $data'); // Debug print
+      // print('newMessage event triggered $data'); // Debug print
       // _showNotification(data['text']);
       messages.add(Message.fromJson(data as Map<String, dynamic>));
       notifyListeners();
+    });
+    socket.on('onTyping', (data) {
+      if (data['userId'] != getUserID()) { // Chỉ cập nhật trạng thái gõ cho người nhận
+        isTyping = true;
+        print("On typing");
+        notifyListeners();
+      }
+    });
+
+    socket.on('disOnTyping', (data) {
+      if (data['userId'] != getUserID()) { // Chỉ cập nhật trạng thái dừng gõ cho người nhận
+        isTyping = false;
+        print("disOn typing");
+        notifyListeners();
+      }
     });
     socket.connect();
   }
 
   void disconnectSocket() {
     if (socket.connected) {
-      print('Disconnected from the server');
+      // print('Disconnected from the server');
       socket.close();
     }
   }

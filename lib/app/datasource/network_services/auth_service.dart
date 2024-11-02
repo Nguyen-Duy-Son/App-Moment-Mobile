@@ -10,29 +10,33 @@ class AuthService{
       'email': email,
       'password': password
     };
-    try{
+    try {
       var response = await BaseConnect.onRequest(
-          ApiUrl.login,
+        ApiUrl.login,
         RequestMethod.POST,
-        body: body
+        body: body,
       );
+
       int statusCode = response['statusCode'];
-      if(statusCode == 200){
+
+      if (statusCode == 200) {
         String token = response['data']['accessToken'];
         String userID = response['data']['user']['_id'];
         setToken(token);
         setUserID(userID);
         setAvatarUser(response['data']['user']['avatar']);
-        return response['data']['user'];
-      }else{
-        print("looxi ${response['message']} vaf ${statusCode}");
+
+        // Return both user data and status code
+        return {'statusCode': statusCode, 'user': response['data']['user']};
       }
-      return statusCode;
-    }catch(e){
+
+      return {'statusCode': statusCode}; // return only status code if not 200
+    } catch (e) {
       print("Lỗi là: ${e}");
-      return 0;
+      return {'statusCode': 0}; // return statusCode 0 for errors
     }
   }
+
 
 
   Future<dynamic> register(String fullName, String phoneNumber, String dateOfBirth,
@@ -68,6 +72,20 @@ class AuthService{
       }
     }catch(e){
       return e.toString();
+    }
+  }
+
+  Future<dynamic> forgotPassword(String email) async{
+    Map<String, dynamic> body = {
+      'email': email
+    };
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.forgotPassword, RequestMethod.POST, body: body);
+      int statusCode = response['statusCode'];
+      return statusCode;
+    }catch(e){
+      return 0;
     }
   }
 

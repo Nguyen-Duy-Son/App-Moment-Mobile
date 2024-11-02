@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
-import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/text_style_constants.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/user_provider.dart';
 
@@ -58,56 +58,162 @@ class editInformationPersonalState extends State<editInformationPersonal> {
   //   dobController.text = formatDate(userInfor.dob!) ?? '';
   //   emailController.text = userInfor.email! ?? '';
   // }
-
   Future<void> _pickImage() async {
     final action = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Choose an action'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                GestureDetector(
-                  child: Text(
-                    'Take a Picture',
-                    style: TextStyle(color: Colors.blue, fontSize: 20.sp),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context, ImageSource.camera);
-                  },
+        return SimpleDialog(
+          contentPadding: EdgeInsets.zero,
+          insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                S.of(context).changeYourProfilePicture,
+                textAlign: TextAlign.center,
+                style: TextStyleConstant.lightLight24.copyWith(
+                  color: AppColors.of(context).neutralColor10,
                 ),
-                Padding(padding: EdgeInsets.all(8.w)),
-                GestureDetector(
-                  child: Text(
-                    'Select from Gallery',
-                    style: TextStyle(color: Colors.blue, fontSize: 20.sp),
-                  ),
-                  onTap: () async {
-                    final picker = ImagePicker();
-                    final pickedFile = await picker.pickImage(
-                      source: ImageSource.gallery,
-                    ); // Mở thư viện ảnh
-                    if (pickedFile != null) {
-                      setState(() {
-                        imageController.text = pickedFile.path;
-                        _imageFile = pickedFile.path;
-                      });
-
-                      // imageController.text =
-                      //     path.basename(imageController.text);
-
-                      Navigator.pop(context);
-                    }
-                  },
+              ),
+              Text(
+                S.of(context).titleChangeAvatar,
+                textAlign: TextAlign.center,
+                style: TextStyleConstant.lightLight20.copyWith(
+                  color: AppColors.of(context).neutralColor8,
                 ),
-              ],
-            ),
+              )
+            ],
           ),
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppColors.of(context).neutralColor8,
+                    width: 1,
+                  ),
+                  top: BorderSide(
+                    color: AppColors.of(context).neutralColor8,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, ImageSource.camera);
+                },
+                child: Center(
+                  child: Text(
+                    S.of(context).takePicture,
+                    style: TextStyleConstant.lightLight24.copyWith(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppColors.of(context).neutralColor8,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: SimpleDialogOption(
+                onPressed: () async {
+                  final picker = ImagePicker();
+                  final pickedFile = await picker.pickImage(
+                    source: ImageSource.gallery,
+                  );
+                  if (pickedFile != null) {
+                    setState(() {
+                      imageController.text = pickedFile.path;
+                      _imageFile = pickedFile.path;
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: Center(
+                  child: Text(
+                    S.of(context).selectFromGallery,
+                    style: TextStyleConstant.lightLight24.copyWith(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: Center(
+                child: Text(
+                  S.of(context).cancel,
+                  style: TextStyleConstant.lightLight24.copyWith(
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
   }
+
+  // Future<void> _pickImage() async {
+  //   final action = await showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(
+  //           S.of(context).chooseOnAction,
+  //           style: TextStyleConstant.lightLight24.copyWith(
+  //             color: AppColors.of(context).neutralColor12,
+  //           ),
+  //         ),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               GestureDetector(
+  //                 child: Text(
+  //                   S.of(context).takePicture,
+  //                   style: TextStyle(color: Colors.blue, fontSize: 20.sp),
+  //                 ),
+  //                 onTap: () {
+  //                   Navigator.pop(context, ImageSource.camera);
+  //                 },
+  //               ),
+  //               Padding(padding: EdgeInsets.all(8.w)),
+  //               GestureDetector(
+  //                 child: Text(
+  //                   S.of(context).selectFromGallery,
+  //                   style: TextStyle(color: Colors.blue, fontSize: 20.sp),
+  //                 ),
+  //                 onTap: () async {
+  //                   final picker = ImagePicker();
+  //                   final pickedFile = await picker.pickImage(
+  //                     source: ImageSource.gallery,
+  //                   ); // Mở thư viện ảnh
+  //                   if (pickedFile != null) {
+  //                     setState(() {
+  //                       imageController.text = pickedFile.path;
+  //                       _imageFile = pickedFile.path;
+  //                     });
+  //                     Navigator.pop(context);
+  //                   }
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   String formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
@@ -131,7 +237,8 @@ class editInformationPersonalState extends State<editInformationPersonal> {
         context.read<UserProvider>().getMe();
         setState(() {
           isEditing = !isEditing;
-         context.read<AuthProvider>().updateAvatar(Provider.of<UserProvider>(context, listen: false).user.avatar!);
+          context.read<AuthProvider>().updateAvatar(
+              Provider.of<UserProvider>(context, listen: false).user.avatar!);
         });
         showSimpleNotification(
           Text(
@@ -150,8 +257,8 @@ class editInformationPersonalState extends State<editInformationPersonal> {
           Text(
             S.of(context).updateProfileSuccess,
             style: AppTextStyles.of(context).light24.copyWith(
-              color: AppColors.of(context).primaryColor1,
-            ),
+                  color: AppColors.of(context).primaryColor1,
+                ),
             textAlign: TextAlign.center,
           ),
           background: ColorConstants.accentRed,

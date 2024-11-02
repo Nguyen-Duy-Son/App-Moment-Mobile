@@ -68,31 +68,37 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       var response = await authService.login(email, password);
-      User user = User.fromJson(response);
-      if (response != 200) {
+
+      int statusCode = response['statusCode'];
+
+      if (statusCode == 200) {
+        User user = User.fromJson(response['user']);
         loginSuccess = S.of(context).loginSuccess;
         loginStatus = ModuleStatus.success;
         avatar = user.avatar;
-        if(isRemember){
+        if (isRemember) {
           setPassWord(password);
           setEmail(email);
         }
-      } else if (response == 401) {
+      } else if (statusCode == 401) {
         loginSuccess = S.of(context).loginError;
         loginStatus = ModuleStatus.fail;
-      } else if(response == 400){
-        loginSuccess =
-        S.of(context).emailInvalid;
+      } else if (statusCode == 400) {
+        loginSuccess = S.of(context).emailInvalid;
         loginStatus = ModuleStatus.fail;
-      }else {
+      } else {
         loginSuccess = S.of(context).networkError;
         loginStatus = ModuleStatus.fail;
       }
+
       notifyListeners();
     } catch (e) {
+      loginStatus = ModuleStatus.fail;
+      loginSuccess = S.of(context).networkError;
       notifyListeners();
     }
   }
+
 
 
   Future<void> register(String fullName, String phoneNumber,
