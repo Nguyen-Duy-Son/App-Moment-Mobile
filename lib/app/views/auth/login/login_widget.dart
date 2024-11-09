@@ -4,7 +4,6 @@ import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
-import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,6 @@ import '../../../core/config/enum.dart';
 import '../../../core/constants/assets.dart';
 import '../../../custom/widgets/scale_on_tap_widget.dart';
 import '../../../l10n/l10n.dart';
-import '../../example/example_view.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
@@ -32,8 +30,8 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = getEmail()??'';
-    _passwordController.text = getPassWord()??'';
+    _emailController.text = getEmail().trim();
+    _passwordController.text = getPassWord().trim();
     if(_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty){
       context.read<AuthProvider>().setData(true);
     } else {
@@ -60,7 +58,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       form.validate();
 
       // Use 'listen: false' here to avoid rebuilding the widget
-      await context.read<AuthProvider>().login(_emailController.text, _passwordController.text, context);
+      await context.read<AuthProvider>().login(_emailController.text.trim(), _passwordController.text.trim(), context);
 
       // Also use 'listen: false' here
       if (context.read<AuthProvider>().loginStatus == ModuleStatus.success) {
@@ -230,16 +228,21 @@ class _LoginWidgetState extends State<LoginWidget> {
           SizedBox(
             height: 32.h,
           ),
-          RichText(
-            text: TextSpan(
-              text: S.of(context).noAccount,
-              style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-              children: <TextSpan>[
-                TextSpan(
-                  text: S.of(context).registerNow,
-                  style: AppTextStyles.of(context).bold16.copyWith(color: AppColors.of(context).primaryColor10),
-                ),
-              ],
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.SIGNUP);
+            },
+            child: RichText(
+              text: TextSpan(
+                text: S.of(context).noAccount,
+                style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: S.of(context).registerNow,
+                    style: AppTextStyles.of(context).bold16.copyWith(color: AppColors.of(context).primaryColor10),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

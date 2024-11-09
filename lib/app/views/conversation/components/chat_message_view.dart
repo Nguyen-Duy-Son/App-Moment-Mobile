@@ -57,12 +57,6 @@ class _ChatMessageViewState extends State<ChatMessageView> {
   bool containsImageTag(String text) {
     return !text.contains('[@isImg123@]');
   }
-  // @override
-  // void deactivate() {
-  //   // TODO: implement deactivate
-  //
-  //   super.deactivate();
-  // }
 
   void callApi() async {
     if (widget.conversationId.isNotEmpty) {
@@ -213,14 +207,6 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                         },
                       ),
                     )),
-                    if (context.watch<ConversationProvider>().isTyping)
-                      Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: Text(
-                          '${widget.receiver.fullName} is typing...', // Sử dụng tên của người nhận
-                          style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
-                        ),
-                      ),
                     Container(
                       margin: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
@@ -230,13 +216,13 @@ class _ChatMessageViewState extends State<ChatMessageView> {
                       child: TextFormField(
                         controller: _controller,
                         onChanged: (value) {
-                          if (_typingTimer?.isActive ?? false) _typingTimer?.cancel();  // Hủy bộ đếm thời gian trước đó nếu còn gõ
-                          _startTyping();  // Gọi phương thức gửi thông báo đang gõ
-
-                          // Thiết lập độ trễ để phát ra sự kiện `disOnTyping` khi dừng gõ
-                          _typingTimer = Timer(const Duration(seconds: 3), () {
-                            _stopTyping();
-                          });
+                          // if (_typingTimer?.isActive ?? false) _typingTimer?.cancel();  // Hủy bộ đếm thời gian trước đó nếu còn gõ
+                          // _startTyping();  // Gọi phương thức gửi thông báo đang gõ
+                          //
+                          // // Thiết lập độ trễ để phát ra sự kiện `disOnTyping` khi dừng gõ
+                          // _typingTimer = Timer(const Duration(seconds: 3), () {
+                          //   _stopTyping();
+                          // });
                         },
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(

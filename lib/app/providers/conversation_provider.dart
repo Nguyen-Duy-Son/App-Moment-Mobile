@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hit_moments/app/core/config/enum.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart' as notif;
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/models/message_model.dart';
@@ -10,6 +11,7 @@ import '../models/conversation_model.dart';
 
 class ConversationProvider extends ChangeNotifier {
   List<Conversation> conversations = [];
+  ModuleStatus loadingMessageStatus = ModuleStatus.initial;
   bool isLoading = false;
   bool isLoadingChatMessage = false;
   List<ChatMessage> chatMessages = [];
@@ -26,9 +28,16 @@ class ConversationProvider extends ChangeNotifier {
   });
 
   void getConversations() async {
-    isLoading = true;
-    conversations = await ConversationService().getConversations();
-    isLoading = false;
+    // isLoading = true;
+    loadingMessageStatus = ModuleStatus.loading;
+    notifyListeners();
+    final data = await ConversationService().getConversations();
+    if(data is List<Conversation>) {
+      conversations = data;
+      loadingMessageStatus = ModuleStatus.success;
+    } else {
+      loadingMessageStatus = ModuleStatus.fail;
+    }
     notifyListeners();
   }
 
@@ -117,6 +126,8 @@ class ConversationProvider extends ChangeNotifier {
       socket.close();
     }
   }
+
+
   // final notif.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   // notif.FlutterLocalNotificationsPlugin();
   //

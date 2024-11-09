@@ -13,6 +13,7 @@ import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:image/image.dart' as img;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/music_provider.dart';
@@ -34,6 +35,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   CameraController? cameraController;
   bool isCameraReady = false;
   int direction = 0;
+  FlashMode _flashMode = FlashMode.off;
+
 
   @override
   void initState() {
@@ -43,6 +46,24 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       context.read<AuthProvider>().updateAvatar(getAvatarUser());
       context.read<MusicProvider>().getListMusic();
     });
+  }
+// Add this method to toggle flash
+  void toggleFlash() {
+    if (cameraController != null) {
+      setState(() {
+        _flashMode = _flashMode == FlashMode.off ? FlashMode.torch : FlashMode.off;
+      });
+      cameraController!.setFlashMode(_flashMode);
+    }
+  }
+
+  void turnOffFlash() {
+    if (cameraController != null) {
+      setState(() {
+        _flashMode = FlashMode.off;
+      });
+      cameraController!.setFlashMode(_flashMode);
+    }
   }
 
   Future<void> startCamera(int direction) async {
@@ -237,20 +258,22 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   Container(
                     width: 67.w,
                     height: 56.w,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
                     child: IconButton(
                       icon: SvgPicture.asset(
                         Assets.icons.lightning,
-                        color: AppColors.of(context).neutralColor12,
+                        color: _flashMode == FlashMode.torch
+                            ? AppColors.of(context).primaryColor9 // Flash on color
+                            : AppColors.of(context).neutralColor12, // Flash off color
                       ),
-                      onPressed: () {},
-                    ), // TODO: Bật đèn Flash
+                      onPressed: toggleFlash,
+                    ),
                   ),
                   OutlinedButton(
                     onPressed: () async {
                       final image = await cameraController!.takePicture();
                       //final croppedImage = await cropImageToAspectRatio(File(image.path));
+                      turnOffFlash();
                       if (!context.mounted) return;
                       await Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => DisplayPictureScreen(
@@ -258,6 +281,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                                 //imagePath: croppedImage.path,
                                 users: context.watch<UserProvider>().friendList,
                               )));
+
                     },
                     style: OutlinedButton.styleFrom(
                         fixedSize: const Size(65, 65),

@@ -144,5 +144,7 @@
   "error": "Lỗi",
   "loginFail": "Đăng nhập thất bại",
   "ok": "OK",
-  "noAccount":"Bạn chưa có tài khoản? "
+  "noAccount":"Bạn chưa có tài khoản? ",
+  "errorStorage": "Vui lòng cho phép truy cập vào thư viện để lưu ảnh",
+  "saveImageFail": "Lưu ảnh thất bại"
 }

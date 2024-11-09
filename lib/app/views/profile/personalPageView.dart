@@ -34,7 +34,7 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
           child: Text(
             overflow: TextOverflow.ellipsis,
             S.of(context).personal,
-            style: AppTextStyles.of(context).bold32,
+            style: AppTextStyles.of(context).bold24,
           ),
         ),
         centerTitle: true,

@@ -27,31 +27,6 @@ class _LoginViewState extends State<LoginView> {
             body: const LoginWidget(),
           ),
         ),
-        // if (loginStatus == ModuleStatus.loading) ...[
-        //   const Opacity(
-        //     opacity: 0.6,
-        //     child: ModalBarrier(dismissible: false, color: Colors.black),
-        //   ),
-        //   const Center(
-        //     child: CircularProgressIndicator(color: Colors.white),
-        //   ),
-        // ],
-        // fail
-        // if(loginStatus == ModuleStatus.fail) ...[
-        //
-        //   _showError()
-        //
-        // ],
-
-        // if (loginStatus == ModuleStatus.success) ...[
-        //   const Opacity(
-        //     opacity: 0.6,
-        //     child: ModalBarrier(dismissible: false, color: Colors.black),
-        //   ),
-          // const Center(
-          //   child: CircularProgressIndicator(color: Colors.white),
-          // ),
-        // ]
       ],
     );
   }

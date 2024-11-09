@@ -11,11 +11,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/app_snack_bar.dart';
+import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
+import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/models/user_model.dart';
 import 'package:hit_moments/app/providers/list_moment_provider.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/music_provider.dart';
 import 'package:hit_moments/app/providers/weather_provider.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 // A widget that displays the picture taken by the user.
@@ -48,6 +53,60 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   AudioPlayer audioPlayer = AudioPlayer();
   String? nameMusic;
   String? musicId;
+
+  Future<void> checkAndSaveImage(String imagePath) async {
+    // Check the current status of the storage permission
+    var status = await Permission.photos.status;
+
+    if (status.isGranted) {
+      // If permission is granted, save the image to the gallery
+      await saveImageToGallery(imagePath);
+    }
+    if (status.isDenied) {
+      // If permission is denied, request it
+      _showError();
+    }
+    if (status.isPermanentlyDenied) {
+      _showError();
+    }
+  }
+
+  void _showError() {
+    showCustomDialog(
+      context,
+      title: S.of(context).error,
+      content: Text(
+        S.of(context).errorStorage,
+        style: AppTextStyles.of(context)
+            .regular24
+            .copyWith(color: AppColors.of(context).neutralColor12),
+        textAlign: TextAlign.center,
+      ),
+      backgroundPositiveButton: AppColors.of(context).primaryColor10,
+      textPositive: S.of(context).ok,
+      onPressPositive: () async{
+        Navigator.of(context).pop();
+        await openAppSettings();
+      },
+      colorTextPositive: AppColors.of(context).primaryColor1,
+      hideNegativeButton: true,
+    );
+  }
+
+  Future<void> saveImageToGallery(String imagePath) async {
+    final result = await ImageGallerySaver.saveFile(imagePath);
+    if (result['isSuccess']) {
+      // if mounted
+      if (mounted) {
+        AppSnackBar.showSuccess(context,S.of(context).saveImageSuccess);
+      }
+    } else {
+      // if mounted
+      if (mounted) {
+        AppSnackBar.showError(context, S.of(context).error, S.of(context).saveImageFail);
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -339,9 +398,10 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       color: AppColors.of(context).neutralColor12,
                     ),
                   ),
+                  // Inside _DisplayPictureScreenState class
                   IconButton(
-                    onPressed: () {
-                      print('Đã ấn');
+                    onPressed: () async {
+                      await checkAndSaveImage(widget.image.path);
                     },
                     icon: SvgPicture.asset(
                       Assets.icons.download2SVG,

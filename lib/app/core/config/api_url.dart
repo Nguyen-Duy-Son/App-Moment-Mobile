@@ -2,7 +2,7 @@ const example = 'example';
 
 mixin class ApiUrl {
   // static const _urlBase = "https://api.hitmoments.com/v1";
-  static const _urlBase = "http://192.168.0.110:3000/api/v1";
+  static const _urlBase = "http://192.168.0.102:3000/api/v1";
   static const forgotPassword = "$_urlBase/auth/forgot-password";
   static const login = "$_urlBase/auth/login";
   static const register = "$_urlBase/auth/register";

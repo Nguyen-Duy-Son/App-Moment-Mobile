@@ -136,5 +136,7 @@
   "error": "Error",
   "loginFail": "Login failed",
   "ok": "OK",
-  "noAccount": "Don't have an account? "
+  "noAccount": "Don't have an account? ",
+  "errorStorage": "Please allow access to the gallery to save photos",
+  "saveImageFail": "Failed to save image"
 }
