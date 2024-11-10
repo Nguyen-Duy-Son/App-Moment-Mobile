@@ -1,4 +1,3 @@
-// app/views/profile/personalPageview.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
@@ -62,10 +61,10 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                   ),
                   child: Column(
                     children: [
-                      Text(
-                        context.watch<UserProvider>().user.fullName ?? "",
-                        style: AppTextStyles.of(context).bold20,
-                      ),
+                      // Text(
+                      //   context.watch<UserProvider>().user.fullName ?? "",
+                      //   style: AppTextStyles.of(context).bold20,
+                      // ),
                       SizedBox(
                         height: 12.w,
                       ),
@@ -98,7 +97,7 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                           SizedBox(
                             height: 12.w,
                           ),
-                          const PersonalPageWidget(),
+                          // const PersonalPageWidget(),
                         ],
                       )
                     ],

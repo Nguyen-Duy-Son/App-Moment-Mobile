@@ -138,5 +138,7 @@
   "ok": "OK",
   "noAccount": "Don't have an account? ",
   "errorStorage": "Please allow access to the gallery to save photos",
-  "saveImageFail": "Failed to save image"
+  "saveImageFail": "Failed to save image",
+  "createMomentSuccess": "Created moment successfully",
+  "createMomentFail": "Failed to create moment"
 }

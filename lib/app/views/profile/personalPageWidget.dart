@@ -192,20 +192,6 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                     ),
                   ),
                 )
-                // Switch(
-                //   value : _value2,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       if (value==true) {
-                //         context.read<LocaleProvider>().changeLocale(const Locale('en'));
-                //       } else {
-                //         context.read<LocaleProvider>().changeLocale(const Locale('vi'));
-                //       }
-                //       _value2 = value;
-                //       setLocaleLocal(_value2 ? 'en' : 'vi');
-                //     });
-                //   },
-                // ),
               ],
             ),
             Container(
@@ -327,17 +313,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             ),
             InkWell(
               onTap: () {
-                setEmail('');
-                setPassWord('');
-                setToken('');
-                setUserID('');
-                setAvatarUser('');
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AuthView(),
-                    ),
-                    ModalRoute.withName(AppRoutes.AUTHENTICATION));
+                _logout();
               },
               child: Row(
                 children: [
@@ -382,5 +358,18 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
         ),
       ),
     );
+  }
+  void _logout() {
+    setEmail('');
+    setPassWord('');
+    setToken('');
+    setUserID('');
+    setAvatarUser('');
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AuthView(),
+        ),
+        ModalRoute.withName(AppRoutes.AUTHENTICATION));
   }
 }

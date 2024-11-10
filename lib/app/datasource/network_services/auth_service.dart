@@ -21,8 +21,10 @@ class AuthService{
 
       if (statusCode == 200) {
         String token = response['data']['accessToken'];
+        String refreshToken = response['data']['accessToken'];
         String userID = response['data']['user']['_id'];
         setToken(token);
+        setRefreshToken(refreshToken);
         setUserID(userID);
         setAvatarUser(response['data']['user']['avatar']);
 

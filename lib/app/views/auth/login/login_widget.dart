@@ -5,6 +5,7 @@ import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
+import 'package:hit_moments/app/views/example/home_view.dart';
 import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
 import 'package:provider/provider.dart';
 
@@ -62,11 +63,22 @@ class _LoginWidgetState extends State<LoginWidget> {
 
       // Also use 'listen: false' here
       if (context.read<AuthProvider>().loginStatus == ModuleStatus.success) {
-        Navigator.pushAndRemoveUntil<void>(
-          context,
-          MaterialPageRoute(builder: (context) => Onbording()),
-          ModalRoute.withName(AppRoutes.ONBOARDING),
-        );
+        if(getIsFirstTime() == true){
+          Navigator.pushAndRemoveUntil<void>(
+            context,
+            MaterialPageRoute(builder: (context) => const Onboarding()),
+            ModalRoute.withName(AppRoutes.ONBOARDING),
+          );
+        }
+        else{
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeView(),
+              ),
+              ModalRoute.withName(AppRoutes.MY_HOME));
+        }
+
       } else if (context.read<AuthProvider>().loginStatus == ModuleStatus.fail) {
         _showError();
       }

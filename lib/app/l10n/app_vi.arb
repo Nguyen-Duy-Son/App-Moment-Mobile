@@ -146,5 +146,7 @@
   "ok": "OK",
   "noAccount":"Bạn chưa có tài khoản? ",
   "errorStorage": "Vui lòng cho phép truy cập vào thư viện để lưu ảnh",
-  "saveImageFail": "Lưu ảnh thất bại"
+  "saveImageFail": "Lưu ảnh thất bại",
+  "createMomentSuccess": "Tạo khoảnh khắc thành công",
+  "createMomentFail": "Tạo khoảnh khắc thất bại"
 }
