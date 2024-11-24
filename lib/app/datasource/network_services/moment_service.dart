@@ -1,13 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
 import '../../models/react_model.dart';
@@ -139,7 +133,7 @@ class MomentService{
   //     return e;
   //   }
   // }
-  Future<dynamic> createMoment(String content, String weather, XFile image) async {
+  Future<dynamic> createMoment(String? content, String? weather, XFile image,String? musicId, String? linkMusic) async {
     try {
       // Kiểm tra xem tệp có tồn tại hay không
       File file = File(image.path);
@@ -155,9 +149,6 @@ class MomentService{
         return "MIME type could not be determined";
       }
 
-      print('Image MIME type: $mimeType');
-      print("File extension: ${file.path.split('.').last}");
-
       // Tạo yêu cầu MultipartRequest
       var request = http.MultipartRequest(
         'POST',
@@ -166,10 +157,18 @@ class MomentService{
 
       // Thêm các trường vào yêu cầu
       request.headers['Authorization'] = 'Bearer ${getToken()}';
-      request.fields['content'] = content;
-      request.fields['weather'] = weather;
-      request.fields['music'] = "669e96c181821615578432e7";
-
+      if (content != null){
+        request.fields['content'] = content;
+      }
+      if (weather != null){
+        request.fields['weather'] = weather;
+      }
+      if (musicId != null){
+        request.fields['musicId'] = musicId;
+      }
+      if (linkMusic != null){
+        request.fields['linkMusic'] = linkMusic;
+      }
       // Thêm tệp vào yêu cầu
       request.files.add(await http.MultipartFile.fromPath(
         'image',
