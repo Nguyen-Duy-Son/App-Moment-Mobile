@@ -83,7 +83,6 @@
     "delete":"Delete",
     "deleteFriend":"Delete friend",
     "sendMessage":"Send message",
-    "accept":"Accept",
     "reject":"Reject",
     "addFriend":"Add friend",
     "no":"No",
@@ -140,5 +139,8 @@
   "errorStorage": "Please allow access to the gallery to save photos",
   "saveImageFail": "Failed to save image",
   "createMomentSuccess": "Created moment successfully",
-  "createMomentFail": "Failed to create moment"
+  "createMomentFail": "Failed to create moment",
+  "secondsAgo": "seconds ago",
+  "history": "History",
+  "updateProfileFail": "Update profile failed"
 }

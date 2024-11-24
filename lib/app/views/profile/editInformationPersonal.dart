@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/app_snack_bar.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -164,57 +165,6 @@ class editInformationPersonalState extends State<editInformationPersonal> {
     );
   }
 
-  // Future<void> _pickImage() async {
-  //   final action = await showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(
-  //           S.of(context).chooseOnAction,
-  //           style: TextStyleConstant.lightLight24.copyWith(
-  //             color: AppColors.of(context).neutralColor12,
-  //           ),
-  //         ),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               GestureDetector(
-  //                 child: Text(
-  //                   S.of(context).takePicture,
-  //                   style: TextStyle(color: Colors.blue, fontSize: 20.sp),
-  //                 ),
-  //                 onTap: () {
-  //                   Navigator.pop(context, ImageSource.camera);
-  //                 },
-  //               ),
-  //               Padding(padding: EdgeInsets.all(8.w)),
-  //               GestureDetector(
-  //                 child: Text(
-  //                   S.of(context).selectFromGallery,
-  //                   style: TextStyle(color: Colors.blue, fontSize: 20.sp),
-  //                 ),
-  //                 onTap: () async {
-  //                   final picker = ImagePicker();
-  //                   final pickedFile = await picker.pickImage(
-  //                     source: ImageSource.gallery,
-  //                   ); // Mở thư viện ảnh
-  //                   if (pickedFile != null) {
-  //                     setState(() {
-  //                       imageController.text = pickedFile.path;
-  //                       _imageFile = pickedFile.path;
-  //                     });
-  //                     Navigator.pop(context);
-  //                   }
-  //                 },
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   String formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     final String formatted = formatter.format(date);
@@ -240,31 +190,9 @@ class editInformationPersonalState extends State<editInformationPersonal> {
           context.read<AuthProvider>().updateAvatar(
               Provider.of<UserProvider>(context, listen: false).user.avatar!);
         });
-        showSimpleNotification(
-          Text(
-            S.of(context).updateProfileSuccess,
-            style: AppTextStyles.of(context).light24.copyWith(
-                  color: AppColors.of(context).primaryColor1,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          background: ColorConstants.accentGreen,
-          duration: const Duration(seconds: 2),
-          position: NotificationPosition.top,
-        );
+        AppSnackBar.showSuccess(context,S.of(context).updateProfileSuccess);
       } else {
-        showSimpleNotification(
-          Text(
-            S.of(context).updateProfileSuccess,
-            style: AppTextStyles.of(context).light24.copyWith(
-                  color: AppColors.of(context).primaryColor1,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          background: ColorConstants.accentRed,
-          duration: const Duration(seconds: 2),
-          position: NotificationPosition.top,
-        );
+        AppSnackBar.showError(context,S.of(context).error, S.of(context).updateProfileFail);
       }
     } else {
       setState(() {
@@ -275,8 +203,6 @@ class editInformationPersonalState extends State<editInformationPersonal> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'User: ${widget.userInfor.fullName}, Email: ${widget.userInfor.email}');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -355,7 +281,6 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
-                                  margin: EdgeInsets.only(bottom: 20.h),
                                   decoration: BoxDecoration(
                                     color: AppColors.of(context).neutralColor7,
                                     borderRadius: BorderRadius.circular(50),
@@ -391,13 +316,13 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                             ? Image.file(
                                 File(_imageFile!),
                                 height: 120.w,
-                                width: 120.h,
+                                width: 120.w,
                                 fit: BoxFit.fill,
                               )
                             : Image.network(
                                 widget.userInfor.avatar!,
                                 height: 120.w,
-                                width: 120.h,
+                                width: 120.w,
                                 fit: BoxFit.fill,
                               ),
                       ),
@@ -502,35 +427,55 @@ class Information extends StatelessWidget {
     }
   }
 }
-// void selectedEdit(BuildContext context) async {
-//   if (isEditing) {
-//     DateTime dob = DateFormat('dd/MM/yyyy').parse(dobController.text);
-//     // Format the date in the format the server expects
-//     String formattedDob = DateFormat('MM/dd/yyyy').format(dob);
-//     await Provider.of<UserProvider>(context, listen: false).updateUser(
-//       fullNameController.text,
-//       emailController.text,
-//       phoneNumberController.text,
-//       formattedDob,
-//       _imageFile != null ? File(_imageFile!) : null,
-//     );
-//     if (Provider.of<UserProvider>(context, listen: false).isLoadingProfile ==
-//         false) {
-//       context.read<UserProvider>().getMe();
-//       setState(() {
-//         isEditing = !isEditing;
-//       });
-//       // context.read<UserProvider>().getMe();
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text('Loading...'),
+
+
+// Future<void> _pickImage() async {
+//   final action = await showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: Text(
+//           S.of(context).chooseOnAction,
+//           style: TextStyleConstant.lightLight24.copyWith(
+//             color: AppColors.of(context).neutralColor12,
+//           ),
+//         ),
+//         content: SingleChildScrollView(
+//           child: ListBody(
+//             children: <Widget>[
+//               GestureDetector(
+//                 child: Text(
+//                   S.of(context).takePicture,
+//                   style: TextStyle(color: Colors.blue, fontSize: 20.sp),
+//                 ),
+//                 onTap: () {
+//                   Navigator.pop(context, ImageSource.camera);
+//                 },
+//               ),
+//               Padding(padding: EdgeInsets.all(8.w)),
+//               GestureDetector(
+//                 child: Text(
+//                   S.of(context).selectFromGallery,
+//                   style: TextStyle(color: Colors.blue, fontSize: 20.sp),
+//                 ),
+//                 onTap: () async {
+//                   final picker = ImagePicker();
+//                   final pickedFile = await picker.pickImage(
+//                     source: ImageSource.gallery,
+//                   ); // Mở thư viện ảnh
+//                   if (pickedFile != null) {
+//                     setState(() {
+//                       imageController.text = pickedFile.path;
+//                       _imageFile = pickedFile.path;
+//                     });
+//                     Navigator.pop(context);
+//                   }
+//                 },
+//               ),
+//             ],
+//           ),
 //         ),
 //       );
-//     }
-//   } else {
-//     setState(() {
-//       isEditing = !isEditing;
-//     });
-//   }
+//     },
+//   );
 // }

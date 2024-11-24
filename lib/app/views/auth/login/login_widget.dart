@@ -107,111 +107,130 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(Assets.images.authPNG),
+                    SizedBox(
+                      height: 16.h,
+                    ),
+                    Text(
+                      S.of(context).loginNow,
+                      style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor12),
+                    )
+                  ],
+                )),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 32.w),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Email',
+                        hintStyle: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
+                      ),
+                      style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12),
+                      validator: (value) => !value!.contains('@') ? S.of(context).invalidEmail : null,
+                      onSaved: (newValue) => _emailController.text = newValue ?? "",
+                      onChanged: (value) {
+                        _updateButtonColor();
+                      },
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          hintText: S.of(context).password,
+                          hintStyle: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
+                          errorStyle: TextStyle(
+                            color:
+                                context.watch<AuthProvider>().loginStatus == ModuleStatus.success ? Colors.green : AppColors.of(context).primaryColor10,
+                          ),
+                          errorText: context.watch<AuthProvider>().loginSuccess,
+                          errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1,
+                                  color: context.watch<AuthProvider>().loginStatus == ModuleStatus.success
+                                      ? AppColors.of(context).neutralColor9
+                                      : AppColors.of(context).primaryColor10)),
+                          suffixIconColor: AppColors.of(context).neutralColor9,
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          )),
+                      style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12),
+                      controller: _passwordController,
+                      validator: (value) => value!.length < 2 ? S.of(context).passwordTooShort : null,
+                      onSaved: (newValue) => _passwordController.text = newValue ?? "",
+                      onChanged: (value) {
+                        _updateButtonColor();
+                      },
+                      obscureText: _obscureText,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 16.w),
+              child: Row(
                 children: [
-                  Image.asset(Assets.images.authPNG),
-                  SizedBox(
-                    height: 16.h,
+                  Checkbox(
+                    value: context.watch<AuthProvider>().isRemember,
+                    onChanged: (value) {
+                      context.read<AuthProvider>().changeRemember();
+                    },
+                    activeColor: Colors.black,
                   ),
                   Text(
-                    S.of(context).loginNow,
-                    style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor12),
+                    S.of(context).saveLoginInfo,
+                    style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
                   )
-                ],
-              )),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.w),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      hintStyle: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-                    ),
-                    style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12),
-                    validator: (value) => !value!.contains('@') ? S.of(context).invalidEmail : null,
-                    onSaved: (newValue) => _emailController.text = newValue ?? "",
-                    onChanged: (value) {
-                      _updateButtonColor();
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                        hintText: S.of(context).password,
-                        hintStyle: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-                        errorStyle: TextStyle(
-                          color:
-                              context.watch<AuthProvider>().loginStatus == ModuleStatus.success ? Colors.green : AppColors.of(context).primaryColor10,
-                        ),
-                        errorText: context.watch<AuthProvider>().loginSuccess,
-                        errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1,
-                                color: context.watch<AuthProvider>().loginStatus == ModuleStatus.success
-                                    ? AppColors.of(context).neutralColor9
-                                    : AppColors.of(context).primaryColor10)),
-                        suffixIconColor: AppColors.of(context).neutralColor9,
-                        suffixIcon: IconButton(
-                          icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        )),
-                    style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12),
-                    controller: _passwordController,
-                    validator: (value) => value!.length < 2 ? S.of(context).passwordTooShort : null,
-                    onSaved: (newValue) => _passwordController.text = newValue ?? "",
-                    onChanged: (value) {
-                      _updateButtonColor();
-                    },
-                    obscureText: _obscureText,
-                  ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.w),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: context.watch<AuthProvider>().isRemember,
-                  onChanged: (value) {
-                    context.read<AuthProvider>().changeRemember();
-                  },
-                  activeColor: Colors.black,
-                ),
-                Text(
-                  S.of(context).saveLoginInfo,
-                  style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-                )
-              ],
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 32.w, top: 32.h, right: 32.w),
-              child: context.watch<AuthProvider>().isFullFieldLogin
-                  ? ScaleOnTapWidget(
-                      onTap: (isSelect) async {
-                        await _submit();
-                      },
-                      child: Container(
+            Padding(
+                padding: EdgeInsets.only(left: 32.w, top: 32.h, right: 32.w),
+                child: context.watch<AuthProvider>().isFullFieldLogin
+                    ? ScaleOnTapWidget(
+                        onTap: (isSelect) async {
+                          await _submit();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: AppColors.of(context).primaryColor10,
+                              borderRadius: const BorderRadius.all(Radius.circular(100)),
+                              boxShadow: [
+                                BoxShadow(color: AppColors.of(context).neutralColor8, spreadRadius: 1.h, blurRadius: 2.h, offset: Offset(0, 4.h))
+                              ]),
+                          child: Text(
+                            S.of(context).login,
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor1),
+                          ),
+                        ),
+                      )
+                    : Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                            color: AppColors.of(context).primaryColor10,
+                            color: AppColors.of(context).neutralColor7,
                             borderRadius: const BorderRadius.all(Radius.circular(100)),
                             boxShadow: [
                               BoxShadow(color: AppColors.of(context).neutralColor8, spreadRadius: 1.h, blurRadius: 2.h, offset: Offset(0, 4.h))
@@ -219,45 +238,31 @@ class _LoginWidgetState extends State<LoginWidget> {
                         child: Text(
                           S.of(context).login,
                           textAlign: TextAlign.center,
-                          style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor1),
+                          style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor11),
                         ),
-                      ),
-                    )
-                  : Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: AppColors.of(context).neutralColor7,
-                          borderRadius: const BorderRadius.all(Radius.circular(100)),
-                          boxShadow: [
-                            BoxShadow(color: AppColors.of(context).neutralColor8, spreadRadius: 1.h, blurRadius: 2.h, offset: Offset(0, 4.h))
-                          ]),
-                      child: Text(
-                        S.of(context).login,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor11),
-                      ),
-                    )),
-          SizedBox(
-            height: 32.h,
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.SIGNUP);
-            },
-            child: RichText(
-              text: TextSpan(
-                text: S.of(context).noAccount,
-                style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: S.of(context).registerNow,
-                    style: AppTextStyles.of(context).bold16.copyWith(color: AppColors.of(context).primaryColor10),
-                  ),
-                ],
+                      )),
+            SizedBox(
+              height: 32.h,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.SIGNUP);
+              },
+              child: RichText(
+                text: TextSpan(
+                  text: S.of(context).noAccount,
+                  style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: S.of(context).registerNow,
+                      style: AppTextStyles.of(context).bold16.copyWith(color: AppColors.of(context).primaryColor10),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

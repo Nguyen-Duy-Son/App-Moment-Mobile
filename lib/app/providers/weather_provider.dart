@@ -50,7 +50,6 @@ class WeatherProvider extends ChangeNotifier {
     if (permission == LocationPermission.deniedForever) {
       return false;
     }
-
     return true;
   }
 }

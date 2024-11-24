@@ -61,10 +61,10 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                   ),
                   child: Column(
                     children: [
-                      // Text(
-                      //   context.watch<UserProvider>().user.fullName ?? "",
-                      //   style: AppTextStyles.of(context).bold20,
-                      // ),
+                      Text(
+                        context.watch<UserProvider>().user.fullName ?? "",
+                        style: AppTextStyles.of(context).bold20,
+                      ),
                       SizedBox(
                         height: 12.w,
                       ),
@@ -97,7 +97,7 @@ class PersonalPageScreenState extends State<PersonalPageScreen> {
                           SizedBox(
                             height: 12.w,
                           ),
-                          // const PersonalPageWidget(),
+                          const PersonalPageWidget(),
                         ],
                       )
                     ],

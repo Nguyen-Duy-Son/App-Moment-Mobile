@@ -1,4 +1,3 @@
-// app/views/profile/personalPageWidget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../../datasource/local/storage.dart';
 import '../../routes/app_routes.dart';
-import '../auth/auth_view.dart';
 
 class PersonalPageWidget extends StatefulWidget {
   const PersonalPageWidget({super.key});
@@ -365,11 +363,9 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
     setToken('');
     setUserID('');
     setAvatarUser('');
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushNamedAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const AuthView(),
-        ),
-        ModalRoute.withName(AppRoutes.AUTHENTICATION));
+        AppRoutes.AUTHENTICATION,
+        (route) => false);
   }
 }

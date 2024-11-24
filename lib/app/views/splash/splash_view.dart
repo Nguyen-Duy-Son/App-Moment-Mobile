@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hit_moments/app/core/constants/assets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
-import 'package:hit_moments/app/views/example/home_view.dart';
-
+import 'package:lottie/lottie.dart';
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
 
@@ -14,22 +14,21 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 4), () {
       _checkLogin();
     });
     super.initState();
   }
-  void _checkLogin(){
+  void _checkLogin() async{
     if(getToken().isNotEmpty){
-      Navigator.pushAndRemoveUntil(
+      Navigator.pushReplacementNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => const HomeView(),
-          ),
-          ModalRoute.withName(AppRoutes.MY_HOME));
+          AppRoutes.MY_HOME,
+      );
+      UserProvider().getMe();
     }
     else{
-      Navigator.popAndPushNamed(context, AppRoutes.AUTHENTICATION);
+      Navigator.pushReplacementNamed(context, AppRoutes.AUTHENTICATION);
     }
   }
 
@@ -37,11 +36,11 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Image.asset(
-          Assets.images.logoSplashPNG,
-          height: 110,
-          width: 110,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: Image.asset('assets/images/rotating_splash.gif', width: 200.w, height: 200.h),
+
         ),
       ),
     );

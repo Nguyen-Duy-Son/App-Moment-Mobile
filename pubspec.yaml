@@ -68,8 +68,9 @@ dependencies:
   skeletonizer: ^1.4.2
   image_gallery_saver: ^2.0.3
   permission_handler: ^11.3.1
-  flutter_image_editor: ^2.1.0
-  image_editor: ^1.5.1
+  image_editor_plus: ^1.0.5
+  flutter_image_compress: ^2.3.0
+  flutter_native_splash: ^2.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -110,6 +111,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/animations/
+
   fonts:
     - family: Dongle
       fonts:
@@ -119,6 +121,15 @@ flutter:
           weight: 300
         - asset: assets/fonts/Dongle-Regular.ttf
           weight: 400
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/flutter_splash_image.png
+  android_gravity: "center_horizontal"
+  ios_content_mode: "scaleAspectFit"
+  android_12:
+    color: "#ffffff"
+    image: assets/images/flutter_splash_image.png
+    icon_background_color: "#ffffff"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

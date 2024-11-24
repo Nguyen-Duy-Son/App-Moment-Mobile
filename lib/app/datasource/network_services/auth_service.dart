@@ -54,7 +54,7 @@ class AuthService{
       var response = await BaseConnect.onRequest(
           ApiUrl.register, RequestMethod.POST, body: body);
       int statusCode = response['statusCode'];
-      String mess = response['message'];
+      // String mess = response['message'];
       return statusCode;
       }catch(e){
       return 0;

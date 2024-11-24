@@ -73,6 +73,7 @@ class _AssetsIcons {
   final pause = 'assets/icons/Pause.svg';
   final playMusic = 'assets/icons/play-music.svg';
   final musicGif = 'assets/icons/music.gif';
+  final remove = 'assets/icons/ic_remove.svg';
 }
 
 class _AssetsImages {

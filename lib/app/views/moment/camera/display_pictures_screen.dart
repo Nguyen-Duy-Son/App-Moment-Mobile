@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/app_bar_widget.dart';
 import 'package:hit_moments/app/custom/widgets/app_snack_bar.dart';
 import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
@@ -17,9 +19,9 @@ import 'package:hit_moments/app/providers/list_moment_provider.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/music_provider.dart';
 import 'package:hit_moments/app/providers/weather_provider.dart';
-import 'package:hit_moments/app/custom/widgets/app_bar_widget.dart';
-import 'package:image_editor/image_editor.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -53,7 +55,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   AudioPlayer audioPlayer = AudioPlayer();
   String? nameMusic;
   String? musicId;
-  XFile? editedImage;
+  late XFile editedImage;
+  String? linkMusic;
 
   Future<void> checkAndSaveImage(String imagePath) async {
     // Check the current status of the storage permission
@@ -85,7 +88,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       ),
       backgroundPositiveButton: AppColors.of(context).primaryColor10,
       textPositive: S.of(context).ok,
-      onPressPositive: () async{
+      onPressPositive: () async {
         Navigator.of(context).pop();
         await openAppSettings();
       },
@@ -99,12 +102,13 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     if (result['isSuccess']) {
       // if mounted
       if (mounted) {
-        AppSnackBar.showSuccess(context,S.of(context).saveImageSuccess);
+        AppSnackBar.showSuccess(context, S.of(context).saveImageSuccess);
       }
     } else {
       // if mounted
       if (mounted) {
-        AppSnackBar.showError(context, S.of(context).error, S.of(context).saveImageFail);
+        AppSnackBar.showError(
+            context, S.of(context).error, S.of(context).saveImageFail);
       }
     }
   }
@@ -144,14 +148,31 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBarWidget(title: S.of(context).sendto,),
-        body: Container(
-          margin: EdgeInsets.only(top: 30.w, left: 4.w, right: 4.w),
+        appBar: AppBarWidget(
+          title: S.of(context).sendto,
+          action: Padding(
+            padding: EdgeInsets.only(right: 16.w,bottom: 8.w),
+            child: GestureDetector(
+              onTap: () async {
+                await checkAndSaveImage(widget.image.path);
+              },
+              child: SvgPicture.asset(
+                Assets.icons.download2SVG,
+                color: AppColors.of(context).neutralColor12,
+                width: 36.w,
+                height: 36.w,
+              ),
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          // Make the entire body scrollable
           child: Column(
             children: [
               _buildHeaderPicture(),
               SizedBox(height: 50.w),
               _buildEditImage(),
+              SizedBox(height: 50.h),
               _buildBottomScreen(),
             ],
           ),
@@ -160,31 +181,82 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     );
   }
 
-  // Method to handle image editing and set the edited image
-  Widget _buildEditImage() {
-    final editorOption = ImageEditorOption();
+  // Mở giao diện chỉnh sửa ảnh từ image_editor_plus
+  // Open the image editor and update the displayed image on return
+  Future<void> _openImageEditor() async {
+    // Read the current image file as bytes
+    final imageBytes = await File(editedImage.path).readAsBytes();
 
+    // Open the image editor and wait for the edited image bytes
+    final editedFileBytes = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ImageEditor(
+          image: imageBytes,
+        ),
+        fullscreenDialog: true,
+      ),
+    );
+
+    // If an edited image is returned, save it to a new file and update the state
+    if (editedFileBytes != null) {
+      final tempDir = await getTemporaryDirectory();
+      final filePath =
+          '${tempDir.path}/edited_image_${DateTime.now().millisecondsSinceEpoch}.png';
+      final editedFileInstance =
+          await File(filePath).writeAsBytes(editedFileBytes);
+
+      setState(() {
+        // Update to the new edited image
+        editedImage = XFile(editedFileInstance.path);
+      });
+    }
+  }
+
+  Widget _buildEditImage() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         IconButton(
-          onPressed: () async {
-            // Convert File to Uint8List
-            final imageFile = File(widget.image.path);
-            final imageBytes = await imageFile.readAsBytes();  // Convert to bytes (Uint8List)
-
-            // Edit the image (e.g., crop)
-            final editedImage = await ImageEditor.editImage(
-              image: imageBytes,
-              imageEditorOption: editorOption,
-            );
-
-            setState(() {
-              this.editedImage = XFile.fromData(editedImage!);
-            });
-          },
-          icon: const Icon(Icons.crop),
+          icon: const Icon(Icons.edit),
+          onPressed: _openImageEditor,
         ),
       ],
+    );
+  }
+
+  Widget _buildPicture() {
+    return Padding(
+      padding: EdgeInsets.only(top: 80.h, left: 4.w, right: 4.w),
+      child: SizedBox(
+        height: 1.sw - 16.w,
+        width: 1.sw - 16.w,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50.w),
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: Image.file(
+              File(editedImage.path),
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.error, color: Colors.red);
+              },
+            ),
+          ),
+        ),
+      ),
+      // child: AspectRatio(
+      //   aspectRatio: 3 / 4,
+      //   child: ClipRRect(
+      //     borderRadius: BorderRadius.circular(50),
+      //     child: Image.file(
+      //       File(editedImage.path),
+      //       fit: BoxFit.cover,
+      //       errorBuilder: (context, error, stackTrace) {
+      //         return const Icon(Icons.error, color: Colors.red);
+      //       },
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -213,10 +285,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                               hintText:
                                   AppLocalizations.of(context)!.searchNameMusic,
                               hintStyle: AppTextStyles.of(context)
-                                  .light24
+                                  .light20
                                   .copyWith(
                                       color:
-                                          AppColors.of(context).neutralColor10),
+                                          AppColors.of(context).neutralColor12),
+
                               contentPadding: EdgeInsets.only(
                                   left: 16.w,
                                   right: 16.w,
@@ -237,6 +310,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                 ),
                               ),
                             ),
+                            style: AppTextStyles.of(context)
+                                .light20
+                                .copyWith(color: AppColors.of(context).neutralColor12),
                           ),
                         ),
                         Expanded(
@@ -255,6 +331,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                       setState(() {
                                         nameMusic = null;
                                         musicId = null;
+                                        linkMusic = null;
                                       }); // Stop the music
                                     } else {
                                       playingIndex = index;
@@ -263,6 +340,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                       setState(() {
                                         nameMusic = music.name;
                                         musicId = music.id;
+                                        linkMusic = music.linkMusic;
                                       });
                                     }
                                   });
@@ -350,29 +428,19 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       weather = weatherController.text;
     }
     await momentProvider.createMoment(
-        feelingController.text, weather, widget.image, musicId!);
+        feelingController.text, weather, editedImage, musicId, linkMusic);
     if (momentProvider.createMomentStatus == ModuleStatus.success) {
+      await context.read<ListMomentProvider>().getListMoment();
+      Navigator.of(context).pop();
       AppSnackBar.showSuccess(context, S.of(context).createMomentSuccess);
     } else {
+      // Navigator.of(context).pop();
       AppSnackBar.showError(context, S.of(context).error,
           S.of(context).error + S.of(context).createMomentFail);
     }
   }
 
-  Widget _buildPicture() {
-    return AspectRatio(
-      aspectRatio: 3 / 4,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Image.file(
-          File(editedImage?.path ?? widget.image.path),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderPicture (){
+  Widget _buildHeaderPicture() {
     return Form(
       key: _globalKey,
       child: Stack(alignment: Alignment.topRight, children: [
@@ -382,168 +450,179 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             _buildPicture(),
             !context.watch<MusicProvider>().isLoadingListMusic
                 ? Positioned(
-              top: 4.w,
-              child: GestureDetector(
-                onTap: () {
-                  showModalSheetSelectMusic(context);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColors.of(context).neutralColor11,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 12.w, vertical: 4.w),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        Assets.icons.music,
-                        width: 20.w,
-                        height: 20.w,
-                        color:
-                        AppColors.of(context).neutralColor1,
+                    top: 80.w,
+                    child: GestureDetector(
+                      onTap: () {
+                        showModalSheetSelectMusic(context);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.of(context).neutralColor11,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.w, vertical: 4.w),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              Assets.icons.music,
+                              width: 14.w,
+                              height: 14.w,
+                              color: AppColors.of(context).neutralColor1,
+                            ),
+                            SizedBox(
+                              width: 4.w,
+                            ),
+                            Text(
+                              nameMusic != null
+                                  ? nameMusic!
+                                  : AppLocalizations.of(context)!.addMusic,
+                              style: AppTextStyles.of(context).light14.copyWith(
+                                  color: AppColors.of(context).neutralColor1),
+                            )
+                          ],
+                        ),
                       ),
-                      SizedBox(
-                        width: 4.w,
-                      ),
-                      Text(
-                        nameMusic != null
-                            ? nameMusic!
-                            : AppLocalizations.of(context)!
-                            .addMusic,
-                        style: AppTextStyles.of(context)
-                            .light20
-                            .copyWith(
-                            color: AppColors.of(context)
-                                .neutralColor1),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            )
+                    ),
+                  )
                 : const SizedBox(),
-            Consumer<WeatherProvider>(builder: (context, weatherProvider, child) {
+            Consumer<WeatherProvider>(
+                builder: (context, weatherProvider, child) {
               if (weatherProvider.weatherStatus != ModuleStatus.initial) {
                 weatherController.text =
-                "${weatherProvider.weather?.city}|${weatherProvider.weather?.tempC}|${weatherProvider.weather?.icon}";
+                    "${weatherProvider.weather?.city}|${weatherProvider.weather?.tempC}|${weatherProvider.weather?.icon}";
                 return checkWeather
                     ? Positioned(
-                  top: 40.w,
-                  right: 4.w,
-                  width: weatherProvider.weather?.icon == null
-                      ? MediaQuery.of(context).size.width / 3.5
-                      : MediaQuery.of(context).size.width / 2.7,
-                  child: Row(
-                    children: [
-                      weatherProvider.weather?.icon == null
-                          ? SvgPicture.asset(
-                          Assets.icons.sunSVG,
-                          height: 24.w,
-                          width: 24.w)
-                          : CachedNetworkImage(
-                        imageUrl: "https:${weatherProvider.weather?.icon}",
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withOpacity(0.3)
-                              ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: EdgeInsets.only(left: 8.w, right: 8.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                textAlign: TextAlign.center,
-                                weatherProvider.weather?.city ?? "",
-                                maxLines: 1,
-                                style: AppTextStyles.of(context)
-                                    .light14
-                                    .copyWith(
-                                  height: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  color: AppColors.of(context).neutralColor1,
-                                  shadows: [
-                                    Shadow(
-                                      blurRadius: 1.0,
-                                      color: AppColors.of(context).neutralColor12,
+                        top: 88.w,
+                        right: 10.w,
+                        width: weatherProvider.weather?.icon == null
+                            ? MediaQuery.of(context).size.width / 3.5
+                            : MediaQuery.of(context).size.width / 2.7,
+                        child: Row(
+                          children: [
+                            weatherProvider.weather?.icon == null
+                                ? SvgPicture.asset(Assets.icons.sunSVG,
+                                    height: 14.w, width: 12.w)
+                                : CachedNetworkImage(
+                                    imageUrl:
+                                        "https:${weatherProvider.weather?.icon}",
+                                    fit: BoxFit.cover,
+                                  ),
+                            SizedBox(width: 2.w),
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.3)
+                                    ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: EdgeInsets.only(left: 8.w, right: 8.w),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      textAlign: TextAlign.center,
+                                      weatherProvider.weather?.city ?? "",
+                                      maxLines: 1,
+                                      style: AppTextStyles.of(context)
+                                          .light14
+                                          .copyWith(
+                                        height: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        color:
+                                            AppColors.of(context).neutralColor1,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 1.0,
+                                            color: AppColors.of(context)
+                                                .neutralColor12,
+                                          ),
+                                        ],
+                                      ),
                                     ),
+                                    Text(
+                                      "${weatherProvider.weather?.tempC ?? 29}℃",
+                                      style: AppTextStyles.of(context)
+                                          .regular16
+                                          .copyWith(
+                                        height: 1,
+                                        color:
+                                            AppColors.of(context).neutralColor3,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 1.0,
+                                            color: AppColors.of(context)
+                                                .neutralColor12,
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
-                              Text(
-                                "${weatherProvider.weather?.tempC ?? 29}℃",
-                                style: AppTextStyles.of(context)
-                                    .regular20
-                                    .copyWith(
-                                  height: 1,
-                                  color: AppColors.of(context).neutralColor3,
-                                  shadows: [
-                                    Shadow(
-                                      blurRadius: 1.0,
-                                      color: AppColors.of(context).neutralColor12,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                )
+                      )
                     : const SizedBox();
               } else {
                 return const SizedBox();
               }
             }),
-            SingleChildScrollView(
-              reverse: true,
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom / 2.3),
-              child: Container(
-                margin: EdgeInsets.fromLTRB(60.w, 0, 60.w, 10.w),
-                decoration: BoxDecoration(
-                  color: AppColors.of(context).neutralColor6,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: const [
-                    BoxShadow(
-                        blurRadius: 5,
-                        spreadRadius: 1,
-                        offset: Offset(1, 1),
-                        color: Colors.black45)
-                  ],
-                ),
-                child: TextFormField(
-                  controller: feelingController,
-                  style: const TextStyle(fontSize: 24),
-                  maxLength: 30,
-                  decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)!.feel,
-                    hintStyle: AppTextStyles.of(context)
-                        .light24
-                        .copyWith(color: AppColors.of(context).neutralColor10),
-                    contentPadding: EdgeInsets.only(
-                        left: 12.w, right: 12.w, top: 4.w, bottom: 4.w),
-                    border: InputBorder.none,
-                    counterText: "", // Add this line
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 88.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: AppColors.of(context).neutralColor7,
+                borderRadius: BorderRadius.circular(20.w),
+              ),
+              child: TextFormField(
+                enableSuggestions: false,
+                autocorrect: false,
+                controller: feelingController,
+                style: AppTextStyles.of(context)
+                    .light20
+                    .copyWith(color: AppColors.of(context).neutralColor12, height: 1),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                textAlignVertical: TextAlignVertical.center,
+                cursorHeight: 20.h,
+                cursorColor: AppColors.of(context).neutralColor10,
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.feel,
+                  isCollapsed: true, // Bắt buộc không thêm padding mặc định
+                  hintStyle: AppTextStyles.of(context)
+                      .light16
+                      .copyWith(color: AppColors.of(context).neutralColor1),
+                  contentPadding: EdgeInsets.only(
+                      left: 12.w, right: 8.w, top: 7.w, bottom: 4.w),
+                  counterStyle: AppTextStyles.of(context)
+                      .light16
+                      .copyWith(color: AppColors.of(context).neutralColor12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.w),
+                    borderSide: BorderSide(color: AppColors.of(context).neutralColor7),
                   ),
-                  maxLines: 1,
+                  disabledBorder: OutlineInputBorder(
+                      borderSide:  BorderSide(color: AppColors.of(context).neutralColor7), borderRadius: BorderRadius.circular(20.w)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:  BorderSide(color: AppColors.of(context).neutralColor7),
+                    borderRadius: BorderRadius.circular(20.w),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:  BorderSide(color: AppColors.of(context).neutralColor7),
+                    borderRadius: BorderRadius.circular(20.w),
+                  ),
+                  counterText: "", // Add this line
                 ),
+                maxLines: 1,
               ),
             ),
           ],
@@ -552,22 +631,20 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     );
   }
 
-  Widget _buildBottomScreen(){
+  Widget _buildBottomScreen() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         GestureDetector(
-          onTap: () {
-            setState(() {
-              checkWeather = !checkWeather;
-            });
+          onTap: () async {
+            Navigator.of(context).pop();
           },
-          child: !checkWeather
-              ? SvgPicture.asset(
-            Assets.icons.cloud1SVG,
+          child: SvgPicture.asset(
+            Assets.icons.remove,
             color: AppColors.of(context).neutralColor12,
-          )
-              : SvgPicture.asset(Assets.icons.cloud2SVG),
+            width: 36.w,
+            height: 36.w,
+          ),
         ),
         OutlinedButton(
           onPressed: () async {
@@ -578,8 +655,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               backgroundColor: AppColors.of(context).neutralColor6,
               shape: const CircleBorder(),
               side: BorderSide(
-                  color: AppColors.of(context).primaryColor10,
-                  width: 4),
+                  color: AppColors.of(context).primaryColor10, width: 4),
               padding: const EdgeInsets.fromLTRB(4, 6, 12, 2)),
           child: SvgPicture.asset(
             Assets.icons.sendSVG,
@@ -588,17 +664,20 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             color: AppColors.of(context).neutralColor12,
           ),
         ),
-        IconButton(
-          onPressed: () async {
-            await checkAndSaveImage(widget.image.path);
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              checkWeather = !checkWeather;
+            });
           },
-          icon: SvgPicture.asset(
-            Assets.icons.download2SVG,
-            color: AppColors.of(context).neutralColor12,
-          ),
-        )
+          child: !checkWeather
+              ? SvgPicture.asset(
+                  Assets.icons.cloud1SVG,
+                  color: AppColors.of(context).neutralColor12,
+                )
+              : SvgPicture.asset(Assets.icons.cloud2SVG),
+        ),
       ],
     );
   }
-
 }

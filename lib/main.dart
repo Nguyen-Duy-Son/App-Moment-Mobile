@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hit_moments/app/core/config/app_config.dart';
@@ -22,14 +23,28 @@ import 'app/providers/moment_provider.dart';
 
 void main() async {
   await GetStorage.init('hit_moment');
-  runApp(OverlaySupport(child: MyApp()));
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // add flutter native splash
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(const OverlaySupport(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final LocaleProvider locale = LocaleProvider();
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FlutterNativeSplash.remove();
+  }
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

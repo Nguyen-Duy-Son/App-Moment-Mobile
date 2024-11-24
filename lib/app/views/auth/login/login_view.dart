@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
-import 'package:hit_moments/app/datasource/local/storage.dart';
-import 'package:hit_moments/app/routes/app_routes.dart';
+import 'package:hit_moments/app/custom/widgets/app_bar_animation.dart';
+import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/views/auth/login/login_widget.dart';
-import 'package:hit_moments/app/views/example/home_view.dart';
-import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -15,18 +15,14 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return Stack(
       children: [
         SafeArea(
@@ -40,6 +36,11 @@ class _LoginViewState extends State<LoginView> {
             body: const LoginWidget(),
           ),
         ),
+        context.watch<AuthProvider>().loginStatus == ModuleStatus.loading
+            ? const Center(
+                child: AppPageWidget(),
+              )
+            : const SizedBox(),
       ],
     );
   }

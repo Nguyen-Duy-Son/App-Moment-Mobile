@@ -101,10 +101,10 @@ class MomentProvider extends ChangeNotifier{
 
   }
 
-  Future<void> createMoment(String? content, String? weather, XFile image,String musicId) async{
+  Future<void> createMoment(String? content, String? weather, XFile image,String? musicId, String? linkMusic) async{
     createMomentStatus = ModuleStatus.loading;
     notifyListeners();
-    final response =  await MomentService().createMoment(content, weather, image, musicId);
+    final response =  await MomentService().createMoment(content, weather, image, musicId, linkMusic);
     if(response == 201){
       createMomentResult = "Thành công";
       createMomentStatus = ModuleStatus.success;

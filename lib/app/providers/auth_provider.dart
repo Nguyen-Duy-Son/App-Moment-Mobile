@@ -67,6 +67,8 @@ class AuthProvider extends ChangeNotifier {
     loginStatus = ModuleStatus.loading;
     notifyListeners();
     try {
+      // Thời gian loading thêm 2 giây rồi mới hiển thị kết quả
+      await Future.delayed(const Duration(seconds: 2));
       var response = await authService.login(email, password);
 
       int statusCode = response['statusCode'];
