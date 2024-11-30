@@ -71,12 +71,12 @@ class _LoginWidgetState extends State<LoginWidget> {
           );
         }
         else{
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeView(),
-              ),
-              ModalRoute.withName(AppRoutes.MY_HOME));
+          // Navigator.pushAndRemoveUntil<void>(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => const HomeView()),
+          //   ModalRoute.withName(AppRoutes.MY_HOME),
+          // );
+          Navigator.pushReplacementNamed(context, AppRoutes.MY_HOME,);
         }
 
       } else if (context.read<AuthProvider>().loginStatus == ModuleStatus.fail) {
