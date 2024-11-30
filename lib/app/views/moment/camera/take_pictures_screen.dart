@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -5,17 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/app_bar_animation.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
-import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
+import 'package:hit_moments/app/providers/list_moment_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:image/image.dart' as img;
 import 'package:provider/provider.dart';
 
 import '../../../providers/music_provider.dart';
 import '../../../providers/user_provider.dart';
+import 'auto_switch_image_widget.dart';
 import 'display_pictures_screen.dart';
 
 // A screen that allows users to take a picture using a given camera.
@@ -35,16 +39,17 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   int direction = 0;
   FlashMode _flashMode = FlashMode.off;
   double zoomLevel = 1.0; // Zoom level from 1x to 5x
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!isCameraReady) {  // Chỉ khởi tạo camera nếu chưa sẵn sàng
+      if (!isCameraReady) {
+        // Chỉ khởi tạo camera nếu chưa sẵn sàng
         startCamera(direction);
       }
       context.read<AuthProvider>().updateAvatar(getAvatarUser());
       context.read<MusicProvider>().getListMusic();
+      context.read<ListMomentProvider>().getListImagesMoment();
     });
   }
 
@@ -55,7 +60,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       startCamera(direction);
     }
   }
-
 
 // Add this method to toggle flash
   void toggleFlash() {
@@ -139,6 +143,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     });
     cameraController.setZoomLevel(zoomLevel);
   }
+
   @override
   void deactivate() {
     // Dừng camera khi widget không còn visible
@@ -146,133 +151,129 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     super.deactivate();
   }
 
-
   @override
   void dispose() {
     // Dừng camera preview và giải phóng tài nguyên
-    cameraController.stopImageStream();  // Dừng camera stream nếu đang chạy
+    cameraController.stopImageStream(); // Dừng camera stream nếu đang chạy
     cameraController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isCameraReady) {
-      return SafeArea(
-          child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.of(context).primaryColor1,
-          centerTitle: true,
-          title: Container(
-            margin: EdgeInsets.only(top: 4.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    await cameraController.pausePreview(); // Dừng camera
-                    Navigator.pushNamed(context, AppRoutes.MY_PROFILE).then((_) async {
-                      // Tiếp tục camera khi quay lại màn hình
-                      await cameraController.resumePreview();
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(
-                            color: AppColors.of(context).neutralColor7,
-                            width: 4.w)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network(
-                        context.watch<AuthProvider>().avatar!,
-                        width: 28.w,
-                        height: 28.w,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    await cameraController.pausePreview(); // Dừng camera
-                    Navigator.pushNamed(context, AppRoutes.LIST_MY_FRIEND).then((_) async {
-                      // Tiếp tục camera khi quay lại màn hình
-                      await cameraController.resumePreview();
-                    });
-                  },
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: AppColors.of(context).neutralColor7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SvgPicture.asset(
-                          Assets.icons.usersSVG,
-                          height: 24.w,
-                          width: 24.w,
-                          color: AppColors.of(context).neutralColor11,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!.addfriend,
-                          style: AppTextStyles.of(context).regular24.copyWith(
-                                color: AppColors.of(context).neutralColor11,
-                              ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(10.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: AppColors.of(context).neutralColor6,
-                  ),
-                  child: GestureDetector(
-                    child: SvgPicture.asset(
-                      Assets.icons.message,
-                      width: 20.w,
-                      height: 20.w,
-                      // color: AppColors.of(context).neutralColor6,
-                    ),
-                    // onTap: () =>
-                    //     Navigator.pushNamed(context, AppRoutes.MY_CONVERSATION),
-                    onTap: () async {
-                      await cameraController.pausePreview(); // Dừng camera
-                      Navigator.pushNamed(context, AppRoutes.MY_CONVERSATION).then((_) async {
-                        // Tiếp tục camera khi quay lại màn hình
-                        await cameraController.resumePreview();
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          toolbarHeight: 52.w, // Set the height of the AppBar here
-        ),
-        body: Container(
-          margin:
-              EdgeInsets.only(top: 80.h, left: 4.w, right: 4.w, bottom: 12.w),
-          alignment: Alignment.center,
-          child: Column(
+    final provider = context.watch<ListMomentProvider>();
+    if (!isCameraReady || !cameraController.value.isInitialized) {
+      return const Center(child: AppPageWidget());
+    }
+    return SafeArea(
+        child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.of(context).primaryColor1,
+        centerTitle: true,
+        title: Container(
+          margin: EdgeInsets.only(top: 4.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Stack(
-                children: [
-                  // Center(
-                  //   child: AspectRatio(
-                  //     aspectRatio: 3 / 4,
-                  //     child: ClipRRect(
-                  //       borderRadius: BorderRadius.circular(50),
-                  //       child: CameraPreview(cameraController!),
-                  //     ),
-                  //   ),
-                  // ),
-                  SizedBox(
+              GestureDetector(
+                onTap: () async {
+                  await cameraController.pausePreview(); // Dừng camera
+                  Navigator.pushNamed(context, AppRoutes.MY_PROFILE)
+                      .then((_) async {
+                    // Tiếp tục camera khi quay lại màn hình
+                    await cameraController.resumePreview();
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                          color: AppColors.of(context).neutralColor7,
+                          width: 4.w)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.network(
+                      context.watch<AuthProvider>().avatar!,
+                      width: 28.w,
+                      height: 28.w,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  await cameraController.pausePreview(); // Dừng camera
+                  Navigator.pushNamed(context, AppRoutes.LIST_MY_FRIEND)
+                      .then((_) async {
+                    // Tiếp tục camera khi quay lại màn hình
+                    await cameraController.resumePreview();
+                  });
+                },
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: AppColors.of(context).neutralColor7),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SvgPicture.asset(
+                        Assets.icons.usersSVG,
+                        height: 24.w,
+                        width: 24.w,
+                        color: AppColors.of(context).neutralColor11,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.addfriend,
+                        style: AppTextStyles.of(context).regular24.copyWith(
+                              color: AppColors.of(context).neutralColor11,
+                            ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: AppColors.of(context).neutralColor6,
+                ),
+                child: GestureDetector(
+                  child: SvgPicture.asset(
+                    Assets.icons.message,
+                    width: 20.w,
+                    height: 20.w,
+                    // color: AppColors.of(context).neutralColor6,
+                  ),
+                  // onTap: () =>
+                  //     Navigator.pushNamed(context, AppRoutes.MY_CONVERSATION),
+                  onTap: () async {
+                    await cameraController.pausePreview(); // Dừng camera
+                    Navigator.pushNamed(context, AppRoutes.MY_CONVERSATION)
+                        .then((_) async {
+                      // Tiếp tục camera khi quay lại màn hình
+                      await cameraController.resumePreview();
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        toolbarHeight: 52.w, // Set the height of the AppBar here
+      ),
+      body: Container(
+        margin: EdgeInsets.only(top: 80.h, left: 4.w, right: 4.w, bottom: 12.w),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Positioned(
+                  child: SizedBox(
                     height: 1.sw,
                     width: 1.sw,
                     child: ClipRRect(
@@ -287,146 +288,162 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    right: 10.w,
-                    top: 20.h,
-                    child: InkWell(
-                      onTap: toggleZoom,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 10.w, vertical: 4.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.of(context).neutralColor8,
-                          borderRadius: BorderRadius.circular(50.w),
-                        ),
-                        child: Text(
-                          "${zoomLevel.toStringAsFixed(0)}x",
-                          style: AppTextStyles.of(context).regular12.copyWith(
-                                color: AppColors.of(context).neutralColor1,
-                              ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 10.w,
-                    top: 20.h,
+                ),
+                Positioned(
+                  right: 10.w,
+                  top: 20.h,
+                  child: InkWell(
+                    onTap: toggleZoom,
                     child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8.w, vertical: 5.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.w),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
                         color: AppColors.of(context).neutralColor8,
+                        borderRadius: BorderRadius.circular(50.w),
                       ),
-                      child: InkWell(
-                        onTap: toggleFlash,
-                        child: SvgPicture.asset(
-                          Assets.icons.lightning,
-                          color: _flashMode == FlashMode.torch
-                              ? AppColors.of(context)
-                                  .primaryColor9 // Flash on color
-                              : AppColors.of(context)
-                                  .neutralColor1, // Fla// sh off color
-                          width: 20.w,
-                          height: 20.h,
-                        ),
+                      child: Text(
+                        "${zoomLevel.toStringAsFixed(0)}x",
+                        style: AppTextStyles.of(context).regular12.copyWith(
+                              color: AppColors.of(context).neutralColor1,
+                            ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 70.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    width: 67.w,
-                    height: 56.w,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/icons/ic_library.svg',
-                        width: 67.w,
-                        height: 56.w,
-                        color: AppColors.of(context).neutralColor12,
-                      ),
-                      onPressed: (){},
                     ),
                   ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      final image = await cameraController.takePicture();
-                      //final croppedImage = await cropImageToAspectRatio(File(image.path));
-                      turnOffFlash();
-                      if (!context.mounted) return;
-                      await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DisplayPictureScreen(
-                                image: image,
-                                //imagePath: croppedImage.path,
-                                users: context.watch<UserProvider>().friendList,
-                              )));
-                    },
-                    style: OutlinedButton.styleFrom(
-                        fixedSize: const Size(65, 65),
-                        shape: const CircleBorder(),
-                        side: BorderSide(
-                            color: AppColors.of(context).primaryColor10,
-                            width: 4.w),
-                        padding: const EdgeInsets.all(6)),
-                    child: Container(
-                      padding: const EdgeInsets.all(30),
-                      decoration: BoxDecoration(
-                          color: AppColors.of(context).neutralColor8,
-                          borderRadius: BorderRadius.circular(50)),
+                ),
+                Positioned(
+                  left: 10.w,
+                  top: 20.h,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: AppColors.of(context).neutralColor8,
+                    ),
+                    child: InkWell(
+                      onTap: toggleFlash,
+                      child: SvgPicture.asset(
+                        Assets.icons.lightning,
+                        color: _flashMode == FlashMode.torch
+                            ? AppColors.of(context)
+                                .primaryColor9 // Flash on color
+                            : AppColors.of(context)
+                                .neutralColor1, // Fla// sh off color
+                        width: 20.w,
+                        height: 20.h,
+                      ),
                     ),
                   ),
-                  IconButton(
+                )
+              ],
+            ),
+            SizedBox(
+              height: 40.h,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  width: 67.w,
+                  height: 56.w,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                  child: IconButton(
                     icon: SvgPicture.asset(
-                      Assets.icons.swap,
+                      'assets/icons/ic_library.svg',
                       width: 67.w,
                       height: 56.w,
                       color: AppColors.of(context).neutralColor12,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        direction = direction == 0 ? 1 : 0;
-                        startCamera(direction);
-                      });
-                    },
+                    onPressed: () {},
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 28.w,
-              ),
-              Text(
-                S.of(context).history,
-                style: AppTextStyles.of(context).regular24.copyWith(
-                      color: AppColors.of(context).neutralColor12,
-                    ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  widget.pageParentController.nextPage(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut);
-                },
-                child: SvgPicture.asset(
-                  Assets.icons.downSVG,
-                  width: 16.w,
-                  height: 16.w,
-                  color: AppColors.of(context).neutralColor9,
                 ),
+                OutlinedButton(
+                  onPressed: () async {
+                    final image = await cameraController.takePicture();
+                    //final croppedImage = await cropImageToAspectRatio(File(image.path));
+                    turnOffFlash();
+                    if (!context.mounted) return;
+                    await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DisplayPictureScreen(
+                              image: image,
+                              //imagePath: croppedImage.path,
+                              users: context.watch<UserProvider>().friendList,
+                            )));
+                  },
+                  style: OutlinedButton.styleFrom(
+                      fixedSize: const Size(65, 65),
+                      shape: const CircleBorder(),
+                      side: BorderSide(
+                          color: AppColors.of(context).primaryColor10,
+                          width: 4.w),
+                      padding: const EdgeInsets.all(6)),
+                  child: Container(
+                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                        color: AppColors.of(context).neutralColor8,
+                        borderRadius: BorderRadius.circular(50)),
+                  ),
+                ),
+                IconButton(
+                  icon: SvgPicture.asset(
+                    Assets.icons.swap,
+                    width: 67.w,
+                    height: 56.w,
+                    color: AppColors.of(context).neutralColor12,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      direction = direction == 0 ? 1 : 0;
+                      startCamera(direction);
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30.w,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                provider.getListImageMoment == ModuleStatus.success &&
+                    provider.listImageMoment.isNotEmpty
+                    ? AutoSwitchImageRow(images: provider.listImageMoment ?? [])
+                    : provider.getListImageMoment == ModuleStatus.loading
+                    ? SvgPicture.asset(
+                  'assets/icons/ic_library.svg',
+                  width: 30.w,
+                  height: 30.w,
+                  color: AppColors.of(context).neutralColor12,
+                )
+                    : SvgPicture.asset(
+                  'assets/icons/ic_library.svg',
+                  width: 30.w,
+                  height: 30.w,
+                  color: AppColors.of(context).neutralColor12,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10.w,
+            ),
+            GestureDetector(
+              onTap: () {
+                widget.pageParentController.nextPage(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut);
+              },
+              child: SvgPicture.asset(
+                Assets.icons.downSVG,
+                width: 16.w,
+                height: 16.w,
+                color: AppColors.of(context).neutralColor9,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ));
-    } else {
-      return const SizedBox();
-    }
+      ),
+    ));
   }
 }

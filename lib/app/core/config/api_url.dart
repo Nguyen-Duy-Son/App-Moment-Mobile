@@ -1,7 +1,7 @@
 const example = 'example';
 
 mixin class ApiUrl {
-  // static const _urlBase = "https://api.hitmoments.com/v1";
+  // static const _urlBase = "https://hit-moments-api-master.vercel.app/api/v1";
   static const _urlBase = "http://192.168.0.103:3000/api/v1";
   // static const _urlBase = "http://10.218.1.162:3000/api/v1";
   static const forgotPassword = "$_urlBase/auth/forgot-password";
@@ -9,6 +9,7 @@ mixin class ApiUrl {
   static const register = "$_urlBase/auth/register";
   static const getMe = "$_urlBase/auth/me";
   static const getListMoment = "$_urlBase/moments/";
+  static const getListImagesMoment = "$_urlBase/moments/images/";
   static const getListMomentByUserID = "$_urlBase/moments/user/";
   static const getFriends = "$_urlBase/friends/list-friends";
   static const getFriendsRequest = "$_urlBase/friends/list-received-request";
