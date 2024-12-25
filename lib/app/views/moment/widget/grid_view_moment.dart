@@ -7,6 +7,7 @@ import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -98,18 +99,19 @@ class _GridViewMomentState extends State<GridViewMoment> {
             future: _generateThumbnail(moment.video ?? ''),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Skeletonizer(
-                  child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(50),
+                return AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(20.w),
+                      ),
                     ),
                   ),
                 )
-
-
                 ;
               } else if (snapshot.hasData) {
                 return Stack(
