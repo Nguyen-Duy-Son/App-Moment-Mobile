@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:hit_moments/app/core/config/theme_config.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -50,20 +52,6 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                             color: AppColors.of(context).neutralColor12)),
                   ],
                 ),
-                // Switch(
-                //   value : _value1,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       if (_value1!=true) {
-                //         context.read<ThemeProvider>().setThemeData(ThemeConfig.darkTheme);
-                //       } else {
-                //         context.read<ThemeProvider>().setThemeData(ThemeConfig.lightTheme);
-                //       }
-                //       _value1 = value;
-                //       setDarkMode(_value1);
-                //     });
-                //   },
-                // ),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -191,6 +179,32 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                   ),
                 )
               ],
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 12.w, bottom: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.SCAN_QR_CODE);
+              },
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    Assets.icons.iconQrCode,
+                    color: AppColors.of(context).neutralColor11,
+                  ),
+                  SizedBox(
+                    width: 15.w,
+                  ),
+                  Text(S.of(context).scanQrCode,
+                      style: AppTextStyles.of(context).light20.copyWith(
+                          color: AppColors.of(context).neutralColor12)),
+                ],
+              ),
             ),
             Container(
               margin: EdgeInsets.only(top: 12.w, bottom: 12.w),

@@ -101,10 +101,16 @@ class MomentProvider extends ChangeNotifier{
 
   }
 
-  Future<void> createMoment(String? content, String? weather, XFile image,String? musicId, String? linkMusic) async{
+  Future<void> createMoment({String? content, String? weather, XFile? image,String? musicId, String? linkMusic, String? type, XFile? video}) async{
     createMomentStatus = ModuleStatus.loading;
     notifyListeners();
-    final response =  await MomentService().createMoment(content, weather, image, musicId, linkMusic);
+    dynamic response;
+    if(type == getStringTypeMoment(TypeMoment.image)){
+      response =  await MomentService().createMomentImage(content, weather, image, musicId, linkMusic, type);
+    }
+    else{
+      response =  await MomentService().createMomentVideo(content, type, video: video);
+    }
     if(response == 201){
       createMomentResult = "Thành công";
       createMomentStatus = ModuleStatus.success;
@@ -116,4 +122,7 @@ class MomentProvider extends ChangeNotifier{
     }
     notifyListeners();
   }
+
+  
+
 }

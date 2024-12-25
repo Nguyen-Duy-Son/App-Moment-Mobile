@@ -30,7 +30,6 @@ class SelectFunctionWidget extends StatefulWidget {
 
 class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
   late ScaffoldMessengerState scaffoldMessenger;
-  @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
   //   scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -38,11 +37,13 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
   // }
   late String saveImageSuccessMessage;
   late String errorMessage;
+  late String saveVideoSuccessMessage;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     saveImageSuccessMessage = S.of(context).saveImageSuccess;
+    saveVideoSuccessMessage = S.of(context).saveVideoSuccessMessage;
     errorMessage = S.of(context).error;
   }
   TextEditingController controller = TextEditingController();
@@ -61,6 +62,35 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
       if (finalPath != null) {
         Fluttertoast.showToast(
           msg: saveImageSuccessMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        // AppSnackBar.showSuccess(context,saveImageSuccessMessage);
+      }
+    } catch (e) {
+      AppSnackBar.showError(context, errorMessage, e.toString());
+    }
+  }
+
+  // save video
+  Future<void> _saveVideo(BuildContext context) async {
+    try {
+      final response = await http.get(Uri.parse(widget.momentModel.video ?? ""));
+      final dir = await getTemporaryDirectory();
+      final filename = '${dir.path}/SaveVideo${Random().nextInt(100)}.mp4';
+      final file = File(filename);
+      await file.writeAsBytes(response.bodyBytes);
+
+      final params = SaveFileDialogParams(sourceFilePath: file.path);
+      final finalPath = await FlutterFileDialog.saveFile(params: params);
+
+      if (finalPath != null) {
+        Fluttertoast.showToast(
+          msg: saveVideoSuccessMessage,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
@@ -354,7 +384,11 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                   {'menu': S.of(context).report}],
                   opTap: (func) async{
                     if (func == S.of(context).download) {
-                      _saveImage(context);
+                      if(widget.momentModel.type == "image") {
+                        await _saveImage(context);
+                      } else if(widget.momentModel.type == "video") {
+                        await _saveVideo(context);
+                      }
                     } else if (func == S.of(context).deletePost) {
                       await Future.delayed(Duration(milliseconds: 100));
                       _deleteMoment(widget.momentModel.momentID ?? "");

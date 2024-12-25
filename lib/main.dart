@@ -5,6 +5,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hit_moments/app/core/config/app_config.dart';
+import 'package:hit_moments/app/datasource/network_services/navigator_service.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
@@ -90,6 +91,7 @@ class _MyAppState extends State<MyApp> {
             child: Consumer<LocaleProvider>(
               builder: (context, provider, child) {
                 return MaterialApp(
+                  navigatorKey: NavigationService.navigatorKey,
                   title: AppConfig.appName,
                   locale: provider.locale,
                   debugShowCheckedModeBanner: false,

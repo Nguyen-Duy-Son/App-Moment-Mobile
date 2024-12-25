@@ -6,3 +6,18 @@ enum ModuleStatus{
   success,
   fail
 }
+
+enum TypeMoment{
+  image,
+  video,
+}
+getStringTypeMoment(TypeMoment type){
+  switch(type){
+    case TypeMoment.image:
+      return 'image';
+    case TypeMoment.video:
+      return 'video';
+    default:
+      return 'image';
+  }
+}

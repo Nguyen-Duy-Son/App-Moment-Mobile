@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AutoSwitchImageRow extends StatefulWidget {
   final List<String?> images; // Danh sách URL ảnh
@@ -55,24 +56,44 @@ class _AutoSwitchImageRowState extends State<AutoSwitchImageRow> {
         ClipRRect(
           borderRadius: BorderRadius.circular(10), // Bo tròn ảnh
           child: Container(
-            width: 30.w, // Kích thước ảnh
-            height: 30.w,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle, // Hình tròn
-            ),
+            width: 28.w, // Kích thước ảnh
+            height: 28.w,
+            // decoration: const BoxDecoration(
+            //   shape: BoxShape.circle, // Hình tròn
+            // ),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 500), // Thời gian hiệu ứng
               child: Image.network(
+                width: 28.w,
+                height: 28.w,
                 widget.images[_currentIndex] ?? '', // Hiển thị ảnh hiện tại
                 key: ValueKey<int>(_currentIndex), // Đảm bảo widget sẽ được tái tạo mỗi khi ảnh thay đổi
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
                 errorBuilder: (context, error, stackTrace) =>
                     Image.asset('assets/images/moment-default.png'), // Ảnh mặc định nếu có lỗi
+                loadingBuilder:
+                    (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: Skeletonizer(
+                      child: Container(
+                        width: 28.w,
+                        height: 28.w,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10), // Bo tròn ảnh
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
+
             ),
           ),
         ),
         SizedBox(width: 6.w),
+
         Text(
           S.of(context).history,
           style: AppTextStyles.of(context).regular24.copyWith(

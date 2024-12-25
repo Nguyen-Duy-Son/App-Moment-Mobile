@@ -13,6 +13,8 @@ class MomentModel{
   final String? weather;
   final String? musicId;
   final String? linkMusic;
+  final String? type;
+  final String? video;
 
   MomentModel( {
     this.imgAvatar,
@@ -28,6 +30,8 @@ class MomentModel{
     this.weather,
     this.musicId,
     this.linkMusic,
+    this.type,
+    this.video
   });
 
   factory MomentModel.fromJson(Map<String, dynamic> json){
@@ -40,11 +44,13 @@ class MomentModel{
       isDeleted: json['isDeleted'],
       image: json['image'],
       content: json['content'],
-      weather: json['weather'],
+      weather: json['weather'] ?? '',
       createAt: DateTime.parse(json['createdAt']),
       updateAt: DateTime.parse(json['updatedAt']),
       musicId: json['musicId'],
       linkMusic: json['linkMusic'],
+      type: json['type'],
+      video: json['video'],
     );
   }
 

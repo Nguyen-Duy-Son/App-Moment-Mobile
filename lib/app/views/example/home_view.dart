@@ -31,17 +31,17 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-          body: PageView(
-            controller: pageController,
-            scrollDirection: Axis.vertical,
-            children: [
-              TakePictureScreen(pageParentController: pageController,),
-              MomentView(pageParentController: pageController,)
-            ],
-          ),
-        )
+    return Scaffold(
+      body: SafeArea(
+        child: PageView(
+          controller: pageController,
+          scrollDirection: Axis.vertical,
+          children: [
+            TakePictureScreen(pageParentController: pageController,),
+            MomentView(pageParentController: pageController,)
+          ],
+        ),
+      ),
     );
   }
 }

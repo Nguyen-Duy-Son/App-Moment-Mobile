@@ -3,8 +3,15 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/datasource/network_services/navigator_service.dart';
+import 'package:hit_moments/app/l10n/l10n.dart';
+import 'package:hit_moments/app/routes/app_routes.dart';
 import 'package:http/http.dart' as http;
 
 enum RequestMethod { GET, POST, PUT, DELETE }
@@ -52,14 +59,11 @@ class BaseConnect {
             }
           });
         }
-        print("lỗi là:" + message.toString());
         break;
       case 401:
-        String message =
-            'CODE (${response.statusCode}):\n${response.reasonPhrase}';
-        print("lỗi là:" + message.toString());
-        //Remove token
         setToken('');
+        // Điều hướng đến màn hình Auth
+        _showError();
         break;
       default:
         break;
@@ -111,10 +115,32 @@ class BaseConnect {
         default:
           throw Exception('Unsupported request method');
       }
+      handleErrorStatus(response);
       return jsonDecode(response.body);
     } catch (e) {
       print(e);
       return Future.error(e);
     }
+  }
+  static void _showError() {
+    BuildContext context = NavigationService.navigatorKey.currentContext!;
+    showCustomDialog(
+      context,
+      title: S.of(context).error,
+      content: Text(
+        S.of(context).loginExpired,
+        style: AppTextStyles.of(context)
+            .regular24
+            .copyWith(color: AppColors.of(context).neutralColor12),
+        textAlign: TextAlign.center,
+      ),
+      backgroundPositiveButton: AppColors.of(context).primaryColor10,
+      textPositive: S.of(context).ok,
+      onPressPositive: () {
+        Navigator.pushReplacementNamed(context, AppRoutes.AUTHENTICATION);
+      },
+      colorTextPositive: AppColors.of(context).neutralColor12,
+      hideNegativeButton: true,
+    );
   }
 }

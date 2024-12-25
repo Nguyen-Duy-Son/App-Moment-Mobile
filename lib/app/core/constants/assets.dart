@@ -57,6 +57,7 @@ class _AssetsIcons {
   final play = 'assets/icons/Play.svg';
   final logoSplashSVG = 'assets/icons/LogoSplash.svg';
   final group = 'assets/icons/group.svg';
+  final avatar = 'assets/icons/ic_avatar.svg';
   // final swap = 'assets/icons/Swap.svg';
   final message = 'assets/icons/Union.svg';
   final lightDark = 'assets/icons/light-dark.svg';
@@ -74,6 +75,11 @@ class _AssetsIcons {
   final playMusic = 'assets/icons/play-music.svg';
   final musicGif = 'assets/icons/music.gif';
   final remove = 'assets/icons/ic_remove.svg';
+  final playVideo = 'assets/icons/ic_play.svg';
+  final stop = 'assets/icons/ic_stop.svg';
+  final eye = 'assets/icons/ic_eye.svg';
+  final eyeOff = 'assets/icons/ic_eye_off.svg';
+  final iconQrCode = 'assets/icons/ic_qr_code.svg';
 }
 
 class _AssetsImages {

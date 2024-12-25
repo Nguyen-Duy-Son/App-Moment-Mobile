@@ -13,6 +13,7 @@ import 'package:hit_moments/app/views/moment/widget/bottom_sheet_input.dart';
 import 'package:hit_moments/app/views/moment/widget/moment_content_widget.dart';
 import 'package:hit_moments/app/views/moment/widget/select_funtion_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../core/config/enum.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../l10n/l10n.dart';
@@ -92,11 +93,27 @@ class _MomentWidgetState extends State<MomentWidget> {
                 return ListTile(
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
-                    child: CachedNetworkImage(
-                      imageUrl: react.avatar,
+                    child: Image.network(
+                      react.avatar,
                       width: 40,
                       height: 40,
                       fit: BoxFit.cover,
+                      loadingBuilder:
+                          (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: Skeletonizer(
+                            child: Container(
+                              width: 35.w,
+                              height: 35.w,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   title: Text(react.fullname,
@@ -159,7 +176,6 @@ class _MomentWidgetState extends State<MomentWidget> {
                 style: AppTextStyles.of(context).regular16.copyWith(
                   height: 1.5,
                   overflow: TextOverflow.ellipsis,
-                  color: AppColors.of(context).neutralColor1,
                   shadows: [
                     const Shadow(
                       blurRadius: 1.0,
@@ -176,7 +192,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                     widget.momentModel.createAt!, context),
                 style: AppTextStyles.of(context).light14.copyWith(
                   height: 1,
-                  color: AppColors.of(context).neutralColor6,
+                  // color: AppColors.of(context).neutralColor6,
                   shadows: [
                     Shadow(
                       blurRadius: 1.0,

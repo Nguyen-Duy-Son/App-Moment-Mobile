@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/providers/conversation_provider.dart';
 import 'package:hit_moments/app/views/conversation/components/chat_message_view.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../core/constants/assets.dart';
 import '../../core/extensions/theme_extensions.dart';
 import '../../l10n/l10n.dart';
 
@@ -33,6 +35,11 @@ class _ConversationViewState extends State<ConversationView> {
       }
     });
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    callApi(); // Gọi lại API khi màn hình trở thành màn hình hiện tại
+  }
 
   String compareTime(DateTime inputTime) {
     final currentTime = DateTime.now();
@@ -51,156 +58,162 @@ class _ConversationViewState extends State<ConversationView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                S.of(context).message,
-                style: AppTextStyles.of(context).bold32.copyWith(
-                      color: AppColors.of(context).neutralColor12,
-                    ),
-              ),
-              centerTitle: true,
-            ),
-            body: RefreshIndicator(
-              onRefresh: () async {
-                callApi();
-              },
-              color: AppColors.of(context).primaryColor9,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: Consumer<ConversationProvider>(
-                  builder: (context, provider, child) {
-                    if (provider.loadingMessageStatus == ModuleStatus.loading) {
-                      return ListView.builder(
-                        itemCount: 5,
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            S.of(context).conservation,
+            style: AppTextStyles.of(context).bold24
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: SvgPicture.asset(Assets.icons.leftSVG),
+            onPressed: () => {
+              Navigator.of(context).pop()
+            },
+          ),
+        ),
+        body: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              callApi();
+            },
+            color: AppColors.of(context).primaryColor9,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              child: Consumer<ConversationProvider>(
+                builder: (context, provider, child) {
+                  if (provider.loadingMessageStatus == ModuleStatus.loading) {
+                    return ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return _buildSkeletonItem();
+                      },
+                    );
+                  }
+                  if(provider.loadingMessageStatus == ModuleStatus.fail){
+                    return Center(
+                      child: Text(S.of(context).noMessage),
+                    );
+                  }
+                  return Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: provider.conversations.length,
+                        physics: const AlwaysScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return _buildSkeletonItem();
-                        },
-                      );
-                    }
-                    if(provider.loadingMessageStatus == ModuleStatus.fail){
-                      return Center(
-                        child: Text("Có lỗi xảy ra"),
-                      );
-                    }
-                    return Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: provider.conversations.length,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatMessageView(
-                                      conversationId:
-                                      provider.conversations[index].id,
-                                      receiver:
-                                      provider.conversations[index].user,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatMessageView(
+                                    conversationId:
+                                    provider.conversations[index].id,
+                                    receiver:
+                                    provider.conversations[index].user,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 32.w,
+                                vertical: 12.w,
+                              ),
+                              margin: EdgeInsets.only(top: 8.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.of(context).neutralColor3,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: Image.network(
+                                      provider.conversations[index].user
+                                          .avatar??'',
+                                      width: 40.w,
+                                      height: 40.w,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 32.w,
-                                  vertical: 12.w,
-                                ),
-                                margin: EdgeInsets.only(top: 8.w),
-                                decoration: BoxDecoration(
-                                  color: AppColors.of(context).neutralColor3,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Row(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
-                                      child: Image.network(
-                                        provider.conversations[index].user
-                                            .avatar??'',
-                                        width: 40.w,
-                                        height: 40.w,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    Expanded(
-                                      // Add this
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                provider.conversations[index]
-                                                    .user.fullName,
-                                                style:
-                                                AppTextStyles.of(context)
-                                                    .regular20
-                                                    .copyWith(
-                                                  color: AppColors.of(
-                                                      context)
-                                                      .neutralColor12,
-                                                ),
+                                  SizedBox(
+                                    width: 8.w,
+                                  ),
+                                  Expanded(
+                                    // Add this
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              provider.conversations[index]
+                                                  .user.fullName,
+                                              style:
+                                              AppTextStyles.of(context)
+                                                  .regular20
+                                                  .copyWith(
+                                                color: AppColors.of(
+                                                    context)
+                                                    .neutralColor12,
                                               ),
-                                              SizedBox(
-                                                width: 8.w,
-                                              ),
-                                            ],
-                                          ),
-                                          provider.conversations[index]
-                                              .lastMessage ==
-                                              null
-                                              ? Text(
-                                            "Chưa có câu trả lời nào",
-                                            style: AppTextStyles.of(
-                                                context)
-                                                .light16
-                                                .copyWith(
-                                              color: AppColors.of(
-                                                  context)
-                                                  .neutralColor11,
                                             ),
-                                            overflow:
-                                            TextOverflow.ellipsis,
-                                          )
-                                              : Text(
-                                            provider
-                                                .conversations[index]
-                                                .lastMessage!,
-                                            style: AppTextStyles.of(
-                                                context)
-                                                .light16
-                                                .copyWith(
-                                              color: AppColors.of(
-                                                  context)
-                                                  .neutralColor11,
+                                            SizedBox(
+                                              width: 8.w,
                                             ),
-                                            overflow:
-                                            TextOverflow.ellipsis,
+                                          ],
+                                        ),
+                                        provider.conversations[index]
+                                            .lastMessage ==
+                                            null
+                                            ? Text(
+                                          "Chưa có câu trả lời nào",
+                                          style: AppTextStyles.of(
+                                              context)
+                                              .light16
+                                              .copyWith(
+                                            color: AppColors.of(
+                                                context)
+                                                .neutralColor11,
                                           ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                          overflow:
+                                          TextOverflow.ellipsis,
+                                        )
+                                            : Text(
+                                          provider
+                                              .conversations[index]
+                                              .lastMessage!,
+                                          style: AppTextStyles.of(
+                                              context)
+                                              .light16
+                                              .copyWith(
+                                            color: AppColors.of(
+                                                context)
+                                                .neutralColor11,
+                                          ),
+                                          overflow:
+                                          TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
-                            );
-                          },
-                        )
-                      ],
-                    );
-                  },
-                ),
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  );
+                },
               ),
-            )));
+            ),
+          ),
+        ));
   }
   Widget _buildSkeletonItem() {
     return Container(
