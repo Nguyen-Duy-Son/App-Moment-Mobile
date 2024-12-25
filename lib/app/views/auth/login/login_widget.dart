@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/providers/auth_provider.dart';
 import 'package:hit_moments/app/routes/app_routes.dart';
+import 'package:hit_moments/app/views/auth/input_textff_widget.dart';
 import 'package:hit_moments/app/views/example/home_view.dart';
 import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +28,8 @@ class _LoginWidgetState extends State<LoginWidget> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
   bool _isFullField = false;
-
+  bool _obscurePass = true;
   @override
   void initState() {
     super.initState();
@@ -71,12 +73,11 @@ class _LoginWidgetState extends State<LoginWidget> {
           );
         }
         else{
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeView(),
-              ),
-              ModalRoute.withName(AppRoutes.MY_HOME));
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.MY_HOME,
+          );
+          // Navigator.pushAndRemoveUntil(context, AppRoutes.MY_HOME,);
         }
 
       } else if (context.read<AuthProvider>().loginStatus == ModuleStatus.fail) {
@@ -116,19 +117,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           children: [
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(Assets.images.authPNG),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    Text(
-                      S.of(context).loginNow,
-                      style: AppTextStyles.of(context).regular32.copyWith(color: AppColors.of(context).neutralColor12),
-                    )
-                  ],
-                )),
+                child: Image.asset(Assets.images.authPNG)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 32.w),
               child: Form(
@@ -137,72 +126,68 @@ class _LoginWidgetState extends State<LoginWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextFormField(
+                    InputTextffWidget(
                       controller: _emailController,
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        hintStyle: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-                      ),
-                      style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12),
-                      validator: (value) => !value!.contains('@') ? S.of(context).invalidEmail : null,
-                      onSaved: (newValue) => _emailController.text = newValue ?? "",
-                      onChanged: (value) {
-                        _updateButtonColor();
-                      },
+                      hintText: S.of(context).enterEmail,
+                      context: context,
+                      validator: (value) =>
+                      value!.isEmpty ? S.of(context).cannotBeEmpty : null,
+                      onChanged: (value) => _updateButtonColor(),
+                      onSaved: (newValue) =>
+                      _emailController.text = newValue ?? "",
+                      labelText: "Email",
+                      isRequired: true,
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          hintText: S.of(context).password,
-                          hintStyle: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-                          errorStyle: TextStyle(
-                            color:
-                                context.watch<AuthProvider>().loginStatus == ModuleStatus.success ? Colors.green : AppColors.of(context).primaryColor10,
-                          ),
-                          errorText: context.watch<AuthProvider>().loginSuccess,
-                          errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 1,
-                                  color: context.watch<AuthProvider>().loginStatus == ModuleStatus.success
-                                      ? AppColors.of(context).neutralColor9
-                                      : AppColors.of(context).primaryColor10)),
-                          suffixIconColor: AppColors.of(context).neutralColor9,
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          )),
-                      style: AppTextStyles.of(context).light20.copyWith(color: AppColors.of(context).neutralColor12),
+                    SizedBox(
+                      height: 16.h,
+                    ),
+                    InputTextffWidget(
                       controller: _passwordController,
-                      validator: (value) => value!.length < 2 ? S.of(context).passwordTooShort : null,
-                      onSaved: (newValue) => _passwordController.text = newValue ?? "",
-                      onChanged: (value) {
-                        _updateButtonColor();
-                      },
-                      obscureText: _obscureText,
+                      hintText: S.of(context).enterPassword,
+                      context: context,
+                      validator: (value) =>
+                      value!.isEmpty ? S.of(context).cannotBeEmpty : null,
+                      onChanged: (value) => _updateButtonColor(),
+                      onSaved: (newValue) =>
+                      _passwordController.text = newValue ?? "",
+                      labelText: S.of(context).password,
+                      isRequired: true,
+                      obscureText: _obscurePass,
+                      suffixIcon: GestureDetector(
+                        child: SvgPicture.asset(
+                          _obscurePass
+                              ? "assets/icons/ic_eye_close.svg"
+                              : "assets/icons/ic_eye.svg",
+                          color: AppColors.of(context).neutralColor9,
+                          width: 24.w,
+                          height: 24.w,
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _obscurePass = !_obscurePass;
+                          });
+                        },
+                      ),
                     ),
+
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 16.w),
-              child: Row(
-                children: [
-                  Checkbox(
-                    value: context.watch<AuthProvider>().isRemember,
-                    onChanged: (value) {
-                      context.read<AuthProvider>().changeRemember();
-                    },
-                    activeColor: Colors.black,
-                  ),
-                  Text(
-                    S.of(context).saveLoginInfo,
-                    style: AppTextStyles.of(context).light16.copyWith(color: AppColors.of(context).neutralColor11),
-                  )
-                ],
+            SizedBox(
+              height: 12.h,
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 32.w),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.FORGOT_PASSWORD);
+                },
+                child: Text(
+                  S.of(context).forgotPassword,
+                  style: AppTextStyles.of(context).bold16.copyWith(color: AppColors.of(context).primaryColor10),
+                ),
               ),
             ),
             Padding(

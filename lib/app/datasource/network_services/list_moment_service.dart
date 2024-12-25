@@ -61,6 +61,23 @@ class ListMomentService{
     }
   }
 
+  Future<dynamic> getListImagesMoment() async{
+    try{
+      final response = await BaseConnect.onRequest(
+          ApiUrl.getListImagesMoment,
+          RequestMethod.GET
+      );
+      int statusCode = response['statusCode'];
+      if(statusCode==200){
+        return MomentModel.fromJson(response['data']);
+      }else{
+        return null;
+      }
+    }catch(e){
+      return e.toString();
+    }
+  }
+
 
 
 

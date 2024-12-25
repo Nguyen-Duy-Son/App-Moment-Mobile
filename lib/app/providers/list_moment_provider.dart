@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hit_moments/app/core/base/base_connect.dart';
+import 'package:hit_moments/app/core/config/api_url.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/datasource/network_services/list_moment_service.dart';
 import 'package:hit_moments/app/datasource/network_services/moment_service.dart';
@@ -18,9 +20,10 @@ class ListMomentProvider extends ChangeNotifier{
   List<MomentModel> listMomentMore=[];
   ModuleStatus getListMomentStatus = ModuleStatus.initial;
   ModuleStatus loadMoreStatus = ModuleStatus.initial;
+  ModuleStatus getListImageMoment = ModuleStatus.initial;
   int _pageIndex = 1;
   int _pageIndexSort = 1;
-
+  List<String?> listImageMoment = [];
   Future<void> getListFriendOfUser() async{
     var response = await UserService.getFriends();
     friendList = response.map<User>((item) => User.fromJson(item)).toList();
@@ -43,6 +46,8 @@ class ListMomentProvider extends ChangeNotifier{
     if(response is List<MomentModel>){
       getListMomentStatus = ModuleStatus.success;
       momentList =  response;
+      // listImageMoment = momentList.map((e) => e.image).toList();
+      // print(listImageMoment);
     }else{
       getListMomentStatus = ModuleStatus.fail;
       momentList =  [];
@@ -50,6 +55,39 @@ class ListMomentProvider extends ChangeNotifier{
     notifyListeners();
 
   }
+
+  Future<void> getListImagesMoment() async {
+    getListImageMoment = ModuleStatus.loading;
+    notifyListeners();
+
+    try {
+      final response = await BaseConnect.onRequest(
+        ApiUrl.getListImagesMoment,
+        RequestMethod.GET,
+      );
+
+      if (response['statusCode'] == 200) {
+        // Parse data nếu thành công
+        final List<String> images = (response['data']['images'] as List)
+            .map((item) => item["image"].toString())
+            .toList();
+        listImageMoment = images;
+        getListImageMoment = ModuleStatus.success;
+      } else {
+        // Xử lý nếu status code khác 200
+        listImageMoment = [];
+        getListImageMoment = ModuleStatus.fail;
+      }
+    } catch (e) {
+      // Xử lý khi gặp lỗi
+      listImageMoment = [];
+      getListImageMoment = ModuleStatus.fail;
+    }
+
+    notifyListeners();
+  }
+
+
   Future<void> getListMomentByUserID(User? friend) async{
     _pageIndex=1;
     _pageIndexSort=1;

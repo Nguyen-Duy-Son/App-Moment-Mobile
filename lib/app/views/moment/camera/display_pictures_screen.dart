@@ -1,5 +1,9 @@
 import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:hit_moments/app/core/constants/color_constants.dart';
+import 'package:hit_moments/app/routes/app_routes.dart';
+import 'package:image/image.dart' as img;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
@@ -20,6 +24,7 @@ import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:hit_moments/app/providers/music_provider.dart';
 import 'package:hit_moments/app/providers/weather_provider.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
+// import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -37,7 +42,7 @@ class DisplayPictureScreen extends StatefulWidget {
   State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
 }
 
-class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+class _DisplayPictureScreenState extends State<DisplayPictureScreen> with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
 
   //Controller
@@ -57,6 +62,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   String? musicId;
   late XFile editedImage;
   String? linkMusic;
+  bool isUploading = false; // Kiểm soát trạng thái tải
+  double uploadProgress = 0.0; // Giá trị phần trăm tải
+  late AnimationController _animationController;
 
   Future<void> checkAndSaveImage(String imagePath) async {
     // Check the current status of the storage permission
@@ -118,12 +126,18 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     super.initState();
     initController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ListMomentProvider>().getListMoment();
+      // context.read<ListMomentProvider>().getListMoment();
+      context.read<MusicProvider>().getListMusic();
     });
     if (context.read<WeatherProvider>().weatherStatus == ModuleStatus.initial) {
       context.read<WeatherProvider>().getCurrentPosition();
     }
     editedImage = XFile(widget.image.path);
+    // Khởi tạo AnimationController
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500), // Thời gian hiệu ứng
+      vsync: this,
+    );
   }
 
   void initController() {
@@ -140,75 +154,117 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   void dispose() {
     audioPlayer.dispose(); // Dispose the audio player
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBarWidget(
-          title: S.of(context).sendto,
-          action: Padding(
-            padding: EdgeInsets.only(right: 16.w,bottom: 8.w),
-            child: GestureDetector(
-              onTap: () async {
-                await checkAndSaveImage(widget.image.path);
-              },
-              child: SvgPicture.asset(
-                Assets.icons.download2SVG,
-                color: AppColors.of(context).neutralColor12,
-                width: 36.w,
-                height: 36.w,
+    return Consumer(
+      builder: (BuildContext context, MomentProvider value, Widget? child) {
+        // if (value.createMomentStatus == ModuleStatus.fail) {
+        //   AppSnackBar.showError(context, S.of(context).error,
+        //       S.of(context).error + S.of(context).createMomentFail);
+        // }
+        return Opacity(
+          opacity: (value.createMomentStatus == ModuleStatus.loading && isUploading == true) ? 0.5 : 1,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.of(context).neutralColor1,
+            appBar: AppBarWidget(
+              title: S.of(context).sendto,
+              action: Padding(
+                padding: EdgeInsets.only(right: 16.w, bottom: 8.w),
+                child: GestureDetector(
+                  onTap: () async {
+                    await checkAndSaveImage(widget.image.path);
+                  },
+                  child: SvgPicture.asset(
+                    Assets.icons.download2SVG,
+                    color: AppColors.of(context).neutralColor12,
+                    width: 36.w,
+                    height: 36.w,
+                  ),
+                ),
+              ),
+            ),
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      _buildHeaderPicture(),
+                      SizedBox(height: 50.w),
+                      SizedBox(height: 50.h),
+                      _buildBottomScreen(),
+                    ],
+                  ),
+                  if(value.createMomentStatus == ModuleStatus.loading && isUploading == true)
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            S.of(context).postMoment,
+                            style: AppTextStyles.of(context).light24.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          LoadingDotsAnimation(), // Thêm animation ba chấm nhảy
+                        ],
+                      ),
+                    ),
+                ]
               ),
             ),
           ),
-        ),
-        body: SingleChildScrollView(
-          // Make the entire body scrollable
-          child: Column(
-            children: [
-              _buildHeaderPicture(),
-              SizedBox(height: 50.w),
-              _buildEditImage(),
-              SizedBox(height: 50.h),
-              _buildBottomScreen(),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  // Mở giao diện chỉnh sửa ảnh từ image_editor_plus
-  // Open the image editor and update the displayed image on return
+
   Future<void> _openImageEditor() async {
     // Read the current image file as bytes
     final imageBytes = await File(editedImage.path).readAsBytes();
 
-    // Open the image editor and wait for the edited image bytes
-    final editedFileBytes = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ImageEditor(
-          image: imageBytes,
+    // Decode the image to manipulate it
+    final decodedImage = img.decodeImage(imageBytes);
+    if (decodedImage != null) {
+      // Resize the image before opening the editor (reduce size by 50%)
+      final resizedImage = img.copyResize(
+        decodedImage,
+        width: (decodedImage.width * 0.5).toInt(), // Reduce width by 50%
+        height: (decodedImage.height * 0.5).toInt(), // Reduce height by 50%
+      );
+
+      // Encode the resized image back to bytes
+      final resizedImageBytes = img.encodePng(resizedImage);
+
+      // Open the resized image in the editor
+      final editedFileBytes = await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ImageEditor(
+            image: resizedImageBytes,
+          ),
+          fullscreenDialog: true,
         ),
-        fullscreenDialog: true,
-      ),
-    );
+      );
 
-    // If an edited image is returned, save it to a new file and update the state
-    if (editedFileBytes != null) {
-      final tempDir = await getTemporaryDirectory();
-      final filePath =
-          '${tempDir.path}/edited_image_${DateTime.now().millisecondsSinceEpoch}.png';
-      final editedFileInstance =
-          await File(filePath).writeAsBytes(editedFileBytes);
+      // If an edited image is returned, save it to a new file and update the state
+      if (editedFileBytes != null) {
+        final tempDir = await getTemporaryDirectory();
+        final filePath =
+            '${tempDir.path}/edited_image_${DateTime.now().millisecondsSinceEpoch}.png';
+        final editedFileInstance =
+        await File(filePath).writeAsBytes(editedFileBytes);
 
-      setState(() {
-        // Update to the new edited image
-        editedImage = XFile(editedFileInstance.path);
-      });
+        setState(() {
+          // Update to the new edited image
+          editedImage = XFile(editedFileInstance.path);
+        });
+      }
     }
   }
 
@@ -422,23 +478,42 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   Future<void> createMoment() async {
     final momentProvider = context.read<MomentProvider>();
-    if (checkWeather == false) {
-      weather = "";
-    } else {
-      weather = weatherController.text;
-    }
+
+    // Nếu không có thông tin thời tiết
+    weather = checkWeather ? weatherController.text : "";
+
+    setState(() {
+      isUploading = true; // Hiển thị widget loading
+      uploadProgress = 0.0; // Bắt đầu từ 0%
+    });
+
+    // Chạy song song giữa cập nhật progress và gọi API
     await momentProvider.createMoment(
-        feelingController.text, weather, editedImage, musicId, linkMusic);
+        content: feelingController.text,
+        weather: weather,
+        image: editedImage,
+        musicId: musicId,
+        linkMusic: linkMusic,
+        type: getStringTypeMoment(TypeMoment.image),
+      );
+
+    // Sau khi API hoàn tất, cập nhật progress lên 100%
     if (momentProvider.createMomentStatus == ModuleStatus.success) {
-      await context.read<ListMomentProvider>().getListMoment();
-      Navigator.of(context).pop();
+      setState(() {
+        isUploading = false; // Ẩn widget loading
+      });
+
+      Navigator.of(context).pop(); // Đóng màn hình
       AppSnackBar.showSuccess(context, S.of(context).createMomentSuccess);
-    } else {
-      // Navigator.of(context).pop();
-      AppSnackBar.showError(context, S.of(context).error,
-          S.of(context).error + S.of(context).createMomentFail);
+    } else if (momentProvider.createMomentStatus == ModuleStatus.fail) {
+      setState(() {
+        isUploading = false; // Ẩn widget loading
+      });
+      AppSnackBar.showError(
+          context, S.of(context).error, S.of(context).createMomentFail);
     }
   }
+
 
   Widget _buildHeaderPicture() {
     return Form(
@@ -585,8 +660,13 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 borderRadius: BorderRadius.circular(20.w),
               ),
               child: TextFormField(
-                enableSuggestions: false,
-                autocorrect: false,
+                enableSuggestions: true,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'.*')), // Cho phép mọi ký tự
+                ],
+                keyboardType: TextInputType.text, // Loại bàn phím hỗ trợ ký tự văn bản
+                textInputAction: TextInputAction.done, // Kiểu hành động nút trên bàn phím
+                autocorrect: true,
                 controller: feelingController,
                 style: AppTextStyles.of(context)
                     .light20
@@ -680,4 +760,332 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       ],
     );
   }
+
 }
+class LoadingDotsAnimation extends StatefulWidget {
+  @override
+  _LoadingDotsAnimationState createState() => _LoadingDotsAnimationState();
+}
+
+class _LoadingDotsAnimationState extends State<LoadingDotsAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation1;
+  late Animation<double> _animation2;
+  late Animation<double> _animation3;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Controller cho hoạt ảnh
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900), // Tốc độ tổng thể
+      vsync: this,
+    )..repeat();
+
+    // Ba hoạt ảnh chồng lấp nhau
+    _animation1 = Tween<double>(begin: 1.0, end: 1.5).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.4, curve: Curves.easeInOut),
+      ),
+    );
+
+    _animation2 = Tween<double>(begin: 1.0, end: 1.5).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.2, 0.6, curve: Curves.easeInOut),
+      ),
+    );
+
+    _animation3 = Tween<double>(begin: 1.0, end: 1.5).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.4, 1.0, curve: Curves.easeInOut),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedBuilder(
+          animation: _animation1,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _animation1.value,
+              child: _buildDot(color: Colors.white),
+            );
+          },
+        ),
+        const SizedBox(width: 8),
+        AnimatedBuilder(
+          animation: _animation2,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _animation2.value,
+              child: _buildDot(color: Colors.white),
+            );
+          },
+        ),
+        const SizedBox(width: 8),
+        AnimatedBuilder(
+          animation: _animation3,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _animation3.value,
+              child: _buildDot(color: Colors.white),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDot({required Color color}) {
+    return Container(
+      width: 12, // Kích thước của dấu chấm
+      height: 12,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+}
+
+// class LoadingDotsAnimation extends StatefulWidget {
+//   const LoadingDotsAnimation({super.key});
+//
+//   @override
+//   _LoadingDotsAnimationState createState() => _LoadingDotsAnimationState();
+// }
+//
+// class _LoadingDotsAnimationState extends State<LoadingDotsAnimation>
+//     with SingleTickerProviderStateMixin {
+//   late AnimationController _controller;
+//   late Animation<double> _animation1;
+//   late Animation<double> _animation2;
+//   late Animation<double> _animation3;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     // Controller cho hoạt ảnh
+//     _controller = AnimationController(
+//       duration: const Duration(milliseconds: 600), // Tốc độ tổng thể
+//       vsync: this,
+//     )..repeat(reverse: true);
+//
+//     // Ba hoạt ảnh với thời gian chồng lấp mượt mà
+//     _animation1 = Tween<double>(begin: 0, end: -10).animate(
+//       CurvedAnimation(
+//         parent: _controller,
+//         curve: const Interval(0.0, 0.4, curve: Curves.easeInOut),
+//       ),
+//     );
+//
+//     _animation2 = Tween<double>(begin: 0, end: -10).animate(
+//       CurvedAnimation(
+//         parent: _controller,
+//         curve: const Interval(0.2, 0.6, curve: Curves.easeInOut),
+//       ),
+//     );
+//
+//     _animation3 = Tween<double>(begin: 0, end: -10).animate(
+//       CurvedAnimation(
+//         parent: _controller,
+//         curve: const Interval(0.4, 1.0, curve: Curves.easeInOut),
+//       ),
+//     );
+//   }
+//
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         AnimatedBuilder(
+//           animation: _animation1,
+//           builder: (context, child) {
+//             return Transform.translate(
+//               offset: Offset(0, _animation1.value),
+//               child: _buildDot(),
+//             );
+//           },
+//         ),
+//         const SizedBox(width: 8),
+//         AnimatedBuilder(
+//           animation: _animation2,
+//           builder: (context, child) {
+//             return Transform.translate(
+//               offset: Offset(0, _animation2.value),
+//               child: _buildDot(),
+//             );
+//           },
+//         ),
+//         const SizedBox(width: 8),
+//         AnimatedBuilder(
+//           animation: _animation3,
+//           builder: (context, child) {
+//             return Transform.translate(
+//               offset: Offset(0, _animation3.value),
+//               child: _buildDot(),
+//             );
+//           },
+//         ),
+//       ],
+//     );
+//   }
+//
+//   Widget _buildDot() {
+//     return Container(
+//       width: 8,
+//       height: 8,
+//       decoration: const BoxDecoration(
+//         color: ColorConstants.primaryLight10,
+//         shape: BoxShape.circle,
+//       ),
+//     );
+//   }
+// }
+
+
+
+// Mở giao diện chỉnh sửa ảnh từ image_editor_plus
+// Open the image editor and update the displayed image on return
+// Future<void> _openImageEditor() async {
+//   // Read the current image file as bytes
+//   final imageBytes = await File(editedImage.path).readAsBytes();
+//
+//   // Open the image editor and wait for the edited image bytes
+//   final editedFileBytes = await Navigator.of(context).push(
+//     MaterialPageRoute(
+//       builder: (context) => Scaffold(
+//         resizeToAvoidBottomInset: false,
+//         body: SafeArea(
+//           child: ImageEditor(
+//             image: imageBytes,
+//           ),
+//         ),
+//       ),
+//       fullscreenDialog: true,
+//     ),
+//   );
+//
+//
+//   // If an edited image is returned, save it to a new file and update the state
+//   if (editedFileBytes != null) {
+//     final tempDir = await getTemporaryDirectory();
+//     final filePath =
+//         '${tempDir.path}/edited_image_${DateTime.now().millisecondsSinceEpoch}.png';
+//     final editedFileInstance =
+//         await File(filePath).writeAsBytes(editedFileBytes);
+//
+//     setState(() {
+//       // Update to the new edited image
+//       editedImage = XFile(editedFileInstance.path);
+//     });
+//   }
+// }
+
+
+// Future<void> createMoment() async {
+//   final momentProvider = context.read<MomentProvider>();
+//
+//   // Nếu không có thông tin thời tiết
+//   weather = checkWeather ? weatherController.text : "";
+//
+//   setState(() {
+//     isUploading = true; // Hiển thị widget loading
+//     uploadProgress = 0.0; // Bắt đầu từ 0%
+//   });
+//
+//   // Chạy song song giữa cập nhật progress và gọi API
+//   await Future.wait([
+//     // 1. Hiển thị progress giả lập đến 90%
+//     Future(() async {
+//       for (int i = 0; i <= 90; i++) {
+//         await Future.delayed(const Duration(milliseconds: 30)); // Giả lập delay
+//         setState(() {
+//           uploadProgress = i.toDouble(); // Cập nhật phần trăm
+//         });
+//       }
+//     }),
+//
+//     // 2. Gọi API
+//     momentProvider.createMoment(
+//       content: feelingController.text,
+//       weather: weather,
+//       image: editedImage,
+//       musicId: musicId,
+//       linkMusic: linkMusic,
+//       type: getStringTypeMoment(TypeMoment.image),
+//     ),
+//   ]);
+//
+//   // Khi API hoàn tất, tiếp tục tăng progress đến 100%
+//   if (momentProvider.createMomentStatus == ModuleStatus.success) {
+//     for (int i = 91; i <= 100; i++) {
+//       await Future.delayed(const Duration(milliseconds: 20)); // Tăng dần từ 90% đến 100%
+//       setState(() {
+//         uploadProgress = i.toDouble();
+//       });
+//     }
+//
+//     // Khi hoàn tất, thoát màn hình và thông báo thành công
+//     setState(() {
+//       isUploading = false; // Ẩn widget loading
+//     });
+//     Navigator.of(context).pop(); // Đóng màn hình
+//     AppSnackBar.showSuccess(context, S.of(context).createMomentSuccess);
+//   } else if (momentProvider.createMomentStatus == ModuleStatus.fail) {
+//     setState(() {
+//       isUploading = false; // Ẩn widget loading
+//     });
+//     AppSnackBar.showError(
+//         context, S.of(context).error, S.of(context).createMomentFail);
+//   }
+// }
+
+
+// Future<void> createMoment() async {
+//   final momentProvider = context.read<MomentProvider>();
+//   if (checkWeather == false) {
+//     weather = "";
+//   } else {
+//     weather = weatherController.text;
+//   }
+//   // feelingController.text, weather, editedImage, musicId, linkMusic, getStringTypeMoment(TypeMoment.image)
+//   await momentProvider.createMoment(
+//     content: feelingController.text,
+//     weather: weather,
+//     image: editedImage,
+//     musicId: musicId,
+//     linkMusic: linkMusic,
+//     type: getStringTypeMoment(TypeMoment.image),
+//       );
+//   if(momentProvider.createMomentStatus == ModuleStatus.success){
+//     Navigator.of(context).pop();
+//     AppSnackBar.showSuccess(context, S.of(context).createMomentSuccess);
+//   }
+//   else if(momentProvider.createMomentStatus == ModuleStatus.fail){
+//     AppSnackBar.showError(context, S.of(context).error, S.of(context).error + S.of(context).createMomentFail);
+//   }
+// }

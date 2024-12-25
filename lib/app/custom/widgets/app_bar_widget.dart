@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
@@ -14,6 +16,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             .regular32
             .copyWith(color: AppColors.of(context).neutralColor12),
       ),
+      leading: IconButton(
+          icon: SvgPicture.asset(Assets.icons.leftSVG),
+          onPressed: () => Navigator.of(context).pop()),
       centerTitle: true,
       actions: [action ?? Container()],
     );

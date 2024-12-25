@@ -190,9 +190,10 @@ class editInformationPersonalState extends State<editInformationPersonal> {
           context.read<AuthProvider>().updateAvatar(
               Provider.of<UserProvider>(context, listen: false).user.avatar!);
         });
-        AppSnackBar.showSuccess(context,S.of(context).updateProfileSuccess);
+        AppSnackBar.showSuccess(context, S.of(context).updateProfileSuccess);
       } else {
-        AppSnackBar.showError(context,S.of(context).error, S.of(context).updateProfileFail);
+        AppSnackBar.showError(
+            context, S.of(context).error, S.of(context).updateProfileFail);
       }
     } else {
       setState(() {
@@ -203,20 +204,27 @@ class editInformationPersonalState extends State<editInformationPersonal> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Padding(
-            padding: EdgeInsets.only(top: 15.w),
-            child: Text(
-              overflow: TextOverflow.ellipsis,
-              S.of(context).personalInformation,
-              style: AppTextStyles.of(context).bold32,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Padding(
+          padding: EdgeInsets.only(top: 15.w),
+          child: Text(
+            overflow: TextOverflow.ellipsis,
+            S.of(context).personalInformation,
+            style: AppTextStyles.of(context).bold32,
           ),
-          centerTitle: true,
         ),
-        body: SingleChildScrollView(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: SvgPicture.asset(Assets.icons.leftSVG),
+          onPressed: () => {
+            Navigator.of(context).pop()
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 20.h),
             child: Stack(
@@ -317,13 +325,13 @@ class editInformationPersonalState extends State<editInformationPersonal> {
                                 File(_imageFile!),
                                 height: 120.w,
                                 width: 120.w,
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               )
                             : Image.network(
                                 widget.userInfor.avatar!,
                                 height: 120.w,
                                 width: 120.w,
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                       ),
                       isEditing == true
@@ -427,7 +435,6 @@ class Information extends StatelessWidget {
     }
   }
 }
-
 
 // Future<void> _pickImage() async {
 //   final action = await showDialog(

@@ -315,6 +315,7 @@
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -323,6 +324,9 @@ import 'package:hit_moments/app/models/moment_model.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/format_time_extension.dart';
@@ -345,7 +349,9 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
   late AnimationController _playAnimationController;
   late Animation<double> _playAnimation;
   bool _isPlaying = false;
-
+  bool _isPlayingVideo = false;
+  bool _showPlayPauseButton = true;
+  late VideoPlayerController _videoPlayerController;
   @override
   void initState() {
     super.initState();
@@ -372,6 +378,31 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
     ));
 
     _audioPlayer = AudioPlayer();
+    if(widget.momentModel.type == getStringTypeMoment(TypeMoment.video)){
+      _videoPlayerController = VideoPlayerController.network(widget.momentModel.video ?? '')
+        ..initialize().then((_) {
+          setState(() {});
+        })
+      ;
+    }
+    else{
+      _videoPlayerController = VideoPlayerController.network('')
+        ..initialize().then((_) {
+        })
+      ;
+    }
+    _videoPlayerController.addListener(() {
+      // Kiểm tra nếu video đã kết thúc
+      if (_videoPlayerController.value.position >= _videoPlayerController.value.duration) {
+        setState(() {
+          _isPlayingVideo = false;
+          _showPlayPauseButton = true; // Hiển thị nút play khi video kết thúc
+        });
+      }
+    });
+    // else{
+    //   _videoPlayerController = v
+    // }
   }
 
   @override
@@ -379,6 +410,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
     _controller.dispose();
     _audioPlayer.dispose();
     _playAnimationController.dispose();
+    _videoPlayerController.dispose();
     super.dispose();
   }
 
@@ -386,11 +418,13 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
   String? temperature;
   String? urlIcon;
 
-  void parseString(String input) {
+  void parseString(String? input) {
     final regex = RegExp(r'^(.*?)\|(.*?)\|(.*?)$');
-
-    if (regex.hasMatch(input)) {
-      final match = regex.firstMatch(input);
+  if(input == null || input.isEmpty){
+    return;
+  }
+    if (regex.hasMatch(input ??"")) {
+      final match = regex.firstMatch(input ?? "");
 
       if (match != null) {
         address = match.group(1);
@@ -413,6 +447,26 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
     });
   }
 
+  Future<void> _togglePlayPauseVideo() async {
+    if(_videoPlayerController.value.isInitialized){
+      if (!_isPlayingVideo) {
+        // Nếu video đang dừng hoặc đã xem hết, phát video
+        await _videoPlayerController.play();
+        setState(() {
+          _isPlayingVideo = true;
+          _showPlayPauseButton = false; // Ẩn nút play ngay khi phát video
+        });
+      } else {
+        // Nếu video đang phát, dừng video
+        await _videoPlayerController.pause();
+        setState(() {
+          _isPlayingVideo = false;
+          _showPlayPauseButton = true; // Hiển thị nút play khi video dừng
+        });
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -428,7 +482,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
       margin: EdgeInsets.only(top: 80.h),
       child: Stack(
         children: [
-          SizedBox(
+          widget.momentModel.image!=null ?SizedBox(
             height: 1.sw,
             width: 1.sw,
             child: ClipRRect(
@@ -438,83 +492,68 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                 child: Image.network(
                   widget.momentModel.image ??'',
                   fit: BoxFit.fill,
-                ),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return _buildSkeletonItem();
+                  }
+                )
+
               ),
             ),
-          ),
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(50),
-          //   child: AspectRatio(
-          //     aspectRatio: 3 / 4,
-          //     child: Image.network(
-          //       widget.momentModel.image!,
-          //       fit: BoxFit.fill,
-          //     ),
-          //   ),
-          // ),
-          // Positioned(
-          //   top: 16.w,
-          //   left: 16.w,
-          //   width: MediaQuery.of(context).size.width / 2,
-          //   child: Row(
-          //     children: [
-          //       Container(
-          //         padding: const EdgeInsets.all(2),
-          //         decoration: const BoxDecoration(
-          //             color: Colors.white,
-          //             borderRadius: BorderRadius.all(Radius.circular(100))),
-          //         child: ClipRRect(
-          //           borderRadius: BorderRadius.circular(40.w),
-          //           child: CachedNetworkImage(
-          //             imageUrl: widget.momentModel.imgAvatar ?? "",
-          //             width: 40.w,
-          //             height: 40.w,
-          //             fit: BoxFit.cover,
-          //           ),
-          //         ),
-          //       ),
-          //       SizedBox(
-          //         width: 8.w,
-          //       ),
-          //       Expanded(
-          //         child: Column(
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             Text(
-          //               widget.momentModel.userName ?? "",
-          //               overflow: TextOverflow.ellipsis,
-          //               maxLines: 1,
-          //               style: AppTextStyles.of(context).regular16.copyWith(
-          //                 overflow: TextOverflow.ellipsis,
-          //                 color: AppColors.of(context).neutralColor1,
-          //                 shadows: [
-          //                   const Shadow(
-          //                     blurRadius: 1.0,
-          //                     color: Colors.black,
-          //                   ),
-          //                 ],
-          //               ),
-          //             ),
-          //             Text(
-          //               FormatTimeExtension().formatTimeDifference(
-          //                   widget.momentModel.createAt!, context),
-          //               style: AppTextStyles.of(context).light14.copyWith(
-          //                 color: AppColors.of(context).neutralColor1,
-          //                 shadows: [
-          //                   Shadow(
-          //                     blurRadius: 1.0,
-          //                     color: AppColors.of(context).neutralColor12,
-          //                   ),
-          //                 ],
-          //               ),
-          //             )
-          //           ],
-          //         ),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          Positioned(
+          ):const SizedBox(),
+          widget.momentModel.type == getStringTypeMoment(TypeMoment.video) ? GestureDetector(
+            onTap: _togglePlayPauseVideo,
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: 1.sw - 16.w,
+                  width: 1.sw - 16.w,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50.w),
+                    child: _videoPlayerController.value.isInitialized
+                        ? SizedBox(
+                      width: 1.sw - 16.w,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth, // Video sẽ hiển thị toàn bộ mà không bị méo
+                        child: SizedBox(
+                          width: _videoPlayerController.value.size.width,
+                          height: _videoPlayerController.value.size.height,
+                          child: VideoPlayer(_videoPlayerController),
+                        ),
+                      ),
+                    )
+                        : _buildSkeletonItem()
+                  ),
+                ),
+                // Nút play/pause
+                if (_showPlayPauseButton == true && _isPlayingVideo == false)
+                  Positioned(
+                    top: (1.sw - 48.w) / 2,
+                    right: 0,
+                    left: 0,
+                    child: Center(
+                      child: Container(
+                        padding: EdgeInsets.all(12.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.of(context).neutralColor6,
+                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                        ),
+                        child: SvgPicture.asset(
+                          'assets/icons/ic_play_video.svg',
+                          width: 16.w,
+                          height: 16.w,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ):const SizedBox(),
+
+          (widget.momentModel.weather?.isNotEmpty ?? false)? Positioned(
             top: 16.w,
             right: 0,
             width: urlIcon == null
@@ -586,40 +625,35 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                 )
               ],
             ),
-          ),
+          ) : const SizedBox(),
           // Music play/pause icon with animation
           widget.momentModel.linkMusic != null && widget.momentModel.linkMusic!.isNotEmpty
               ?  Positioned(
             bottom: 16.w,
             right: 16.w,
-            child:  Positioned(
-              bottom: 16.w,
-              right: 16.w,
-              child: GestureDetector(
-                onTap: _togglePlayPause,
-                child: ScaleTransition(
-                  scale: _playAnimation,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.of(context).neutralColor1,
-                      borderRadius: const BorderRadius.all(Radius.circular(100)),
-                    ),
-                    child: SvgPicture.asset(
-                      _isPlaying
-                          ? 'assets/icons/Pause.svg'
-                          : 'assets/icons/play-music.svg',
-                      width: 24.w,
-                      height: 24.w,
-                      color: AppColors.of(context).neutralColor12,
-                    ),
+            child:  GestureDetector(
+              onTap: _togglePlayPause,
+              child: ScaleTransition(
+                scale: _playAnimation,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.of(context).neutralColor1,
+                    borderRadius: const BorderRadius.all(Radius.circular(100)),
+                  ),
+                  child: SvgPicture.asset(
+                    _isPlaying
+                        ? 'assets/icons/Pause.svg'
+                        : 'assets/icons/play-music.svg',
+                    width: 24.w,
+                    height: 24.w,
+                    color: AppColors.of(context).neutralColor12,
                   ),
                 ),
               ),
             ),
           )
               : const SizedBox.shrink(),
-
           if (widget.momentModel.content != null &&
               widget.momentModel.content!.isNotEmpty)
             Positioned(
@@ -656,6 +690,25 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                   fit: BoxFit.cover, controller: _controller),
             ),
         ],
+      ),
+    );
+  }
+  Widget _buildSkeletonItem() {
+    return Container(
+      width: 1.sw - 16.w,
+      height: 1.sw - 16.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50.w),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(50.w),
+          ),
+        ),
       ),
     );
   }

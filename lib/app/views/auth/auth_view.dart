@@ -45,108 +45,108 @@ class _AuthViewState extends State<AuthView> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SafeArea(
-            child: Scaffold(
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                      padding: EdgeInsets.only(left: 24.w, top: 16.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(Assets.images.authPNG),
-                          SizedBox(height: 16.h,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(S.of(context).greeting,
-                                style: AppTextStyles.of(context).bold32.copyWith(
-                                    color: AppColors.of(context).neutralColor12
-                                ),),
-                              Text(S.of(context).accountPrompt,
-                                style: AppTextStyles.of(context).light20.copyWith(
-                                    color: AppColors.of(context).neutralColor11
-                                ),)
-                            ],
-                          )
-                        ],
-                      )
-                  ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
-                      child: Column(
-                        children: [
-                          ScaleOnTapWidget(
-                            onTap: (isSelect) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const LoginView()));
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  color: AppColors.of(context).primaryColor10,
-                                  borderRadius: const BorderRadius.all(Radius.circular(100)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: AppColors.of(context).neutralColor8,
-                                        spreadRadius: 1.h,
-                                        blurRadius: 2.h,
-                                        offset: Offset(0, 4.h)
-                                    )
-                                  ]
-                              ),
-                              child: Text(
-                                S.of(context).login,
-                                textAlign: TextAlign.center,
-                                style: AppTextStyles.of(context).regular32.copyWith(
-                                    color: AppColors.of(context).neutralColor1
-                                ),
+        Scaffold(
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(left: 24.w, top: 16.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(Assets.images.authPNG),
+                        SizedBox(height: 16.h,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(S.of(context).greeting,
+                              style: AppTextStyles.of(context).bold32.copyWith(
+                                  color: AppColors.of(context).neutralColor12
+                              ),),
+                            Text(S.of(context).accountPrompt,
+                              style: AppTextStyles.of(context).light20.copyWith(
+                                  color: AppColors.of(context).neutralColor11
+                              ),)
+                          ],
+                        )
+                      ],
+                    )
+                ),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
+                    child: Column(
+                      children: [
+                        ScaleOnTapWidget(
+                          onTap: (isSelect) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginView()));
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: AppColors.of(context).primaryColor10,
+                                borderRadius: const BorderRadius.all(Radius.circular(100)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: AppColors.of(context).neutralColor8,
+                                      spreadRadius: 1.h,
+                                      blurRadius: 2.h,
+                                      offset: Offset(0, 4.h)
+                                  )
+                                ]
+                            ),
+                            child: Text(
+                              S.of(context).login,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.of(context).regular32.copyWith(
+                                  color: AppColors.of(context).neutralColor1
                               ),
                             ),
                           ),
-                          SizedBox(height: 32.h,),
-                          ScaleOnTapWidget(
-                            onTap: (isSelect) {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) => const RegisterView()));
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  color: AppColors.of(context).primaryColor2,
-                                  borderRadius: const BorderRadius.all(Radius.circular(100)),
-                                  border: Border.all(
-                                      width: 2,
-                                      color: AppColors.of(context).primaryColor9
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: AppColors.of(context).neutralColor8,
-                                        spreadRadius: 1.h,
-                                        blurRadius: 2.h,
-                                        offset: Offset(0, 4.h)
-                                    )
-                                  ]
-                              ),
-                              child: Text(
-                                S.of(context).register,
-                                textAlign: TextAlign.center,
-                                style: AppTextStyles.of(context).regular32.copyWith(
+                        ),
+                        SizedBox(height: 32.h,),
+                        ScaleOnTapWidget(
+                          onTap: (isSelect) {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) => const RegisterView()));
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: AppColors.of(context).primaryColor2,
+                                borderRadius: const BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(
+                                    width: 2,
                                     color: AppColors.of(context).primaryColor9
                                 ),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: AppColors.of(context).neutralColor8,
+                                      spreadRadius: 1.h,
+                                      blurRadius: 2.h,
+                                      offset: Offset(0, 4.h)
+                                  )
+                                ]
+                            ),
+                            child: Text(
+                              S.of(context).register,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.of(context).regular32.copyWith(
+                                  color: AppColors.of(context).primaryColor9
                               ),
                             ),
                           ),
-                        ],
-                      )
-                  ),
-                  const SizedBox(),
-                ],
-              ),
-            )
+                        ),
+                      ],
+                    )
+                ),
+                const SizedBox(),
+              ],
+            ),
+          ),
         ),
         context.watch<AuthProvider>().loginStatus == ModuleStatus.loading
             ?const Opacity(

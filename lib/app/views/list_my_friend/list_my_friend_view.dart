@@ -42,110 +42,111 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: Padding(
-            padding: EdgeInsets.only(top: 15.w),
-            child: BackButton(
-              onPressed: () {
+    return Scaffold(
+      appBar: AppBar(
+        // leading: BackButton(
+        //   onPressed: () {
+        //     Navigator.of(context).pop(
+        //         MaterialPageRoute(builder: (context) => const ExampleView()));
+        //   },
+        //   color: AppColors.of(context).neutralColor9,
+        // ),
+        leading: IconButton(
+          icon: SvgPicture.asset(Assets.icons.leftSVG),
+          onPressed: () => {
                 Navigator.of(context).pop(
-                    MaterialPageRoute(builder: (context) => ExampleView()));
-              },
-              color: AppColors.of(context).neutralColor9,
+                    MaterialPageRoute(builder: (context) => const ExampleView()))
+          },
+        ),
+        title: Text(
+          overflow: TextOverflow.ellipsis,
+          S.of(context).friend,
+          style: AppTextStyles.of(context).bold24,
+        ),
+        centerTitle: true,
+        actions: [
+          PopupMenuButton(
+            offset: const Offset(
+              -16,
+              64,
             ),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 15.w),
-            child: Text(
-              overflow: TextOverflow.ellipsis,
-              S.of(context).friend,
-              style: AppTextStyles.of(context).bold32,
+            shape: const TooltipShape(),
+            constraints: BoxConstraints.expand(width: 0.8.sw, height: 0.4.sh),
+            padding: EdgeInsets.only(
+              top: 8.w,
+              right: 15.w,
             ),
-          ),
-          centerTitle: true,
-          actions: [
-            PopupMenuButton(
-              offset: const Offset(
-                -16,
-                64,
-              ),
-              shape: const TooltipShape(),
-              constraints: BoxConstraints.expand(width: 0.8.sw, height: 0.4.sh),
-              padding: EdgeInsets.only(
-                top: 15.w,
-                right: 15.w,
-              ),
-              onOpened: () {
-                setState(() {
-                  checkOpacity = true;
-                });
-              },
-              onCanceled: () {
-                setState(() {
-                  checkOpacity = false;
-                });
-              },
-              icon: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.of(context).neutralColor1,
-                      ),
-                      padding: EdgeInsets.all(8.w),
-                      child: SvgPicture.asset(
-                        Assets.icons.bell,
-                        width: 20.w,
-                        height: 20.w,
-                      ),
+            onOpened: () {
+              setState(() {
+                checkOpacity = true;
+              });
+            },
+            onCanceled: () {
+              setState(() {
+                checkOpacity = false;
+              });
+            },
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.of(context).neutralColor1,
+                    ),
+                    padding: EdgeInsets.all(8.w),
+                    child: SvgPicture.asset(
+                      Assets.icons.bell,
+                      width: 20.w,
+                      height: 20.w,
                     ),
                   ),
-                  !context.watch<UserProvider>().isLoandingFriendRequests
-                      ? (context.watch<UserProvider>().friendRequests.isNotEmpty
-                          ? Positioned(
-                              right: 1.w,
-                              top: -3.w,
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: ColorConstants.accentRed,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                width: 20.w,
-                                height: 20.w,
-                                child: Text(
-                                  '${Provider.of<UserProvider>(context, listen: false).friendRequests.length}',
-                                  style: AppTextStyles.of(context)
-                                      .regular20
-                                      .copyWith(
-                                        color:
-                                            AppColors.of(context).neutralColor1,
-                                      ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                ),
+                !context.watch<UserProvider>().isLoandingFriendRequests
+                    ? (context.watch<UserProvider>().friendRequests.isNotEmpty
+                        ? Positioned(
+                            right: 1.w,
+                            top: -3.w,
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: ColorConstants.accentRed,
+                                borderRadius: BorderRadius.circular(50),
                               ),
-                            )
-                          : Container())
-                      : Container(),
-                ],
-              ),
-              itemBuilder: (_) =>
-                  !Provider.of<UserProvider>(context, listen: false)
-                          .isLoandingFriendRequests
-                      ? _buildFriendRequestMenu(
-                          Provider.of<UserProvider>(context, listen: false)
-                              .friendRequests)
-                      : [
-                          const PopupMenuItem(
-                              child: Center(child: CircularProgressIndicator()))
-                        ],
+                              width: 20.w,
+                              height: 20.w,
+                              child: Text(
+                                '${Provider.of<UserProvider>(context, listen: false).friendRequests.length}',
+                                style: AppTextStyles.of(context)
+                                    .regular20
+                                    .copyWith(
+                                      color:
+                                          AppColors.of(context).neutralColor1,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                        : Container())
+                    : Container(),
+              ],
             ),
-          ],
-        ),
-        body: Container(
+            itemBuilder: (_) =>
+                !Provider.of<UserProvider>(context, listen: false)
+                        .isLoandingFriendRequests
+                    ? _buildFriendRequestMenu(
+                        Provider.of<UserProvider>(context, listen: false)
+                            .friendRequests)
+                    : [
+                        const PopupMenuItem(
+                            child: Center(child: CircularProgressIndicator()))
+                      ],
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Container(
           margin: EdgeInsets.only(bottom: 32.h),
           child: Opacity(
             opacity: checkOpacity ? 0.3 : 1,

@@ -69,26 +69,23 @@ class _MyFriendInfomationScreenState extends State<MyFriendInfomationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: Padding(
-            padding: EdgeInsets.only(top: 15.w),
-            child: BackButton(
-              color: AppColors.of(context).neutralColor9,
-            ),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 15.w),
-            child: Text(
-              overflow: TextOverflow.ellipsis,
-              S.of(context).friend,
-              style: AppTextStyles.of(context).bold32,
-            ),
-          ),
-          centerTitle: true,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: SvgPicture.asset(Assets.icons.leftSVG),
+          onPressed: () => {
+            Navigator.of(context).pop()
+          },
         ),
-        body: SingleChildScrollView(
+        title: Text(
+          overflow: TextOverflow.ellipsis,
+          S.of(context).friend,
+          style: AppTextStyles.of(context).bold24,
+        ),
+        centerTitle: true,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 20.h),
             child: Stack(children: [

@@ -1,9 +1,15 @@
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../models/moment_model.dart';
 import '../../../providers/list_moment_provider.dart';
@@ -34,7 +40,7 @@ class _GridViewMomentState extends State<GridViewMoment> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),
       color: AppColors.of(context).neutralColor1,
       child: GridView.builder(
         itemCount: widget.listMoment.length,
@@ -44,25 +50,184 @@ class _GridViewMomentState extends State<GridViewMoment> {
               crossAxisSpacing: 8.w,
               mainAxisSpacing: 8.h
           ),
-          itemBuilder: (context, index) => imgMoment(context, widget.listMoment[index], index),
+          itemBuilder: (context, index) {
+          // late VideoPlayerController videoPlayerController;
+          //   if(widget.listMoment[index].type == getStringTypeMoment(TypeMoment.video)){
+          //     videoPlayerController = VideoPlayerController.network(widget.listMoment[index].video ?? '')
+          //       ..initialize().then((_) {
+          //         setState(() {});
+          //       })
+          //     ;
+          //   }
+          //   else{
+          //     videoPlayerController = VideoPlayerController.network('')
+          //       ..initialize().then((_) {
+          //       })
+          //     ;
+          //   }
+          return imgMoment(context, widget.listMoment[index], index);
+        }
       ),
     );
   }
-
-
-
-  Widget imgMoment(BuildContext context, MomentModel moment, int index){
+  Widget imgMoment(BuildContext context, MomentModel moment, int index) {
     return ScaleOnTapWidget(
-        child: AspectRatio(
-          aspectRatio: 3/4,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.w),
-            child: Image.network(moment.image!, fit: BoxFit.cover,),
+      child: AspectRatio(
+        aspectRatio: 3 / 4,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.w),
+          child: moment.type == getStringTypeMoment(TypeMoment.image)
+              ? CachedNetworkImage(
+            imageUrl: moment.image ?? '',
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Center(
+              child: Skeletonizer(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+            ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          )
+              : FutureBuilder<Uint8List?>(
+            future: _generateThumbnail(moment.video ?? ''),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Skeletonizer(
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                )
+
+
+                ;
+              } else if (snapshot.hasData) {
+                return Stack(
+                  children: [
+                    Image.memory(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      left: 0,
+                      child: Center(
+                        child: Icon(
+                          Icons.play_circle_outline,
+                          size: 50.w,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return Container(
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(Icons.error, color: Colors.red),
+                  ),
+                );
+              }
+            },
           ),
         ),
-        onTap: (isSelect) {
-          widget.onSelected(moment, index);
-        },
+      ),
+      onTap: (isSelect) {
+        widget.onSelected(moment, index);
+      },
     );
   }
+  Future<Uint8List?> _generateThumbnail(String videoUrl) async {
+    try {
+      return await VideoThumbnail.thumbnailData(
+        video: videoUrl,
+        imageFormat: ImageFormat.JPEG,
+        maxWidth: 200, // Set kích thước tối đa cho thumbnail
+        quality: 75,
+      );
+    } catch (e) {
+      print('Error generating thumbnail: $e');
+      return null;
+    }
+  }
+
+//   Widget imgMoment(BuildContext context, MomentModel moment, int index) {
+//     // late VideoPlayerController videoPlayerController;
+//     //   if(widget.listMoment[index].type == getStringTypeMoment(TypeMoment.video)){
+//     //     videoPlayerController = VideoPlayerController.network(widget.listMoment[index].video ?? '')
+//     //       ..initialize().then((_) {
+//     //         setState(() {});
+//     //       })
+//     //     ;
+//     //   }
+//     //   else{
+//     //     videoPlayerController = VideoPlayerController.network('')
+//     //       ..initialize().then((_) {
+//     //       })
+//     //     ;
+//     //   }
+//     return ScaleOnTapWidget(
+// //moment.type == getStringTypeMoment(TypeMoment.image) ?
+//         child:  AspectRatio(
+//           aspectRatio: 3/4,
+//           child: ClipRRect(
+//             borderRadius: BorderRadius.circular(20.w),
+//             child: CachedNetworkImage(
+//               imageUrl: moment.image ?? '',
+//               fit: BoxFit.cover,
+//               placeholder: (context, url) => Center(
+//                 child: Skeletonizer(
+//                   child: Container(
+//                     decoration: BoxDecoration(
+//                       color: Colors.grey[300],
+//                       borderRadius: BorderRadius.circular(50),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//               errorWidget: (context, url, error) => const Icon(Icons.error),
+//             )
+//           ),
+//         ),
+//         //     :  SizedBox(
+//         //   child: ClipRRect(
+//         //     borderRadius: BorderRadius.circular(20.w),
+//         //     child: videoPlayerController.value.isInitialized
+//         //         ? SizedBox(
+//         //       width: 200.w ,
+//         //       height: 200.h,
+//         //       child: FittedBox(
+//         //         fit: BoxFit.fitWidth, // Video sẽ hiển thị toàn bộ mà không bị méo
+//         //         child: SizedBox(
+//         //           width: videoPlayerController.value.size.width,
+//         //           height: videoPlayerController.value.size.height,
+//         //           child: VideoPlayer(videoPlayerController),
+//         //         ),
+//         //       ),
+//         //     )
+//         //         : Container(
+//         //       color: Colors.grey[300],
+//         //     ),
+//         //   ),
+//         // ),
+//         onTap: (isSelect) {
+//           widget.onSelected(moment, index);
+//         },
+//     );
+//   }
 }
