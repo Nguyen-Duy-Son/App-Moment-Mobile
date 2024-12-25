@@ -475,7 +475,6 @@
 //     ));
 //   }
 // }
-
 import 'dart:async';
 import 'dart:io';
 
@@ -571,7 +570,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   void toggleFlash() {
     setState(() {
       _flashMode =
-          _flashMode == FlashMode.off ? FlashMode.torch : FlashMode.off;
+      _flashMode == FlashMode.off ? FlashMode.torch : FlashMode.off;
     });
     cameraController.setFlashMode(_flashMode);
   }
@@ -648,7 +647,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   void toggleZoom() {
     setState(() {
       zoomLevel =
-          zoomLevel >= 3.0 ? 1.0 : zoomLevel + 1.0; // Cycle zoom from 1x to 5x
+      zoomLevel >= 3.0 ? 1.0 : zoomLevel + 1.0; // Cycle zoom from 1x to 5x
     });
     cameraController.setZoomLevel(zoomLevel);
   }
@@ -705,33 +704,28 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                               width: 4.w)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                          context.watch<AuthProvider>().avatar ?? "",
+                        child: context.watch<UserProvider>().isLoadingProfile
+                            ? Skeletonizer(
+                          child: Container(
+                            width: 28.w,
+                            height: 28.w,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                        )
+                            : Image.network(
+                          context.watch<AuthProvider>().avatar!,
                           width: 28.w,
                           height: 28.w,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return SvgPicture.asset(
-                              Assets.icons.avatar,
+                              Assets.icons.userSVG,
                               width: 28.w,
                               height: 28.w,
                               color: AppColors.of(context).neutralColor7,
-                            );
-                          },
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: Skeletonizer(
-                                child: Container(
-                                  width: 28.w,
-                                  height: 28.w,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                              ),
                             );
                           },
                         ),
@@ -749,7 +743,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                     },
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
                           color: AppColors.of(context).neutralColor7),
@@ -765,8 +759,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                           Text(
                             AppLocalizations.of(context)!.addfriend,
                             style: AppTextStyles.of(context).regular24.copyWith(
-                                  color: AppColors.of(context).neutralColor11,
-                                ),
+                              color: AppColors.of(context).neutralColor11,
+                            ),
                           )
                         ],
                       ),
@@ -816,7 +810,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                       width: 100.w,
                       alignment: Alignment.center,
                       padding:
-                          EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
+                      EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
                       decoration: BoxDecoration(
                         color: isRecording
                             ? AppColors.of(context).neutralColor4
@@ -835,7 +829,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                             padding: EdgeInsets.all(4.w),
                             decoration: BoxDecoration(
                               color:
-                                  isRecording ? Colors.red : Colors.transparent,
+                              isRecording ? Colors.red : Colors.transparent,
                               borderRadius: BorderRadius.circular(50),
                             ),
                           ),
@@ -846,8 +840,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                                 ? formatDuration(recordingDuration)
                                 : "",
                             style: AppTextStyles.of(context).regular24.copyWith(
-                                  color: AppColors.of(context).neutralColor1,
-                                ),
+                              color: AppColors.of(context).neutralColor1,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -872,7 +866,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                                   width: cameraController
                                       .value.previewSize!.height,
                                   height:
-                                      cameraController.value.previewSize!.width,
+                                  cameraController.value.previewSize!.width,
                                   child: CameraPreview(cameraController),
                                 ),
                               ),
@@ -913,9 +907,9 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                                 Assets.icons.lightning,
                                 color: _flashMode == FlashMode.torch
                                     ? AppColors.of(context)
-                                        .primaryColor9 // Flash on color
+                                    .primaryColor9 // Flash on color
                                     : AppColors.of(context)
-                                        .neutralColor12, // Fla// sh off color
+                                    .neutralColor12, // Fla// sh off color
                                 width: 20.w,
                                 height: 20.h,
                               ),
@@ -940,8 +934,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                               !isRecording
                                   ? 'assets/icons/ic_library.svg'
                                   : (isPaused
-                                      ? Assets.icons.playVideo
-                                      : Assets.icons.pause),
+                                  ? Assets.icons.playVideo
+                                  : Assets.icons.pause),
                               width: 56.w,
                               height: 56.w,
                               color: AppColors.of(context).neutralColor12,
@@ -992,7 +986,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                             onPressed: () async {
                               if (isRecording) {
                                 final video =
-                                    await cameraController.stopVideoRecording();
+                                await cameraController.stopVideoRecording();
                                 setState(() {
                                   isRecording = false;
                                   isPaused = false;
@@ -1014,7 +1008,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                                 ));
                               } else {
                                 final image =
-                                    await cameraController.takePicture();
+                                await cameraController.takePicture();
                                 if (!context.mounted) return;
                                 await Navigator.of(context)
                                     .push(MaterialPageRoute(
@@ -1038,19 +1032,19 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                             ),
                             child: isRecording
                                 ? SvgPicture.asset(Assets.icons.stop,
-                                    width: 40.w,
-                                    height: 40.w,
-                                    color: Colors.red // Đổi màu khi đang quay
-                                    )
+                                width: 40.w,
+                                height: 40.w,
+                                color: Colors.red // Đổi màu khi đang quay
+                            )
                                 : Container(
-                                    padding: const EdgeInsets.all(30),
-                                    decoration: BoxDecoration(
-                                      color: isRecording
-                                          ? Colors.red // Đổi màu khi đang quay
-                                          : AppColors.of(context).neutralColor8,
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
+                              padding: const EdgeInsets.all(30),
+                              decoration: BoxDecoration(
+                                color: isRecording
+                                    ? Colors.red // Đổi màu khi đang quay
+                                    : AppColors.of(context).neutralColor8,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
                           ),
                         ),
                         IconButton(
@@ -1093,27 +1087,27 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         context
-                                    .watch<ListMomentProvider>()
-                                    .getListImageMoment ==
-                                ModuleStatus.success
+                            .watch<ListMomentProvider>()
+                            .getListImageMoment ==
+                            ModuleStatus.success
                             ? AutoSwitchImageRow(
-                                images: context
-                                        .watch<ListMomentProvider>()
-                                        .listImageMoment ??
-                                    [])
-                            // : provider.getListImageMoment == ModuleStatus.loading
+                            images: context
+                                .watch<ListMomentProvider>()
+                                .listImageMoment ??
+                                [])
+                        // : provider.getListImageMoment == ModuleStatus.loading
                             : Center(
-                                child: Skeletonizer(
-                                  child: Container(
-                                    // width: 35.w,
-                                    // height: 35.w,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                ),
-                              )
+                          child: Skeletonizer(
+                            child: Container(
+                              // width: 35.w,
+                              // height: 35.w,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                     SizedBox(

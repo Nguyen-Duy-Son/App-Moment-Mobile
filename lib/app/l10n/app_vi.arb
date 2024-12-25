@@ -172,5 +172,9 @@
   "myQrCode": "Mã QR của tôi",
   "scanQrCode": "Quét mã QR",
   "saveVideoSuccessMessage": "Video đã được lưu",
-  "loginExpired": "Đăng nhập đã hết hạn"
+  "loginExpired": "Đăng nhập đã hết hạn",
+  "createReportError": "Bạn đã báo cáo bài viết này trước đó",
+  "warning": "Cảnh báo",
+  "doyouwanttologoutoftheapplication": "Bạn có muốn đăng xuất khỏi ứng dụng không?",
+  "month": "Tháng"
 }

@@ -80,6 +80,7 @@ class _AssetsIcons {
   final eye = 'assets/icons/ic_eye.svg';
   final eyeOff = 'assets/icons/ic_eye_off.svg';
   final iconQrCode = 'assets/icons/ic_qr_code.svg';
+  final iconHistory = 'assets/icons/ic_history.svg';
 }
 
 class _AssetsImages {

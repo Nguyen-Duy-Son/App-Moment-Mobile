@@ -163,5 +163,9 @@
   "myQrCode": "My QR Code",
   "scanQrCode": "Scan QR Code",
   "saveVideoSuccessMessage": "Video saved successfully",
-  "loginExpired": "Login expired"
+  "loginExpired": "Login expired",
+  "createReportError": "You have reported this post before",
+  "warning": "Warning",
+  "doyouwanttologoutoftheapplication": "Do you want to log out of the application?",
+  "month": "Month"
 }

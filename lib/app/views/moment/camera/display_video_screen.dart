@@ -5,12 +5,14 @@ import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/app_bar_animation.dart';
 import 'package:hit_moments/app/custom/widgets/app_bar_widget.dart';
 import 'package:hit_moments/app/custom/widgets/app_snack_bar.dart';
 import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
@@ -102,42 +104,53 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
         throw Exception("File không tồn tại");
       }
 
-      final result = await ImageGallerySaver.saveFile(
-          videoPath,
-          name: "HIT_VIDEO_${DateTime.now().millisecondsSinceEpoch}"
-      );
+      // Ensure the video file has the correct MIME type for saving
+      final videoExtension = videoPath.split('.').last;
+      print('Extension: $videoExtension');
+      if (videoExtension == 'temp') {
+        // Rename the temporary file to a valid video file
+        final newVideoPath = videoPath.replaceAll('.temp', '.mp4');
+        final renamedFile = await file.rename(newVideoPath);
 
-      if (result != null && result['isSuccess']) {
-        if (mounted) {
-          AppSnackBar.showSuccess(context, "Video đã được lưu thành công");
+        // Save the renamed file
+        final result = await ImageGallerySaver.saveFile(
+            renamedFile.path,
+            name: "HIT_VIDEO_${DateTime.now().millisecondsSinceEpoch}"
+        );
+
+        if (result != null && result['isSuccess']) {
+          if (mounted) {
+            AppSnackBar.showSuccess(context, "Video đã được lưu thành công");
+          }
+        } else {
+          throw Exception("Lưu video thất bại");
         }
-      } else {
-        throw Exception("Lưu video thất bại");
       }
     } catch (e) {
       if (mounted) {
+        print('Lỗi: $e');
         AppSnackBar.showError(context, "Lỗi", "Không thể lưu video: ${e.toString()}");
       }
     }
   }
 
 
-  Future<void> checkAndSaveVideo(String videoPath) async {
-    // Check the current status of the storage permission
-    Permission permission = Platform.isIOS ? Permission.photos : Permission.storage;
-    var status = await permission.status;
-    if (status.isGranted) {
-      // If permission is granted, save the video to the gallery
-      await saveVideoToGallery(videoPath);
-    }
-    if (status.isDenied) {
-      // If permission is denied, request it
-      _showError();
-    }
-    if (status.isPermanentlyDenied) {
-      _showError();
-    }
-  }
+  // Future<void> checkAndSaveVideo(String videoPath) async {
+  //   // Check the current status of the storage permission
+  //   Permission permission = Platform.isIOS ? Permission.photos : Permission.storage;
+  //   var status = await permission.status;
+  //   if (status.isGranted) {
+  //     // If permission is granted, save the video to the gallery
+  //     await saveVideoToGallery(videoPath);
+  //   }
+  //   if (status.isDenied) {
+  //     // If permission is denied, request it
+  //     _showError();
+  //   }
+  //   if (status.isPermanentlyDenied) {
+  //     _showError();
+  //   }
+  // }
 
   @override
   void initState() {
@@ -243,7 +256,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
             ),
           )
               : const Center(
-            child: CircularProgressIndicator(),
+            child: AppPageWidget(),
           ),
         ),
       );
@@ -272,7 +285,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                     child: VideoPlayer(_videoPlayerController),
                   ),
                 )
-                    : const CircularProgressIndicator(),
+                    : const AppPageWidget(),
               ),
             ),
             if (_showPlayPauseButton == true && _isPlayingVideo == false)
@@ -320,19 +333,24 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                 borderRadius: BorderRadius.circular(20.w),
               ),
               child: TextFormField(
-                enableSuggestions: false,
-                autocorrect: false,
+                enableSuggestions: true,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'.*')), // Cho phép mọi ký tự
+                ],
+                keyboardType: TextInputType.text, // Loại bàn phím hỗ trợ ký tự văn bản
+                textInputAction: TextInputAction.done, // Kiểu hành động nút trên bàn phím
+                autocorrect: true,
                 controller: feelingController,
-                style: AppTextStyles.of(context).light20.copyWith(
-                    color: AppColors.of(context).neutralColor12, height: 1),
+                style: AppTextStyles.of(context)
+                    .light20
+                    .copyWith(color: AppColors.of(context).neutralColor12, height: 1),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 textAlignVertical: TextAlignVertical.center,
                 cursorHeight: 20.h,
                 cursorColor: AppColors.of(context).neutralColor10,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.feel,
-                  isCollapsed: true,
-                  // Bắt buộc không thêm padding mặc định
+                  isCollapsed: true, // Bắt buộc không thêm padding mặc định
                   hintStyle: AppTextStyles.of(context)
                       .light16
                       .copyWith(color: AppColors.of(context).neutralColor1),
@@ -343,21 +361,16 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                       .copyWith(color: AppColors.of(context).neutralColor12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.w),
-                    borderSide:
-                        BorderSide(color: AppColors.of(context).neutralColor7),
+                    borderSide: BorderSide(color: AppColors.of(context).neutralColor7),
                   ),
                   disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: AppColors.of(context).neutralColor7),
-                      borderRadius: BorderRadius.circular(20.w)),
+                      borderSide:  BorderSide(color: AppColors.of(context).neutralColor7), borderRadius: BorderRadius.circular(20.w)),
                   enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: AppColors.of(context).neutralColor7),
+                    borderSide:  BorderSide(color: AppColors.of(context).neutralColor7),
                     borderRadius: BorderRadius.circular(20.w),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: AppColors.of(context).neutralColor7),
+                    borderSide:  BorderSide(color: AppColors.of(context).neutralColor7),
                     borderRadius: BorderRadius.circular(20.w),
                   ),
                   counterText: "", // Add this line
@@ -365,6 +378,58 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                 maxLines: 1,
               ),
             ),
+            // Container(
+            //   margin: EdgeInsets.symmetric(horizontal: 88.w, vertical: 8.h),
+            //   decoration: BoxDecoration(
+            //     color: AppColors.of(context).neutralColor7,
+            //     borderRadius: BorderRadius.circular(20.w),
+            //   ),
+            //   child: TextFormField(
+            //     enableSuggestions: false,
+            //     autocorrect: false,
+            //     controller: feelingController,
+            //     style: AppTextStyles.of(context).light20.copyWith(
+            //         color: AppColors.of(context).neutralColor12, height: 1),
+            //     autovalidateMode: AutovalidateMode.onUserInteraction,
+            //     textAlignVertical: TextAlignVertical.center,
+            //     cursorHeight: 20.h,
+            //     cursorColor: AppColors.of(context).neutralColor10,
+            //     decoration: InputDecoration(
+            //       hintText: AppLocalizations.of(context)!.feel,
+            //       isCollapsed: true,
+            //       // Bắt buộc không thêm padding mặc định
+            //       hintStyle: AppTextStyles.of(context)
+            //           .light16
+            //           .copyWith(color: AppColors.of(context).neutralColor1),
+            //       contentPadding: EdgeInsets.only(
+            //           left: 12.w, right: 8.w, top: 7.w, bottom: 4.w),
+            //       counterStyle: AppTextStyles.of(context)
+            //           .light16
+            //           .copyWith(color: AppColors.of(context).neutralColor12),
+            //       border: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(20.w),
+            //         borderSide:
+            //             BorderSide(color: AppColors.of(context).neutralColor7),
+            //       ),
+            //       disabledBorder: OutlineInputBorder(
+            //           borderSide: BorderSide(
+            //               color: AppColors.of(context).neutralColor7),
+            //           borderRadius: BorderRadius.circular(20.w)),
+            //       enabledBorder: OutlineInputBorder(
+            //         borderSide:
+            //             BorderSide(color: AppColors.of(context).neutralColor7),
+            //         borderRadius: BorderRadius.circular(20.w),
+            //       ),
+            //       focusedBorder: OutlineInputBorder(
+            //         borderSide:
+            //             BorderSide(color: AppColors.of(context).neutralColor7),
+            //         borderRadius: BorderRadius.circular(20.w),
+            //       ),
+            //       counterText: "", // Add this line
+            //     ),
+            //     maxLines: 1,
+            //   ),
+            // ),
           ],
         ),
       ]),
@@ -445,9 +510,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
           ),
         ),
         GestureDetector(
-          // onTap: () async {
-          //   await checkAndSaveVideo(widget.videoFile.path);
-          // },
+          onTap: () async {
+            await saveVideoToGallery(widget.videoFile.path);
+          },
           child: SvgPicture.asset(
             Assets.icons.download2SVG,
             color: AppColors.of(context).neutralColor12,

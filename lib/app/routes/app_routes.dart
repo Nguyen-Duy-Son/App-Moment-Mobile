@@ -19,4 +19,5 @@ abstract class AppRoutes {
   static String RESET_PASSWORD = '/reset-password';
   static String VERIFY_OTP = '/verify-otp';
   static String SCAN_QR_CODE = '/scan-qr-code';
+  static String HISTORY = '/history';
 }

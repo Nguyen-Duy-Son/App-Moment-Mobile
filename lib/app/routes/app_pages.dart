@@ -9,6 +9,7 @@ import 'package:hit_moments/app/views/example/example_view.dart';
 import 'package:hit_moments/app/views/example/home_view.dart';
 import 'package:hit_moments/app/views/forgot_password/cubit/forgot_password_cubit.dart';
 import 'package:hit_moments/app/views/forgot_password/forgot_password_screen.dart';
+import 'package:hit_moments/app/views/history/history_screen.dart';
 import 'package:hit_moments/app/views/onboarding/onboarding_view.dart';
 import 'package:hit_moments/app/views/profile/personalPageView.dart';
 import 'package:hit_moments/app/views/scan_qr_code/scan_qr_code_screen.dart';
@@ -36,5 +37,6 @@ abstract class AppPages {
       child: const ForgotPasswordScreen(),
     ),
     AppRoutes.SCAN_QR_CODE : (context) => const ScanQrCodeScreen(),
+    AppRoutes.HISTORY : (context) => const HistoryScreen(),
   };
 }

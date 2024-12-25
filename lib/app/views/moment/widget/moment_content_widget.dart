@@ -324,6 +324,7 @@ import 'package:hit_moments/app/models/moment_model.dart';
 import 'package:hit_moments/app/providers/moment_provider.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:video_player/video_player.dart';
 
@@ -447,20 +448,22 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
   }
 
   Future<void> _togglePlayPauseVideo() async {
-    if (!_isPlayingVideo) {
-      // Nếu video đang dừng hoặc đã xem hết, phát video
-      await _videoPlayerController.play();
-      setState(() {
-        _isPlayingVideo = true;
-        _showPlayPauseButton = false; // Ẩn nút play ngay khi phát video
-      });
-    } else {
-      // Nếu video đang phát, dừng video
-      await _videoPlayerController.pause();
-      setState(() {
-        _isPlayingVideo = false;
-        _showPlayPauseButton = true; // Hiển thị nút play khi video dừng
-      });
+    if(_videoPlayerController.value.isInitialized){
+      if (!_isPlayingVideo) {
+        // Nếu video đang dừng hoặc đã xem hết, phát video
+        await _videoPlayerController.play();
+        setState(() {
+          _isPlayingVideo = true;
+          _showPlayPauseButton = false; // Ẩn nút play ngay khi phát video
+        });
+      } else {
+        // Nếu video đang phát, dừng video
+        await _videoPlayerController.pause();
+        setState(() {
+          _isPlayingVideo = false;
+          _showPlayPauseButton = true; // Hiển thị nút play khi video dừng
+        });
+      }
     }
   }
 
@@ -493,18 +496,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                     if (loadingProgress == null) {
                       return child;
                     }
-                    return Center(
-                      child: Skeletonizer(
-                        child: Container(
-                          // height: 1.sw,
-                          // width: 1.sw,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                      ),
-                    );
+                    return _buildSkeletonItem();
                   }
                 )
 
@@ -532,9 +524,7 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                         ),
                       ),
                     )
-                        : Container(
-                      color: Colors.grey[300],
-                    ),
+                        : _buildSkeletonItem()
                   ),
                 ),
                 // Nút play/pause
@@ -544,20 +534,17 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                     right: 0,
                     left: 0,
                     child: Center(
-                      child: GestureDetector(
-                        // onTap: _togglePlayPauseVideo,
-                        child: Container(
-                          padding: EdgeInsets.all(12.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.of(context).neutralColor6,
-                            borderRadius: const BorderRadius.all(Radius.circular(50)),
-                          ),
-                          child: SvgPicture.asset(
-                            'assets/icons/ic_play_video.svg',
-                            width: 16.w,
-                            height: 16.w,
-                            color: Colors.white,
-                          ),
+                      child: Container(
+                        padding: EdgeInsets.all(12.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.of(context).neutralColor6,
+                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                        ),
+                        child: SvgPicture.asset(
+                          'assets/icons/ic_play_video.svg',
+                          width: 16.w,
+                          height: 16.w,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -703,6 +690,25 @@ class _MomentContentWidgetState extends State<MomentContentWidget>
                   fit: BoxFit.cover, controller: _controller),
             ),
         ],
+      ),
+    );
+  }
+  Widget _buildSkeletonItem() {
+    return Container(
+      width: 1.sw - 16.w,
+      height: 1.sw - 16.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50.w),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(50.w),
+          ),
+        ),
       ),
     );
   }

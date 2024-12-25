@@ -236,7 +236,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
       },
     );
   }
-  Future<void> _reportMoment() async {
+  Future<void> _reportMoment(BuildContext context) async {
     controller = TextEditingController();
     showDialog(
       context: context,
@@ -271,32 +271,15 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                       child: ScaleOnTapWidget(
                         onTap: (isSelect) async {
                           if(controller.text.isNotEmpty){
-                            Navigator.pop(context);
-                            final momentProvider = context.read<MomentProvider>();
-                            await momentProvider
-                                .createReport(widget.momentModel.momentID??"",
-                                controller.text, S.of(context).reportExists);
-
-                            if (momentProvider.createReportStatus == ModuleStatus.success) {
-                              Fluttertoast.showToast(
-                                msg: S.of(context).reportSuccess,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 16.0,
+                            if (mounted) {
+                              Navigator.pop(context);
+                              final momentProvider = context.read<MomentProvider>();
+                              await momentProvider.createReport(
+                                widget.momentModel.momentID ?? "",
+                                controller.text,
+                                S.of(context).reportExists,
                               );
-                            }else{
-                              Fluttertoast.showToast(
-                                msg: momentProvider.createReportResult,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.redAccent,
-                                textColor: Colors.white,
-                                fontSize: 16.0,
-                              );
+                              showStatus(momentProvider);
                             }
                           }else{
                             Fluttertoast.showToast(
@@ -396,7 +379,7 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
                       // Xử lý khi chọn ẩn bài đăng
                     } else if (func == S.of(context).report) {
                       await Future.delayed(Duration(milliseconds: 100));
-                      _reportMoment();
+                      _reportMoment(context);
                     }
                   },
                   userIDOfMoment: widget.momentModel.userID??"",
@@ -407,5 +390,13 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
         );
       },
     );
+  }
+
+  void showStatus(MomentProvider momentProvider) async{
+    if (momentProvider.createReportStatus == ModuleStatus.success) {
+      AppSnackBar.showSuccess(context, S.of(context).reportSuccess);
+    } else {
+      AppSnackBar.showError(context, S.of(context).error, S.of(context).createReportError);
+    }
   }
 }

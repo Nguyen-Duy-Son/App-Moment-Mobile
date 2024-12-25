@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +8,7 @@ import 'package:hit_moments/app/core/config/theme_config.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/custom_dialog.dart';
 import 'package:hit_moments/app/l10n/l10n.dart';
 import 'package:hit_moments/app/providers/language_provider.dart';
 import 'package:hit_moments/app/providers/theme_provider.dart';
@@ -47,9 +49,12 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                     SizedBox(
                       width: 10.w,
                     ),
-                    Text(AppLocalizations.of(context)!.modeLightDark,
-                        style: AppTextStyles.of(context).light20.copyWith(
-                            color: AppColors.of(context).neutralColor12)),
+                    Padding(
+                      padding: EdgeInsets.only(top: 6.w),
+                      child: Text(AppLocalizations.of(context)!.modeLightDark,
+                          style: AppTextStyles.of(context).light20.copyWith(
+                              color: AppColors.of(context).neutralColor12)),
+                    ),
                   ],
                 ),
                 GestureDetector(
@@ -123,9 +128,12 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                     SizedBox(
                       width: 15.w,
                     ),
-                    Text(AppLocalizations.of(context)!.language,
-                        style: AppTextStyles.of(context).light20.copyWith(
-                            color: AppColors.of(context).neutralColor12)),
+                    Padding(
+                      padding: EdgeInsets.only(top: 6.w),
+                      child: Text(AppLocalizations.of(context)!.language,
+                          style: AppTextStyles.of(context).light20.copyWith(
+                              color: AppColors.of(context).neutralColor12)),
+                    ),
                   ],
                 ),
                 GestureDetector(
@@ -187,6 +195,36 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 height: 1,
               ),
             ),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.HISTORY);
+              },
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    Assets.icons.iconHistory,
+                    color: AppColors.of(context).neutralColor11,
+                  ),
+                  SizedBox(
+                    width: 15.w,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 6.w),
+                    child: Text(AppLocalizations.of(context)!.history,
+                        style: AppTextStyles.of(context)
+                            .light20
+                            .copyWith(color: AppColors.of(context).neutralColor12)),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 12.w),
+              child: Divider(
+                color: AppColors.of(context).neutralColor12,
+                height: 1,
+              ),
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, AppRoutes.SCAN_QR_CODE);
@@ -200,9 +238,12 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                   SizedBox(
                     width: 15.w,
                   ),
-                  Text(S.of(context).scanQrCode,
-                      style: AppTextStyles.of(context).light20.copyWith(
-                          color: AppColors.of(context).neutralColor12)),
+                  Padding(
+                    padding: EdgeInsets.only(top: 6.w),
+                    child: Text(S.of(context).scanQrCode,
+                        style: AppTextStyles.of(context).light20.copyWith(
+                            color: AppColors.of(context).neutralColor12)),
+                  ),
                 ],
               ),
             ),
@@ -222,10 +263,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 SizedBox(
                   width: 15.w,
                 ),
-                Text(AppLocalizations.of(context)!.report,
-                    style: AppTextStyles.of(context)
-                        .light20
-                        .copyWith(color: AppColors.of(context).neutralColor12))
+                Padding(
+                  padding: EdgeInsets.only(top: 6.w),
+                  child: Text(AppLocalizations.of(context)!.report,
+                      style: AppTextStyles.of(context)
+                          .light20
+                          .copyWith(color: AppColors.of(context).neutralColor12)),
+                )
               ],
             ),
             Container(
@@ -244,10 +288,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 SizedBox(
                   width: 15.w,
                 ),
-                Text(AppLocalizations.of(context)!.blockList,
-                    style: AppTextStyles.of(context)
-                        .light20
-                        .copyWith(color: AppColors.of(context).neutralColor12))
+                Padding(
+                  padding: EdgeInsets.only(top: 6.w),
+                  child: Text(AppLocalizations.of(context)!.blockList,
+                      style: AppTextStyles.of(context)
+                          .light20
+                          .copyWith(color: AppColors.of(context).neutralColor12)),
+                )
               ],
             ),
             Container(
@@ -266,10 +313,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 SizedBox(
                   width: 15.w,
                 ),
-                Text(AppLocalizations.of(context)!.review,
-                    style: AppTextStyles.of(context)
-                        .light20
-                        .copyWith(color: AppColors.of(context).neutralColor12))
+                Padding(
+                  padding: EdgeInsets.only(top: 6.w),
+                  child: Text(AppLocalizations.of(context)!.review,
+                      style: AppTextStyles.of(context)
+                          .light20
+                          .copyWith(color: AppColors.of(context).neutralColor12)),
+                )
               ],
             ),
             Container(
@@ -288,10 +338,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 SizedBox(
                   width: 15.w,
                 ),
-                Text(AppLocalizations.of(context)!.tos,
-                    style: AppTextStyles.of(context)
-                        .light20
-                        .copyWith(color: AppColors.of(context).neutralColor12))
+                Padding(
+                  padding: EdgeInsets.only(top: 6.w),
+                  child: Text(AppLocalizations.of(context)!.tos,
+                      style: AppTextStyles.of(context)
+                          .light20
+                          .copyWith(color: AppColors.of(context).neutralColor12)),
+                )
               ],
             ),
             Container(
@@ -310,10 +363,13 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                 SizedBox(
                   width: 15.w,
                 ),
-                Text(AppLocalizations.of(context)!.privacy,
-                    style: AppTextStyles.of(context)
-                        .light20
-                        .copyWith(color: AppColors.of(context).neutralColor12))
+                Padding(
+                  padding: EdgeInsets.only(top: 6.w),
+                  child: Text(AppLocalizations.of(context)!.privacy,
+                      style: AppTextStyles.of(context)
+                          .light20
+                          .copyWith(color: AppColors.of(context).neutralColor12)),
+                )
               ],
             ),
             Container(
@@ -325,7 +381,7 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
             ),
             InkWell(
               onTap: () {
-                _logout();
+                _showDialogLogout();
               },
               child: Row(
                 children: [
@@ -336,9 +392,12 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                   SizedBox(
                     width: 15.w,
                   ),
-                  Text(AppLocalizations.of(context)!.logout,
-                      style: AppTextStyles.of(context).light20.copyWith(
-                          color: AppColors.of(context).neutralColor12))
+                  Padding(
+                    padding: EdgeInsets.only(top: 6.w),
+                    child: Text(AppLocalizations.of(context)!.logout,
+                        style: AppTextStyles.of(context).light20.copyWith(
+                            color: AppColors.of(context).neutralColor12)),
+                  )
                 ],
               ),
             ),
@@ -360,9 +419,12 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
                   SizedBox(
                     width: 15.w,
                   ),
-                  Text(AppLocalizations.of(context)!.deleteAcc,
-                      style: AppTextStyles.of(context).light20.copyWith(
-                          color: AppColors.of(context).primaryColor10))
+                  Padding(
+                    padding: EdgeInsets.only(top: 6.w),
+                    child: Text(AppLocalizations.of(context)!.deleteAcc,
+                        style: AppTextStyles.of(context).light20.copyWith(
+                            color: AppColors.of(context).primaryColor10)),
+                  )
                 ],
               ),
             )
@@ -381,5 +443,29 @@ class PersonalPageScreenState extends State<PersonalPageWidget> {
         context,
         AppRoutes.AUTHENTICATION,
         (route) => false);
+  }
+  void _showDialogLogout() {
+    showCustomDialog(
+      context,
+      title: S.of(context).warning,
+      content: Text(
+        S.of(context).doyouwanttologoutoftheapplication,
+        style: AppTextStyles.of(context)
+            .regular24
+            .copyWith(color: AppColors.of(context).neutralColor12),
+        textAlign: TextAlign.center,
+      ),
+      backgroundPositiveButton: AppColors.of(context).primaryColor10,
+      textPositive: S.of(context).ok,
+      onPressPositive: () {
+        _logout();
+      },
+      colorTextPositive: AppColors.of(context).neutralColor1,
+      textNegative: S.of(context).cancel,
+      colorTextNegative: AppColors.of(context).neutralColor12,
+      onPressNegative: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 }
