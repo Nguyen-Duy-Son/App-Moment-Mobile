@@ -41,6 +41,7 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
       setState(() {
         sentRequestList[index] = true;
       });
+      context.read<UserProvider>().getFriendProposals();
       print("Gửi yêu cầu kết bạn thành công");
     } else {
       print("Gửi yêu cầu kết bạn thất bại");

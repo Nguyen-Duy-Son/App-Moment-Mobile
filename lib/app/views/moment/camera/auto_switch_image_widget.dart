@@ -68,7 +68,7 @@ class _AutoSwitchImageRowState extends State<AutoSwitchImageRow> {
                 height: 28.w,
                 widget.images[_currentIndex] ?? '', // Hiển thị ảnh hiện tại
                 key: ValueKey<int>(_currentIndex), // Đảm bảo widget sẽ được tái tạo mỗi khi ảnh thay đổi
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) =>
                     Image.asset('assets/images/moment-default.png'), // Ảnh mặc định nếu có lỗi
                 loadingBuilder:

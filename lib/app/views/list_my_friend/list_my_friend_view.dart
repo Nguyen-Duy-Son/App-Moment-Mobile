@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/custom/widgets/app_bar_animation.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/example/example_view.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_widget.dart';
@@ -44,18 +45,10 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: BackButton(
-        //   onPressed: () {
-        //     Navigator.of(context).pop(
-        //         MaterialPageRoute(builder: (context) => const ExampleView()));
-        //   },
-        //   color: AppColors.of(context).neutralColor9,
-        // ),
         leading: IconButton(
           icon: SvgPicture.asset(Assets.icons.leftSVG),
           onPressed: () => {
-                Navigator.of(context).pop(
-                    MaterialPageRoute(builder: (context) => const ExampleView()))
+                Navigator.of(context).pop(),
           },
         ),
         title: Text(
@@ -150,15 +143,10 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           margin: EdgeInsets.only(bottom: 32.h),
           child: Opacity(
             opacity: checkOpacity ? 0.3 : 1,
-            child: (!context.watch<UserProvider>().isLoandingFriendList &&
-                    !context.watch<UserProvider>().isLoandingFriendSuggests)
-                ? ListMyFriendWidget(
+            child: ListMyFriendWidget(
                     friendProposals:
                         context.watch<UserProvider>().friendSuggests,
                     friendsUsers: context.watch<UserProvider>().friendList)
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  ),
           ),
         ),
       ),

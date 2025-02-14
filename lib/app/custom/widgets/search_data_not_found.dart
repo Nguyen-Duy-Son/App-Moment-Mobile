@@ -14,22 +14,39 @@ class SearchDataNotFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            Assets.icons.searchOff,
-            width: 100.w,
-            height: 100.h,
-            color: ColorConstants.neutralLight100,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppColors.of(context).neutralColor8,
+            width: 1.w,
           ),
-          Text(
-            S.of(context).userNotFound,
-            style: AppTextStyles.of(context).light24.copyWith(
-                  color: AppColors.of(context).neutralColor11,
-                ),
-          ),
-        ],
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 20.h,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              Assets.icons.searchOff,
+              width: 100.w,
+              height: 100.h,
+              color: ColorConstants.neutralLight100,
+            ),
+            Text(
+              S.of(context).userNotFound,
+              style: AppTextStyles.of(context).light24.copyWith(
+                    color: AppColors.of(context).neutralColor11,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }

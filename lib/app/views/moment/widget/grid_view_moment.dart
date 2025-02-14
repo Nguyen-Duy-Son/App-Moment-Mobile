@@ -82,13 +82,12 @@ class _GridViewMomentState extends State<GridViewMoment> {
             imageUrl: moment.image ?? '',
             fit: BoxFit.cover,
             placeholder: (context, url) => Center(
-              child: Skeletonizer(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
                 child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(50),
                   ),
                 ),
               ),

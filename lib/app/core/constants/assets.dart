@@ -81,6 +81,7 @@ class _AssetsIcons {
   final eyeOff = 'assets/icons/ic_eye_off.svg';
   final iconQrCode = 'assets/icons/ic_qr_code.svg';
   final iconHistory = 'assets/icons/ic_history.svg';
+  final delete = 'assets/icons/ic_delete.svg';
 }
 
 class _AssetsImages {

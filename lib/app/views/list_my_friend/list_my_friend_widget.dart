@@ -133,7 +133,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
               ? Column(
                 children: [
                   ListMyFriend(
-                    users: widget.friendsUsers,
+                    // users: widget.friendsUsers,
                     setExpanded: setExpandedMyFriend,
                     isExpanded: isExpandedMyFriend,
                   ),

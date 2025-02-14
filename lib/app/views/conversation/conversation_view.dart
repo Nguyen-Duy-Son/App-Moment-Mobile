@@ -137,6 +137,22 @@ class _ConversationViewState extends State<ConversationView> {
                                       width: 40.w,
                                       height: 40.w,
                                       fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return Center(
+                                          child: Skeletonizer(
+                                            child: Container(
+                                              width: 40.w,
+                                              height: 40.w,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius: BorderRadius.circular(10), // Bo tròn ảnh
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                   SizedBox(
